@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-        <title>Introduction | </title>
+        <title>注解 | </title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Book generated using GitBook">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 1.5.0">
         <meta name="HandheldFriendly" content="true"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -19,8 +19,10 @@
         
     
     
-    <link rel="next" href="./基础.html" />
+    <link rel="next" href="./时间和日期.html" />
     
+    
+    <link rel="prev" href="./反射.html" />
     
 
         
@@ -32,7 +34,7 @@
 
 
         
-    <div class="book" data-level="0" data-basepath="." data-revision="1455784862652">
+    <div class="book" data-level="13" data-basepath="." data-revision="1455784862652">
     
 
 <div class="book-summary">
@@ -50,7 +52,7 @@
         
     
         
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -256,7 +258,7 @@
         </li>
     
         
-        <li class="chapter " data-level="13" data-path="注解.html">
+        <li class="chapter active" data-level="13" data-path="注解.html">
             
                 
                     <a href="./注解.html">
@@ -392,14 +394,127 @@
                 <div class="page-inner">
                 
                 
+                    <section class="normal" id="section-gitbook_437">
+                    
+                        <h2 id="">注解</h2>
+<h3>1.注解定义</h3>
+
+<p>使用@interface自定义注解时，自动继承了java.lang.annotation.Annotation接口，由编译程序自动完成其他细节。在定义注解时，不能继承其他的注解或接口。@interface用来声明一个注解，其中的每一个方法实际上是声明了一个配置参数。方法的名称就是参数的名称，返回值类型就是参数的类型。可以通过default来声明参数的默认值。</p>
+<p>注解参数的可支持数据类型：</p>
+<ol>
+<li>所有基本数据类型</li>
+<li>String类型</li>
+<li>Class类型</li>
+<li>enum类型</li>
+<li>Annotation类型</li>
+<li>以上所有类型的数组</li>
+</ol>
+<p>Annotation类型参数只能用public或者默认这两个访问权限。</p>
+<p>如果参数名设置成value，则使用时不必指定参数名。</p>
+<h3>2.元注解</h3>
+
+<p>元注解的作用就是负责注解其他注解。Java5.0定义了4个原注解，它们被用来提供对其它 annotation类型作说明。Java5.0定义的元注解：</p>
+<ol>
+<li>@Target</li>
+<li>@Retention</li>
+<li>@Documented</li>
+<li>@Inherited</li>
+</ol>
+<p><h4 id="2.1@Target">2.1@Target</h4>
+@Target用于描述注解的使用范围。
+取值范围</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> ElementType {
+    <span class="hljs-javadoc">/** Class, interface (including annotation type), or enum declaration */</span>
+    TYPE,
+
+    <span class="hljs-javadoc">/** Field declaration (includes enum constants) */</span>
+    FIELD,
+
+    <span class="hljs-javadoc">/** Method declaration */</span>
+    METHOD,
+
+    <span class="hljs-javadoc">/** Formal parameter declaration */</span>
+    PARAMETER,
+
+    <span class="hljs-javadoc">/** Constructor declaration */</span>
+    CONSTRUCTOR,
+
+    <span class="hljs-javadoc">/** Local variable declaration */</span>
+    LOCAL_VARIABLE,
+
+    <span class="hljs-javadoc">/** Annotation type declaration */</span>
+    ANNOTATION_TYPE,
+
+    <span class="hljs-javadoc">/** Package declaration */</span>
+    PACKAGE,
+
+    <span class="hljs-javadoc">/**
+     * Type parameter declaration
+     *
+     *<span class="hljs-javadoctag"> @since</span> 1.8
+     */</span>
+    TYPE_PARAMETER,
+
+    <span class="hljs-javadoc">/**
+     * Use of a type
+     *
+     *<span class="hljs-javadoctag"> @since</span> 1.8
+     */</span>
+    TYPE_USE
+}
+</code></pre>
+<p><h4 id="2.2@Retention">2.2@Retention</h4>
+@Retention表示需要在什么级别保存该注释信息，用于描述注解的生命周期。</p>
+<p>取值范围</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> RetentionPolicy {
+    <span class="hljs-javadoc">/**
+     * Annotations are to be discarded by the compiler.
+     */</span>
+    SOURCE,
+
+    <span class="hljs-javadoc">/**
+     * Annotations are to be recorded in the class file by the compiler
+     * but need not be retained by the VM at run time.  This is the default
+     * behavior.
+     */</span>
+    CLASS,
+
+    <span class="hljs-javadoc">/**
+     * Annotations are to be recorded in the class file by the compiler and
+     * retained by the VM at run time, so they may be read reflectively.
+     *
+     *<span class="hljs-javadoctag"> @see</span> java.lang.reflect.AnnotatedElement
+     */</span>
+    RUNTIME
+}
+</code></pre>
+<h3>3.提取注解</h3>
+
+<p>方法</p>
+<ul>
+<li>getAnnotation</li>
+<li>getAnnotations：</li>
+<li>getDeclaredAnnotations</li>
+<li>isAnnotationPresent:判断该程序元素上是否包含指定类型的注解，存在返回true，不存在返回false</li>
+</ul>
+<p>注解的方法</p>
+<ul>
+<li>annotationType</li>
+</ul>
+
+                    
+                    </section>
+                
                 
                 </div>
             </div>
         </div>
 
         
+        <a href="./反射.html" class="navigation navigation-prev " aria-label="Previous page: 反射"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./基础.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 基础"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./时间和日期.html" class="navigation navigation-next " aria-label="Next page: 时间和日期"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

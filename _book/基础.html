@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-        <title>Introduction | </title>
+        <title>基础 | </title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Book generated using GitBook">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 1.5.0">
         <meta name="HandheldFriendly" content="true"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -19,8 +19,10 @@
         
     
     
-    <link rel="next" href="./基础.html" />
+    <link rel="next" href="./控制流程.html" />
     
+    
+    <link rel="prev" href="./index.html" />
     
 
         
@@ -32,7 +34,7 @@
 
 
         
-    <div class="book" data-level="0" data-basepath="." data-revision="1455784862652">
+    <div class="book" data-level="1" data-basepath="." data-revision="1455784862652">
     
 
 <div class="book-summary">
@@ -50,7 +52,7 @@
         
     
         
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -64,7 +66,7 @@
         </li>
     
         
-        <li class="chapter " data-level="1" data-path="基础.html">
+        <li class="chapter active" data-level="1" data-path="基础.html">
             
                 
                     <a href="./基础.html">
@@ -392,14 +394,84 @@
                 <div class="page-inner">
                 
                 
+                    <section class="normal" id="section-gitbook_430">
+                    
+                        <h2 id="">基础部分</h2>
+<h3 id="1.开发环境搭建">1.开发环境搭建</h3>
+
+
+<p>略</p>
+<h3 id="2.Java编译与运行">2.Java编译与运行</h3>
+
+<p>使用记事本编写如下代码，并保存为HelloWorld.java</p>
+<pre><code class="lang-java"><span class="hljs-keyword">package</span> com.malinkang;
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HelloWorld</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>{
+        System.out.println(<span class="hljs-string">"Hello,World"</span>);
+    }
+}
+</code></pre>
+<p>在命令行下执行如下命令进行编译。</p>
+<pre><code>javac -d ./Dropbox/Code/JavaDemo/com/malinkang ./Dropbox/Code/JavaDemo/HelloWorld.java
+</code></pre><p><code>-d</code>指定编译后的.class文件存放的目录</p>
+<p>编译成功之后，运行程序</p>
+<pre><code>java -cp ./Dropbox/Code/JavaDemo com.malinkang.HelloWorld
+</code></pre><p><code>-cp</code>用于指定环境变量。</p>
+<h3 id="3.进制">3.进制</h3>
+
+<p>二进制转换十进制</p>
+<p>1001 1×2<sup><a href="#fn_0" id="reffn_0">0</a></sup> + 0×2<sup><a href="#fn_1" id="reffn_1">1</a></sup>+ 0×2<sup><a href="#fn_2" id="reffn_2">2</a></sup>+ 1×2<sup><a href="#fn_3" id="reffn_3">3</a></sup> ＝9</p>
+<p>二进制转换为八进制</p>
+<p>101001 -&gt; 101 001 -&gt;51</p>
+<p><a href="http://www.wikihow.com/Convert-from-Decimal-to-Binary" target="_blank">十进制转换二进制</a></p>
+<h3 id="4.源码补码反码">4.源码补码反码</h3>
+
+<p>1.原码</p>
+<p>将最高位作为符号位（以0代表正，1代表负），其余各位代表数值本身的绝对值（以二进制表示）。
+为了简单起见，我们用1个字节来表示一个整数。</p>
+<pre><code> +7的原码为： 00000111
+ -7的原码为： 10000111
+</code></pre><p>2.反码</p>
+<p>一个数如果为正，则它的反码与原码相同；一个数如果为负，则符号位为1，其余各位是对原码取反。
+为了简单起见，我们用1个字节来表示一个整数：</p>
+<pre><code>     +7的反码为：00000111
+     -7的反码为： 11111000
+</code></pre><p>3.补码</p>
+<p>补码：一个数如果为正，则它的原码、反码、补码相同；一个数如果为负，则符号位为1，其余各位是对原码取反，然后整个数加1。为了简单起见，我们用1个字节来表示一个整数：</p>
+<pre><code>+7的补码为： 00000111
+-7的补码为： 11111001
+</code></pre><p>已知一个负数的补码，将其转换为十进制数，步骤：</p>
+<ul>
+<li>1、先对各位取反；</li>
+<li>2、将其转换为十进制数；</li>
+<li>3、加上负号，再减去1。</li>
+</ul>
+<pre><code>11111010，最高位为1，是负数，先对各位取反得00000101，转换为十进制数得5，加上负号得-5，再减1得-6
+</code></pre><h3 id="5.数据类型">5.数据类型</h3>
+
+<h3 id="6.类型提升和强制转换">6.类型提升和强制转换</h3>
+
+<h3 id="7.运算符">7.运算符</h3>
+
+<h3>参考</h3>
+
+<ul>
+<li><a href="https://github.com/lifesinger/lifesinger.github.com/issues/187" target="_blank">补码之美</a></li>
+</ul>
+
+                    
+                    </section>
+                
                 
                 </div>
             </div>
         </div>
 
         
+        <a href="./index.html" class="navigation navigation-prev " aria-label="Previous page: Introduction"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./基础.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 基础"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./控制流程.html" class="navigation navigation-next " aria-label="Next page: 控制流程"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

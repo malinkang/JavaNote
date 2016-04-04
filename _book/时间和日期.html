@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-        <title>Introduction | </title>
+        <title>时间和日期 | </title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Book generated using GitBook">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 1.5.0">
         <meta name="HandheldFriendly" content="true"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -19,8 +19,10 @@
         
     
     
-    <link rel="next" href="./基础.html" />
+    <link rel="next" href="./Java8/Java8.html" />
     
+    
+    <link rel="prev" href="./注解.html" />
     
 
         
@@ -32,7 +34,7 @@
 
 
         
-    <div class="book" data-level="0" data-basepath="." data-revision="1455784862652">
+    <div class="book" data-level="14" data-basepath="." data-revision="1455784862652">
     
 
 <div class="book-summary">
@@ -50,7 +52,7 @@
         
     
         
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -272,7 +274,7 @@
         </li>
     
         
-        <li class="chapter " data-level="14" data-path="时间和日期.html">
+        <li class="chapter active" data-level="14" data-path="时间和日期.html">
             
                 
                     <a href="./时间和日期.html">
@@ -392,14 +394,127 @@
                 <div class="page-inner">
                 
                 
+                    <section class="normal" id="section-gitbook_435">
+                    
+                        <h2 id="">时间和日期</h2>
+<h3>1.Date类</h3>
+
+<h4>1.1构造函数</h4>
+
+<ul>
+<li>public Date()：创建一个当前时间的Date对象。</li>
+<li>public Date(long date)：传入一个距离1970年1月1日起的毫秒数。</li>
+</ul>
+<h4>1.2常用方法</h4>
+
+<ul>
+<li>public long getTime()：返回自1970年1月1日00:00:00 以来的毫秒数。</li>
+<li>public void setTime(long time)：</li>
+<li>public boolean after(Date when)：若当调用此方法的Date对象在指定日期之后返回true,否则返回false。</li>
+<li>boolean before(Date date)：若当调用此方法的Date对象在指定日期之前返回true,否则返回false。</li>
+</ul>
+<h4>1.3字符串格式化</h4>
+
+<pre><code class="lang-java">        Date date = <span class="hljs-keyword">new</span> Date();
+        SimpleDateFormat sdf=<span class="hljs-keyword">new</span> SimpleDateFormat(<span class="hljs-string">"yyyy年MM月dd日"</span>);
+        System.out.println(sdf.format(date));
+        <span class="hljs-comment">//2015年06月24日</span>
+</code></pre>
+<p>SimpleDateFormat还可以将字符串转换为Date对象。</p>
+<pre><code class="lang-java">        SimpleDateFormat sdf=<span class="hljs-keyword">new</span> SimpleDateFormat(<span class="hljs-string">"yyyy年MM月dd日"</span>);
+        System.out.println(sdf.parse(<span class="hljs-string">"2000年1月1日"</span>));
+        <span class="hljs-comment">//Sat Jan 01 00:00:00 CST 2000</span>
+</code></pre>
+<p>时间模式字符串</p>
+<table>
+<thead>
+<tr>
+<th>模式字母</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>y</strong></td>
+<td>年 </td>
+</tr>
+<tr>
+<td>M</td>
+<td>一年中的月份</td>
+</tr>
+<tr>
+<td>w</td>
+<td>一年中的星期</td>
+</tr>
+<tr>
+<td>W</td>
+<td>月份中的星期</td>
+</tr>
+<tr>
+<td>d</td>
+<td>月份中的日</td>
+</tr>
+<tr>
+<td>D</td>
+<td>一年中的日</td>
+</tr>
+<tr>
+<td>H</td>
+<td>一天中的小时-介于0到23之间的数字</td>
+</tr>
+<tr>
+<td>k</td>
+<td>一天中的小时-介于1到24之间的数字</td>
+</tr>
+<tr>
+<td>K</td>
+<td>上午或下午中的小时-介于0到11之间的数字</td>
+</tr>
+<tr>
+<td>h</td>
+<td>上午或下午中的小时-介于1到12之间的数字</td>
+</tr>
+<tr>
+<td>m</td>
+<td>小时中的分钟</td>
+</tr>
+<tr>
+<td>s</td>
+<td>分钟中的秒钟</td>
+</tr>
+<tr>
+<td>S</td>
+<td>毫秒</td>
+</tr>
+</tbody>
+</table>
+<h3>2.Calendar类</h3>
+
+<h4>2.1常用方法</h4>
+
+<ul>
+<li>public static Calendar getInstance()：返回一个表示当前时间的calendar的对象。</li>
+<li>public void set(int field, int value)</li>
+<li>public int get(int field)</li>
+<li>public void add(int field, int amount)</li>
+<li>public final Date getTime()</li>
+<li>public final void setTime(Date date)</li>
+<li>public long getTimeInMillis()</li>
+</ul>
+
+                    
+                    </section>
+                
                 
                 </div>
             </div>
         </div>
 
         
+        <a href="./注解.html" class="navigation navigation-prev " aria-label="Previous page: 注解"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./基础.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 基础"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./Java8/Java8.html" class="navigation navigation-next " aria-label="Next page: Java8介绍"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

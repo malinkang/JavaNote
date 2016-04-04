@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-        <title>Introduction | </title>
+        <title>网络编程 | </title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Book generated using GitBook">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 1.5.0">
         <meta name="HandheldFriendly" content="true"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -19,8 +19,10 @@
         
     
     
-    <link rel="next" href="./基础.html" />
+    <link rel="next" href="./集合.html" />
     
+    
+    <link rel="prev" href="./IO编程.html" />
     
 
         
@@ -32,7 +34,7 @@
 
 
         
-    <div class="book" data-level="0" data-basepath="." data-revision="1455784862652">
+    <div class="book" data-level="9" data-basepath="." data-revision="1455784862652">
     
 
 <div class="book-summary">
@@ -50,7 +52,7 @@
         
     
         
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -192,7 +194,7 @@
         </li>
     
         
-        <li class="chapter " data-level="9" data-path="网络编程.html">
+        <li class="chapter active" data-level="9" data-path="网络编程.html">
             
                 
                     <a href="./网络编程.html">
@@ -392,14 +394,49 @@
                 <div class="page-inner">
                 
                 
+                    <section class="normal" id="section-gitbook_439">
+                    
+                        <h2 id="">网络编程</h2>
+<pre><code class="lang-java">        <span class="hljs-comment">// https://api.weibo.com/2/trends/hourly.json</span>
+        HttpURLConnection connection = (HttpURLConnection) <span class="hljs-keyword">new</span> URL(<span class="hljs-string">"https://api.weibo.com/2/trends/hourly.json"</span>).openConnection();
+        connection.setConnectTimeout(<span class="hljs-number">30</span> * <span class="hljs-number">1000</span>);<span class="hljs-comment">//</span>
+        connection.setReadTimeout(<span class="hljs-number">20</span> * <span class="hljs-number">1000</span>);
+        connection.setRequestMethod(<span class="hljs-string">"GET"</span>);
+        connection.setDoInput(<span class="hljs-keyword">true</span>);
+        connection.setDoOutput(<span class="hljs-keyword">true</span>);
+        ByteArrayOutputStream content = <span class="hljs-keyword">new</span> ByteArrayOutputStream();
+        <span class="hljs-comment">// 多个参数使用&amp;</span>
+        content.write(<span class="hljs-string">"source"</span>.getBytes(<span class="hljs-string">"UTF-8"</span>));
+        content.write(<span class="hljs-string">'='</span>);
+        content.write(<span class="hljs-string">"2996785772"</span>.getBytes(<span class="hljs-string">"UTF-8"</span>));
+        connection.getOutputStream().write(content.toByteArray());
+        <span class="hljs-keyword">int</span> status = connection.getResponseCode();
+        String reason = connection.getResponseMessage();
+        BufferedReader in = <span class="hljs-keyword">new</span> BufferedReader(
+                <span class="hljs-keyword">new</span> InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuffer response = <span class="hljs-keyword">new</span> StringBuffer();
+
+        <span class="hljs-keyword">while</span> ((inputLine = in.readLine()) != <span class="hljs-keyword">null</span>) {
+            response.append(inputLine);
+        }
+        System.out.println(response);
+        in.close();
+</code></pre>
+
+                    
+                    </section>
+                
                 
                 </div>
             </div>
         </div>
 
         
+        <a href="./IO编程.html" class="navigation navigation-prev " aria-label="Previous page: IO编程"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./基础.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 基础"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./集合.html" class="navigation navigation-next " aria-label="Next page: 集合"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

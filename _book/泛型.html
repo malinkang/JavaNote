@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-        <title>Introduction | </title>
+        <title>泛型 | </title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Book generated using GitBook">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 1.5.0">
         <meta name="HandheldFriendly" content="true"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -19,8 +19,10 @@
         
     
     
-    <link rel="next" href="./基础.html" />
+    <link rel="next" href="./反射.html" />
     
+    
+    <link rel="prev" href="./集合.html" />
     
 
         
@@ -32,7 +34,7 @@
 
 
         
-    <div class="book" data-level="0" data-basepath="." data-revision="1455784862652">
+    <div class="book" data-level="11" data-basepath="." data-revision="1455784862652">
     
 
 <div class="book-summary">
@@ -50,7 +52,7 @@
         
     
         
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -224,7 +226,7 @@
         </li>
     
         
-        <li class="chapter " data-level="11" data-path="泛型.html">
+        <li class="chapter active" data-level="11" data-path="泛型.html">
             
                 
                     <a href="./泛型.html">
@@ -392,14 +394,42 @@
                 <div class="page-inner">
                 
                 
+                    <section class="normal" id="section-gitbook_438">
+                    
+                        <h2 id="">枚举</h2>
+<p><h3 id="1.定义一个枚举">1.定义一个枚举<h3></p>
+<pre><code class="lang-java">
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span>  WeekDay {
+
+    SUN,MON,TUES,WED,THUR,FRI,SAT
+}
+</code></pre>
+<p>枚举中的方法</p>
+<pre><code class="lang-java">
+ WeekDay weekDay=WeekDay.FRI;
+        System.out.println(weekDay);
+        System.out.println(weekDay.name());
+        System.out.println(weekDay.ordinal());<span class="hljs-comment">//5</span>
+        System.out.println(WeekDay.valueOf(<span class="hljs-string">"SUN"</span>).ordinal());<span class="hljs-comment">//0</span>
+        <span class="hljs-comment">//遍历</span>
+        <span class="hljs-keyword">for</span> (WeekDay w:WeekDay.values()) {
+            System.out.println(w);
+        }
+</code></pre>
+
+                    
+                    </section>
+                
                 
                 </div>
             </div>
         </div>
 
         
+        <a href="./集合.html" class="navigation navigation-prev " aria-label="Previous page: 集合"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./基础.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 基础"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./反射.html" class="navigation navigation-next " aria-label="Next page: 反射"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

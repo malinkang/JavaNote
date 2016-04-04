@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-        <title>Introduction | </title>
+        <title>反射 | </title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="Book generated using GitBook">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 1.5.0">
         <meta name="HandheldFriendly" content="true"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -19,8 +19,10 @@
         
     
     
-    <link rel="next" href="./基础.html" />
+    <link rel="next" href="./注解.html" />
     
+    
+    <link rel="prev" href="./泛型.html" />
     
 
         
@@ -32,7 +34,7 @@
 
 
         
-    <div class="book" data-level="0" data-basepath="." data-revision="1455784862652">
+    <div class="book" data-level="12" data-basepath="." data-revision="1455784862652">
     
 
 <div class="book-summary">
@@ -50,7 +52,7 @@
         
     
         
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
                     <a href="./index.html">
@@ -240,7 +242,7 @@
         </li>
     
         
-        <li class="chapter " data-level="12" data-path="反射.html">
+        <li class="chapter active" data-level="12" data-path="反射.html">
             
                 
                     <a href="./反射.html">
@@ -392,14 +394,75 @@
                 <div class="page-inner">
                 
                 
+                    <section class="normal" id="section-gitbook_429">
+                    
+                        <h2 id="">反射</h2>
+<h3 id="1.Type类型">1.Type类型</h3>
+
+
+
+<h3>Method</h3>
+
+<ul>
+<li>getDeclaringClass 获取声明此方法的类</li>
+</ul>
+<pre><code class="lang-java">     <span class="hljs-comment">//boolean addAll(Collection&lt;? extends E&gt; c);</span>
+      Method method =  List.class.getMethod(<span class="hljs-string">"addAll"</span>, Collection.class);
+        <span class="hljs-comment">// 获取参数</span>
+       Parameter[] parameters= method.getParameters();
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;parameters.length;i++){
+            System.out.println(parameters[i]);
+            <span class="hljs-comment">//java.util.Collection&lt;? extends E&gt; arg0</span>
+        }
+        Type[] types1=method.getGenericParameterTypes();
+
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;types1.length;i++){
+            System.out.println(types1[i]);
+            <span class="hljs-comment">// 输出 java.util.Collection&lt;? extends E&gt;</span>
+
+            <span class="hljs-keyword">if</span>(types1[i] <span class="hljs-keyword">instanceof</span> ParameterizedType){
+                Type type=((ParameterizedType)types1[i]).getRawType();
+                System.out.println(<span class="hljs-string">"rawtype--&gt;"</span>+type);
+                <span class="hljs-comment">// 输出 rawtype--&gt;interface java.util.Collection</span>
+            }
+        }
+
+       Type[] types2 = method.getParameterTypes();
+
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;types2.length;i++){
+            System.out.println(types2[i]);
+
+
+            <span class="hljs-comment">// 输出 interface java.util.Collection</span>
+        }
+
+
+        Method method2 =  List.class.getMethod(<span class="hljs-string">"iterator"</span>);
+        Type type1= method2.getReturnType();
+
+        System.out.println(type1);
+        <span class="hljs-comment">// 输出 interface java.util.Iterator</span>
+
+        Type type2= method2.getGenericReturnType();
+
+        System.out.println(type2);
+
+        <span class="hljs-comment">//java.util.Iterator&lt;E&gt;</span>
+</code></pre>
+
+                    
+                    </section>
+                
                 
                 </div>
             </div>
         </div>
 
         
+        <a href="./泛型.html" class="navigation navigation-prev " aria-label="Previous page: 泛型"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./基础.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 基础"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="./注解.html" class="navigation navigation-next " aria-label="Next page: 注解"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
