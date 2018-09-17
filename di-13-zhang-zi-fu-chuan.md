@@ -1,11 +1,12 @@
 ---
 title: 《Java编程思想》读书笔记 第十三章 字符串
-date: 2013-11-1 14:31:36
+date: '2013-11-01T14:31:36.000Z'
 tags: Java
 ---
 
+# 第13章 字符串
 
-### 1.不可变String
+## 1.不可变String
 
 ```java
 public class Immutable {
@@ -23,12 +24,11 @@ public class Immutable {
 }
 ```
 
-当把`q`传给`upcase()`方法时，实际传递的是引用的一份拷贝。其实，**每当把`String`对象作为方法的参数时，都会复制一份引用**，而该引用所指的对象其实一直待在单一的物理位置上，从未动过。
+当把`q`传给`upcase()`方法时，实际传递的是引用的一份拷贝。其实，**每当把**`String`**对象作为方法的参数时，都会复制一份引用**，而该引用所指的对象其实一直待在单一的物理位置上，从未动过。
 
 回到`upcase()`的定义，传入其中的引用有了名字`s`,只有`upcase()`运行的时候，局部引用`s`才存在。一旦`upcase()`运行结束，`s`就消失了。当然了，`upcase()`的返回值，其实只是最终结果的引用。这足以说明，`upcase()`返回的引用已经指向了一个新的对象，而原本的`q`则还在原地。
 
-
-### 2.重载“+”与StringBuilder
+## 2.重载“+”与StringBuilder
 
 操作符“+”可以用来连接`String`。
 
@@ -44,7 +44,7 @@ public class Concatenation {
 
 用`JDK`自带的工具`javap`来反编译以上代码。命令如下
 
-```
+```text
 javap -c Concatenation
 ```
 
@@ -77,7 +77,6 @@ Code:
 `dup`与`invokevirtual`语句相当于`Java`虚拟机上的汇编语句。
 
 在这个例子中，编译器创建了一个`StringBuilder`对象，用以构建最终的`String`，并未每个字符串调用一次`StringBuilder`的`append()`方法，总计四次。最后调用`toString()`生成结果，并存为`s`。
-
 
 ```java
 public class WhitherStringBuilder {
@@ -194,7 +193,7 @@ public class UsingStringBuilder {
  */
 ```
 
-### 3.无意识的递归
+## 3.无意识的递归
 
 `Java`中的每个类从根本上都是继承自`Object`，标准容器类自然也不例外。因此容器类都有`toString()`方法，覆写了该方法，使得它生成的`String`结果能够表达容器自身，以及容器所包含的对象。例如`ArrayList.toString()`，它会遍历`ArrayList`中包含的所有对象，调用每个元素上的`toString()`方法：
 
@@ -212,7 +211,7 @@ public class ArrayListDisplay {
 [Americano 0, Latte 1, Americano 2, Mocha 3, Mocha 4, Breve 5,
 Americano 6, Latte 7, Cappuccino 8, Cappuccino 9]
  */
-```	
+```
 
 如果希望`toString()`方法打印出对象的内存地址，也许会考虑使用`this`关键字：
 
@@ -252,21 +251,19 @@ public class InfiniteRecursion {
 
 执行代码会得到一串非常长的异常。这里发生了自动类型转换，由`InfiniteRecursion`类型转换成`String`类型。因为编译器看到一个`String`对象后面跟着一个“+”，而在后面的对象不是`String`，于是编译器试着将`this`转换成一个`String`。调用`this`上的`toString()`方法进行转换，于是就发生了递归调用。所以不该使用`this`，而是应该调用`super.toString()`方法。
 
-### 4.String上的操作
+## 4.String上的操作
 
+## 5.格式化输出
 
-### 5.格式化输出
-
-#### 5.1 printf()
+### 5.1 printf\(\)
 
 ```java
-System.out.printf("Row 1:[%d %f] \n",10,2.5);// Row 1:[10 2.500000] 
+System.out.printf("Row 1:[%d %f] \n",10,2.5);// Row 1:[10 2.500000]
 ```
 
-#### 5.2 System.out.format()
+### 5.2 System.out.format\(\)
 
 `Java SE5`引入的`format`方法可用于`PrintStream`或`PrintWriter`对象，其中也包括`System.out`对象。
-
 
 ```java
 public class SimpleFormat {
@@ -288,7 +285,7 @@ Row 1: [5 5.332542]
  */
 ```
 
-#### 5.3 Formatter类
+### 5.3 Formatter类
 
 ```java
 public class Turtle {
@@ -327,18 +324,17 @@ Terry The Turtle is at (3,3)
  */
 ```
 
-#### 5.4 格式化说明符
+### 5.4 格式化说明符
 
 在插入数据时，如果想要控制空格与对齐，你需要更精细复杂的格式修饰符，一下是其抽象的语法：
 
-```
+```text
 %[argument_index$][flags][width][precision]conversion
 ```
 
 通过指定`width`来实现控制一个域的最小尺寸。`Formatter`对象通过在必要时添加空格，来确保一个域至少达到某个长度。在默认情况下，数据时右对齐，不过可以通过使用“-”标志来改变对齐方向。
 
 与`width`相对的是`precision`,它用来指明最大尺寸。`width`可以用用于各种类型的数据转换，并且其行为方式都一样。`precision`则不然，不是所有类型的数据都能使用`precision`，而且，应用于不同类型的数据转换时，`precision`的意义也不同。在将`precision`应用于`String`时，它表示打印`String`时输出字符的最大数量。而在将`precision`应用于浮点数时，它表示小数部分要显示出来的位数（默认是6位小数），如果小数位过多则舍入，太少则在尾部补零。由于整数没有小数部分，所以`precision`无法应用于整数，如果你对整数应用`precision`，则会触发异常。
-
 
 ```java
 public class Receipt {
@@ -383,8 +379,7 @@ Total                      25.06
  */
 ```
 
-
-#### 5.5 Formatter转换
+### 5.5 Formatter转换
 
 类型转换字符：
 
@@ -502,7 +497,7 @@ h: 4d5
 
 程序中的每个变量都用到了`b`转换。虽然它对各种类型都是合法的，但其行为却不一定与你想象的一致。对于`boolean`基本类型或`Boolean`对象，其转换结果是对应的`true`或`false`。但是，对其他类型的参数，只要该参数不为`null`，那转换的结果就永远都是`true`。即使是数字0，转换结果依然是`true`，而这在其他语言中，往往转换为`false`。
 
-#### 5.6 String.format()
+### 5.6 String.format\(\)
 
 ```java
 public class DatabaseException extends Exception {
@@ -555,9 +550,9 @@ public class Hex {
 }
 ```
 
-### 6.正则表达式
+## 6.正则表达式
 
-#### 6.1 基础
+### 6.1 基础
 
 ```java
 public class Splitting {
@@ -587,7 +582,6 @@ the, mightiest, tree, in, the, forest, with, a, herring]
  */
 ```
 
-
 ```java
 public class Replacing {
     static String s = Splitting.knights;
@@ -597,32 +591,30 @@ public class Replacing {
         System.out.println(s.replaceAll("shrubbery|tree|herring","banana"));//匹配三个单词中的任意一个
     }
 }
-
 ```
 
-#### 6.2 创建正则表达式
+### 6.2 创建正则表达式
 
 字符类（character classes）:
 
 * · ：任意字符
-* [abc]：包含a、b和c的任何字符
-* [^abc]：除了a、b和c之外的任何字符
-* [a-zA-Z]：从a到z或从A到Z的任何字符
-* [abc[hij]]：任意a、b、c、h、i和j
-* [a-z&&[hij]]：任意h、i或j
+* \[abc\]：包含a、b和c的任何字符
+* ：除了a、b和c之外的任何字符
+* \[a-zA-Z\]：从a到z或从A到Z的任何字符
+* \[abc\[hij\]\]：任意a、b、c、h、i和j
+* \[a-z&&\[hij\]\]：任意h、i或j
 * \s：空白符
 * \S：非空白符
-* \d：数字[0-9]
-* \D：非数字[^0-9]
-* \w：词字符[a-zA-Z0-9]
-* \W：非词字符[^\w]
-
+* \d：数字\[0-9\]
+* \D：非数字
+* \w：词字符\[a-zA-Z0-9\]
+* \W：非词字符
 
 逻辑操作符：
 
 * XY：Y跟在X后面
-* X|Y：X或Y
-* (X): 捕获组，可以子啊表达式中用\i引用第i个捕获组
+* X\|Y：X或Y
+* \(X\): 捕获组，可以子啊表达式中用\i引用第i个捕获组
 
 边界匹配符
 
@@ -649,7 +641,7 @@ true
  */
 ```
 
-#### 6.3 量词
+### 6.3 量词
 
 量词描述了一个模式吸收输入文本的方式：
 
@@ -657,7 +649,7 @@ true
 * `勉强型`：用问好来指定，这个量词匹配满足模式所需要的最少字符数。因此也称作懒惰的、最少匹配的、非贪婪的、或不贪婪的。
 * `占有型`：目前，这种类型的量词只有在`Java`语言中才可用（在其他语言中不可用），并且也更高级，因此我们大概不会立刻用到它。当正则表达式被应用于字符串时，它会产生相当多的状态，以便在匹配失败时可以回溯。而“占有的”量词并不保存这些中间状态，因此它们可以防止回溯。它们常常用于防止正则表达式失控，因此可以使正则表达式执行起来更有效。
 
-#### 6.4 Pattern和Matcher
+### 6.4 Pattern和Matcher
 
 比起功能有限的`String`类。我们更愿意构建功能强大的正则表达式对象。用`Pattern.compile()`方法来编译你的正则表达式。它会根据你的`String`类型的正则表达式生成一个`Pattern`对象。接下来，把你想要检索的字符串传入`Pattern`对象的`matcher()`方法。`matcher()`方法会生成一个`Matcher`对象。
 
@@ -683,9 +675,8 @@ public class TestRegularExpression {
 }
 ```
 
-```shell
+```text
 java strings.TestRegularExpression "abcabcabcdefabc" "abc+" "(abc)+" "(abc){2,}"
-
 ```
 
 输出：
@@ -716,14 +707,14 @@ static boolean matches(String regex,CharSequence input)
 
 通过调用`Pattern.matcher()`方法，并传入一个字符串参数，我们得到了一个`Matcher`对象。使用`Matcher`上的方法，我们将能够判断各种不同类型的匹配是否成功：
 
-* boolean matches()
-* boolean lookingAt()
-* boolean find()
-* boolean find(int start)
+* boolean matches\(\)
+* boolean lookingAt\(\)
+* boolean find\(\)
+* boolean find\(int start\)
 
 其中`matches()`方法用来判断整个输入字符串是否匹配正则表达式模式，而`lookingAt()`则用来判断该字符串（不必是整个字符串）的始部分是否能够匹配模式。
 
-**find()**
+**find\(\)**
 
 `Matcher.find()`方法可用来在`CharSequence`中查找多个匹配。
 
@@ -756,20 +747,19 @@ the, the, he, e, linnet, linnet, innet, nnet, net, et, t, s, s, wings, wings, in
 
 组是用括号划分的正则表达式，可以根据组的编号来引用某个组。组号为0表示整个表达式，组号1表示被第一对括号括起来的组，依次类推。因此，在下面这个表达式,
 
-```
+```text
 A(B(C))D
 ```
+
 中有三个组：组0是ABCD，组1是BC，组2是C。
 
 `Matcher`对象提供了一系列方法，用以获取与组相关的信息：
 
-* groupCount()：返回该匹配器的模式中的分组数目，第0组不包括在内。
-* group()：返回前一次匹配操作（例如find())的第0组（整个匹配）。
-* group(int i)：返回前一次匹配操作的第i组。指定的组没有匹配输入字符串的任何部分，则将会返回`null`。
-* start(int group)：返回在前一次匹配操作中寻找到的组的起始索引。
-* end(int group)：返回在前一次匹配操作中寻找到的组的最后一个字符索引加一的值。
-
-
+* groupCount\(\)：返回该匹配器的模式中的分组数目，第0组不包括在内。
+* group\(\)：返回前一次匹配操作（例如find\(\)\)的第0组（整个匹配）。
+* group\(int i\)：返回前一次匹配操作的第i组。指定的组没有匹配输入字符串的任何部分，则将会返回`null`。
+* start\(int group\)：返回在前一次匹配操作中寻找到的组的起始索引。
+* end\(int group\)：返回在前一次匹配操作中寻找到的组的最后一个字符索引加一的值。
 
 ```java
 public class Groups {
@@ -805,7 +795,7 @@ public class Groups {
  */
 ```
 
-**start()与end()**
+**start\(\)与end\(\)**
 
 ```java
 public class StartEnd {
@@ -895,7 +885,6 @@ matches() start = 0 end = 31
 
 `find()`可以在输入的任意位置定位正则表达式，而`lookingAt()`和`matches()`只有在正则表达式与输入的最开始处就开始匹配时才会成功。`matches()`只有在整个输入都匹配正则表达式时才会成功，而`lookingAt()`只要输入的第一部分匹配就会成功。
 
-
 **Pattern标记**
 
 `Pattern`类的`compile()`方法还有另一个版本，它接受一个标记参数，已调整匹配的行为：
@@ -916,7 +905,7 @@ Pattern Pattern.compile(String regex,int flag)
 
 在这些标记中，`Pattern.CASE_INSENSITIVE`、`Pattern.MULTILINE`以及`Pattern.COMMENTS`特别有用。
 
-可以通过“或”(|)操作符
+可以通过“或”\(\|\)操作符
 
 ```java
 public class ReFlags {
@@ -939,7 +928,7 @@ JAVA
  */
 ```
 
-#### 6.5 split()
+### 6.5 split\(\)
 
 ```java
 public class SplitDemo {
@@ -956,13 +945,12 @@ public class SplitDemo {
  */
 ```
 
-#### 6.6 替换操作
+### 6.6 替换操作
 
-
-* replaceFirst(String replacement)
-* replaceAll(String replacement)：替换所有匹配成功的部分。
-* appendReplacement(StringButter sbuf,String replacement)：执行渐进式的替换，允许你调用其他方法来生成或处理`replacement`，使你能够以编程的方式将目标分割成组，从而具备更强大的替换功能。
-* appendTail(StringBuffer sbuf)：在执行了一次货多次`appendReplacement()`之后，调用此方法可以将输入字符串余下的部分复制到`sbuf`中。
+* replaceFirst\(String replacement\)
+* replaceAll\(String replacement\)：替换所有匹配成功的部分。
+* appendReplacement\(StringButter sbuf,String replacement\)：执行渐进式的替换，允许你调用其他方法来生成或处理`replacement`，使你能够以编程的方式将目标分割成组，从而具备更强大的替换功能。
+* appendTail\(StringBuffer sbuf\)：在执行了一次货多次`appendReplacement()`之后，调用此方法可以将输入字符串余下的部分复制到`sbuf`中。
 
 ```java
 /*!Here's a block of text to use as input to
@@ -1021,10 +1009,9 @@ fIrst ExtrAct thE blOck Of tExt by lOOkIng fOr
 thE spEcIAl dElImItErs, thEn prOcEss thE
 ExtrActEd blOck. 
  */
-
 ```
 
-#### 6.7 reset()
+### 6.7 reset\(\)
 
 通过`reset()`方法，可以将现有的`Matcher`对象应用于一个新的字符序列：
 
@@ -1045,8 +1032,7 @@ public class Resetting {
 }
 ```
 
-#### 6.8 正则表达式与Java I/O
-
+### 6.8 正则表达式与Java I/O
 
 ```java
 public class JGrep {
@@ -1068,7 +1054,7 @@ public class JGrep {
 }
 ```
 
-### 7.扫描输入
+## 7.扫描输入
 
 从文件或标准输入读取数据时一件相当痛苦的事情。一般的解决之道就是读入一行文本，对其进行粉刺，然后使用`Integer`、`Double`等类的各种解析方法来解析数据：
 
@@ -1108,7 +1094,6 @@ My favorite double is 0.809015.
  */
 ```
 
-
 `Java SE5`新增了`Scanner`类，可以大大减轻扫描输入的工作负担：
 
 ```java
@@ -1138,7 +1123,7 @@ My favorite double is 0.809015.
  */
 ```
 
-#### 7.1 Scanner定界符
+### 7.1 Scanner定界符
 
 在默认情况下，`Scanner`根据空白字符对输入进行分词，但是你可以用正则表达式指定自己所需的定界符：
 
@@ -1161,7 +1146,7 @@ public class ScannerDelimiter {
  */
 ```
 
-#### 7.2 用正则表达式扫描
+### 7.2 用正则表达式扫描
 
 除了能够扫描基本类型之外，还可以使用自定义的正则表达式进行扫描，这在扫描复杂数据的时候非常有用。
 
@@ -1197,10 +1182,9 @@ Threat on 02/12/2005 from 58.27.82.161
  */
 ```
 
-### 8.StringTokenizer
+## 8.StringTokenizer
 
 在`Java`引入正则表达式和`Scanner`类之前，分割字符串的唯一方法是使用`StringTokenizer`来分词。
-
 
 ```java
 public class ReplacingStringTokenizer {
@@ -1225,6 +1209,7 @@ But I'm not dead yet! I feel happy!
  */
 ```
 
-### 延伸阅读
+## 延伸阅读
 
 * [正则表达式30分钟入门教程](https://deerchao.net/tutorials/regex/regex.htm)
+

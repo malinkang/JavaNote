@@ -1,10 +1,12 @@
 ---
 title: 《Java编程思想》读书笔记 第十四章 类型信息
-date: 2013-11-2 14:31:36
-tags: Java 
+date: '2013-11-02T14:31:36.000Z'
+tags: Java
 ---
 
-### 1.为什么需要RTTI
+# 第14章 类型信息
+
+## 1.为什么需要RTTI
 
 ```java
 abstract class Shape{
@@ -49,17 +51,15 @@ Triangle.draw()
  */
 ```
 
-
 当把`Shape`对象放入`List<Shape>`的数组时会向上转型。但在向上转型为`Shape`的时候也丢失了`Shape`对象的具体类型。对于数组而言，它们只是`Shape`类的对象。
 
 当从数组中取出元素时，这种容器实际上它将所有的事物都当作`Object`持有会自动将结果转型回`Shape`。这是`RTTI`最基本的使用形式，因为在`Java`中，所有的类型转换都是在运行时进行正确性检查的。这也是`RTTI`名字的含义：在运行时，识别一个对象的类型。
 
-
 在这个例子中，`RTTI`类型转换并不彻底：`Object`被转型为`Shape`，而不是转型为`Circle`、`Square`或者`Triangle`。这是因为目前我们只知道这个`List<Shape>`保存的都是`Shape`。在编译时，将由容器和`Java`的泛型系统来强制确保这一点；而在运行时，由类型转换操作来确保这一点。
 
-接下来就是多态机制的事情了，`Shape`对象实际执行什么样的代码，是由引用所指向的具体对象`Circle`、`Square`或者`Triangle`而决定的。通常，也正是这样要求的；你希望大部分代码尽可能少地了解对象的具体类型，而是只与对象家族中的一个通用表示打交道（在这个例子中是`Shape`)。这样代码更容易写，更容易读，且更便于维护；设计也更容易实现、理解和改变。所以"多态"是面向对象编程的基本目标。
+接下来就是多态机制的事情了，`Shape`对象实际执行什么样的代码，是由引用所指向的具体对象`Circle`、`Square`或者`Triangle`而决定的。通常，也正是这样要求的；你希望大部分代码尽可能少地了解对象的具体类型，而是只与对象家族中的一个通用表示打交道（在这个例子中是`Shape`\)。这样代码更容易写，更容易读，且更便于维护；设计也更容易实现、理解和改变。所以"多态"是面向对象编程的基本目标。
 
-### 2.Class对象
+## 2.Class对象
 
 要理解`RTTI`在`Java`中的工作原理，首先必须知道类型信息在运行时是如何表示的。
 
@@ -136,15 +136,15 @@ Canonical name : typeinfo.toys.Toy
 *///:~
 ```
 
-* getName()：产生全限定的类名。
-* getSimpleName()：产生不含包名的类名。
-* getCannonicalName()：（Java SE5中引入)产生全限定的类名。
-* isInterface()：Class对象是否表示某个接口。
-* getInterfaces()：Class对象中所包含的接口。
-* getSuperclass()：获取直接基类。
-* newInstance()：
+* getName\(\)：产生全限定的类名。
+* getSimpleName\(\)：产生不含包名的类名。
+* getCannonicalName\(\)：（Java SE5中引入\)产生全限定的类名。
+* isInterface\(\)：Class对象是否表示某个接口。
+* getInterfaces\(\)：Class对象中所包含的接口。
+* getSuperclass\(\)：获取直接基类。
+* newInstance\(\)：
 
-#### 2.1类字面常量
+### 2.1类字面常量
 
 `Java`还提供了另一种方法来生成对`Class`对象的引用，即使用`类字面常量`。对上述程序来说，就像下面这样：
 
@@ -236,8 +236,7 @@ code
 
 如果一个`static`域不是`final`的，那么在对它访问时，总是要求在它被读取之前，要先进行链接（为这个域分配存储空间）和初始化（初始化该存储空间），就像在对`Initable2.staticNonFinal`的访问中所看到的那样。
 
-
-#### 2.2 泛化的Class引用
+### 2.2 泛化的Class引用
 
 `Class`引用总是指向某个`Class`对象，它可以制造类的实例，并包含可作用域这些实例的所有方法代码。它还包含该类的静态成员，因此，`Class`引用表示的就是它所指向的对象的确切类型，而该对象便是`Class`类的一个对象。
 
@@ -288,6 +287,7 @@ public class BoundedClassReferences {
   }
 } ///:~
 ```
+
 下面示例使用了泛型类语法。
 
 ```java
@@ -302,7 +302,7 @@ class CountedInteger {
 
 public class FilledList<T> {
   private Class<T> type;
-  public FilledList(Class<T> type) { this.type = type; }	
+  public FilledList(Class<T> type) { this.type = type; }    
   public List<T> create(int nElements) {
     List<T> result = new ArrayList<T>();
     try {
@@ -344,7 +344,7 @@ public class GenericToyTest {
 } ///:~
 ```
 
-#### 2.3 新的转型语法
+### 2.3 新的转型语法
 
 `Java SE5`还添加了用于`Class`引用的转型语法，即`cast()`方法：
 
@@ -364,12 +364,9 @@ public class ClassCasts {
 } ///:~
 ```
 
-
 `Class.asSubclass()`允许你将一个类对象转型为更加具体的类型。
 
-
-### 3.类型转换前先做检查
-
+## 3.类型转换前先做检查
 
 ```java
 public class Individual implements Comparable<Individual> {
@@ -493,7 +490,7 @@ public abstract class PetCreator {
     } catch(IllegalAccessException e) {
       throw new RuntimeException(e);
     }
-  }	
+  }    
   public Pet[] createArray(int size) {
     Pet[] result = new Pet[size];
     for(int i = 0; i < size; i++)
@@ -524,7 +521,7 @@ public class ForNameCreator extends PetCreator {
     "typeinfo.pets.Rat",
     "typeinfo.pets.Mouse",
     "typeinfo.pets.Hamster"
-  };	
+  };    
   @SuppressWarnings("unchecked")
   private static void loader() {
     try {
@@ -559,7 +556,7 @@ public class PetCount {
       else
         put(type, quantity + 1);
     }
-  }	
+  }    
   public static void countPets(PetCreator creator) {
     PetCounter counter= new PetCounter();
     for(Pet pet : creator.createArray(20)) {
@@ -593,7 +590,7 @@ public class PetCount {
     // Show the counts:
     print();
     print(counter);
-  }	
+  }    
   public static void main(String[] args) {
     countPets(new ForNameCreator());
   }
@@ -605,12 +602,9 @@ Rat Manx Cymric Mutt Pug Cymric Pug Manx Cymric Rat EgyptianMau Hamster Egyptian
 
 对`instanceof`有比较严格的限制：只可将其与命名类型进行比较，而不能与`Class`对象作比较。
 
-
-#### 3.1 使用类字面常量
-
+### 3.1 使用类字面常量
 
 ```java
-
 public class LiteralPetCreator extends PetCreator {
   // No try block needed.
   @SuppressWarnings("unchecked")
@@ -625,7 +619,7 @@ public class LiteralPetCreator extends PetCreator {
       allTypes.size());
   public List<Class<? extends Pet>> types() {
     return types;
-  }	
+  }    
   public static void main(String[] args) {
     System.out.println(types);
   }
@@ -637,7 +631,6 @@ public class LiteralPetCreator extends PetCreator {
 将`LiteralPetCreator`实现作为默认实现。
 
 ```java
-
 public class Pets {
   public static final PetCreator creator =
     new LiteralPetCreator();
@@ -666,13 +659,11 @@ public class PetCount2 {
 } /* (Execute to see output) *///:~
 ```
 
-#### 3.2 动态的instanceof
-
+### 3.2 动态的instanceof
 
 `Class.isInstance`方法提供了一种动态地测试对象的途径。于是所有那些单调的`instanceof`语句都可以从`PetCount`中移除。
 
 ```java
-
 //: typeinfo/PetCount3.java
 // Using isInstance()
 import typeinfo.pets.*;
@@ -683,7 +674,7 @@ import static net.mindview.util.Print.*;
 public class PetCount3 {
   static class PetCounter
   extends LinkedHashMap<Class<? extends Pet>,Integer> {
-  	//构造函数中put所有的Class
+      //构造函数中put所有的Class
     public PetCounter() {
       super(MapData.map(LiteralPetCreator.allTypes, 0));
     }
@@ -692,7 +683,7 @@ public class PetCount3 {
       for(Map.Entry<Class<? extends Pet>,Integer> pair : entrySet())
         if(pair.getKey().isInstance(pet))
           put(pair.getKey(), pair.getValue() + 1);
-    }	
+    }    
     public String toString() {
       StringBuilder result = new StringBuilder("{");
       for(Map.Entry<Class<? extends Pet>,Integer> pair
@@ -706,7 +697,7 @@ public class PetCount3 {
       result.append("}");
       return result.toString();
     }
-  }	
+  }    
   public static void main(String[] args) {
     PetCounter petCount = new PetCounter();
     for(Pet pet : Pets.createArray(20)) {
@@ -722,17 +713,13 @@ Rat Manx Cymric Mutt Pug Cymric Pug Manx Cymric Rat EgyptianMau Hamster Egyptian
 *///:~
 ```
 
-#### 3.3 递归计数
+### 3.3 递归计数
 
 在`PetCount3.PetCounter`中的`Map`预加载了所有不同的`Pet`类。与预加载映射表不同的是，我们可以使用`Class.isAssignableFrom()`，并创建一个不局限于`Pet`计数的通用工具。
 
-
-
 `isAssignableFrom()`方法：
 
-> Determines if the class or interface represented by this Class object is either the same as, or is a superclass or superinterface of, the class or interface represented by the specified Class parameter.  It returns true if so;otherwise it returns false.If this Class object represents a primitive type,this method returns true if the specified Class parameter is exactly this Class object; otherwise it returns false.
-> 确定此Class对象表示的类或接口是否与指定的Class参数表示的类或接口相同，或者是否为超类或超接口。如果是，则返回true;否则返回false。如果此Class对象表示一个基本类型，如果指定的Class参数恰好是此Class对象则此方法返回true;否则返回false。
-
+> Determines if the class or interface represented by this Class object is either the same as, or is a superclass or superinterface of, the class or interface represented by the specified Class parameter. It returns true if so;otherwise it returns false.If this Class object represents a primitive type,this method returns true if the specified Class parameter is exactly this Class object; otherwise it returns false. 确定此Class对象表示的类或接口是否与指定的Class参数表示的类或接口相同，或者是否为超类或超接口。如果是，则返回true;否则返回false。如果此Class对象表示一个基本类型，如果指定的Class参数恰好是此Class对象则此方法返回true;否则返回false。
 
 ```java
 //: net/mindview/util/TypeCounter.java
@@ -752,7 +739,7 @@ public class TypeCounter extends HashMap<Class<?>,Integer>{
         + type + ", should be type or subtype of "
         + baseType);
     countClass(type);
-  }	
+  }    
   private void countClass(Class<?> type) {
     Integer quantity = get(type);
     put(type, quantity == null ? 1 : quantity + 1);
@@ -798,9 +785,7 @@ Rat Manx Cymric Mutt Pug Cymric Pug Manx Cymric Rat EgyptianMau Hamster Egyptian
 *///:~
 ```
 
-
-
-### 4.注册工厂
+## 4.注册工厂
 
 ```java
 //: typeinfo/factory/Factory.java
@@ -819,7 +804,7 @@ class Part {
     return getClass().getSimpleName();
   }
   static List<Factory<? extends Part>> partFactories =
-    new ArrayList<Factory<? extends Part>>();	
+    new ArrayList<Factory<? extends Part>>();    
   static {
     // Collections.addAll() gives an "unchecked generic
     // array creation ... for varargs parameter" warning.
@@ -836,7 +821,7 @@ class Part {
     int n = rand.nextInt(partFactories.size());
     return partFactories.get(n).create(); //随机获取Factory并调用create方法
   }
-}	
+}    
 
 class Filter extends Part {}
 
@@ -853,7 +838,7 @@ class AirFilter extends Filter {
   implements typeinfo.factory.Factory<AirFilter> {
     public AirFilter create() { return new AirFilter(); }
   }
-}	
+}    
 
 class CabinAirFilter extends Filter {
   public static class Factory
@@ -869,7 +854,7 @@ class OilFilter extends Filter {
   implements typeinfo.factory.Factory<OilFilter> {
     public OilFilter create() { return new OilFilter(); }
   }
-}	
+}    
 
 class Belt extends Part {}
 
@@ -887,7 +872,7 @@ class GeneratorBelt extends Belt {
       return new GeneratorBelt();
     }
   }
-}	
+}    
 
 class PowerSteeringBelt extends Belt {
   public static class Factory
@@ -896,7 +881,7 @@ class PowerSteeringBelt extends Belt {
       return new PowerSteeringBelt();
     }
   }
-}	
+}    
 
 public class RegisteredFactories {
   public static void main(String[] args) {
@@ -915,15 +900,11 @@ PowerSteeringBelt
 PowerSteeringBelt
 FuelFilter
 *///:~
-
 ```
 
-
-### 5.instanceof与Class的等价性
+## 5.instanceof与Class的等价性
 
 在查询类型信息时，以`instanceof`的形式与直接比较`Class`对象有一个很重要的差别。
-
-
 
 ```java
 //: typeinfo/FamilyVsExactType.java
@@ -932,7 +913,7 @@ package typeinfo;
 import static net.mindview.util.Print.*;
 
 class Base {}
-class Derived extends Base {}	
+class Derived extends Base {}    
 
 public class FamilyVsExactType {
   static void test(Object x) {
@@ -954,7 +935,7 @@ public class FamilyVsExactType {
   public static void main(String[] args) {
     test(new Base());
     test(new Derived());
-  }	
+  }    
 } /* Output:
 Testing x of type class typeinfo.Base
 x instanceof Base true
@@ -979,9 +960,9 @@ x.getClass().equals(Derived.class)) true
 
 `instanceof`和`isInstance()`生成的结果完全一样，`equals()`和`==`也一样。但是这两组测试得出的结论却不相同。`instanceof`保持了类型的概念,它指的是“你是这个类吗？，或者你是这个类的派生类吗？”而如果用`==`比较实际的`Class`对象，就没有考虑继承，它是这个确切的类型，或者不是。
 
-### 6.反射：运行时的类信息
+## 6.反射：运行时的类信息
 
-#### 6.1 类方法提取器
+### 6.1 类方法提取器
 
 ```java
 //: typeinfo/ShowMethods.java
@@ -1048,7 +1029,7 @@ public ShowMethods()
 *///:~
 ```
 
-### 7.动态代理
+## 7.动态代理
 
 `代理`是基本的设计模式之一，它是你为了提供额外的或不同的操作，而插入的用来代替”实际“对象的对象。这些操作通常设计与“实际”对象的通信，因此代理通常充当着中间人的角色。
 
@@ -1066,7 +1047,7 @@ class RealObject implements Interface {
   public void somethingElse(String arg) {
     print("somethingElse " + arg);
   }
-}	
+}    
 
 class SimpleProxy implements Interface {
   private Interface proxied;
@@ -1081,7 +1062,7 @@ class SimpleProxy implements Interface {
     print("SimpleProxy somethingElse " + arg);
     proxied.somethingElse(arg);
   }
-}	
+}    
 
 class SimpleProxyDemo {
   public static void consumer(Interface iface) {
@@ -1102,7 +1083,6 @@ somethingElse bonobo
 *///:~
 ```
 
-
 `Java`的动态代理比代理的思想更向前迈进了一步，因为它可以动态地创建代理并动态地处理对所代理方法的调用。在动态代理上所做的所有调用都会被重定向到单一的`调用处理器`上，它的工作是揭示调用的类型并确定相应的对策。
 
 ```java
@@ -1122,7 +1102,7 @@ class DynamicProxyHandler implements InvocationHandler {
         System.out.println("  " + arg);
     return method.invoke(proxied, args);
   }
-}	
+}    
 
 class SimpleDynamicProxy {
   public static void consumer(Interface iface) {
@@ -1139,7 +1119,7 @@ class SimpleDynamicProxy {
       new DynamicProxyHandler(real));
     consumer(proxy);
   }
-} /* Output: (95% match)	
+} /* Output: (95% match)    
 doSomething
 somethingElse bonobo
 **** proxy: class $Proxy0, method: public abstract void Interface.doSomething(), args: null
@@ -1151,7 +1131,6 @@ somethingElse bonobo
 ```
 
 通过调用静态方法`Proxy.newProxyInstance()`可以创建动态代理，这个方法需要得到一个类加载器（你通常可以从已经被加载的对象中获取其类加载器，然后传递给它），一个你希望**该代理实现的接口列表**，以及`InvocationHandler`接口的一个实现。
-
 
 你可以通过传递某些参数，来过滤某些方法调用：
 
@@ -1173,7 +1152,7 @@ class MethodSelector implements InvocationHandler {
       print("Proxy detected the interesting method");
     return method.invoke(proxied, args);
   }
-}	
+}    
 
 interface SomeMethods {
   void boring1();
@@ -1189,7 +1168,7 @@ class Implementation implements SomeMethods {
     print("interesting " + arg);
   }
   public void boring3() { print("boring3"); }
-}	
+}    
 
 class SelectingMethods {
   public static void main(String[] args) {
@@ -1211,16 +1190,13 @@ boring3
 *///:~
 ```
 
-
-### 8.空对象
-
+## 8.空对象
 
 ```java
 //: net/mindview/util/Null.java
 package net.mindview.util;
 public interface Null {} ///:~
 ```
-
 
 ```java
 //: typeinfo/Person.java
@@ -1236,7 +1212,7 @@ class Person {
     this.first = first;
     this.last = last;
     this.address = address;
-  }	
+  }    
   public String toString() {
     return "Person: " + first + " " + last + " " + address;
   }
@@ -1264,7 +1240,7 @@ class Position {
   public Position(String jobTitle) {
     title = jobTitle;
     person = Person.NULL;
-  }	
+  }    
   public String getTitle() { return title; }
   public void setTitle(String newTitle) {
     title = newTitle;
@@ -1300,7 +1276,7 @@ public class Staff extends ArrayList<Position> {
          position.getPerson() == Person.NULL)
         return true;
     return false;
-  }	
+  }    
   public void fillPosition(String title, Person hire) {
     for(Position position : this)
       if(position.getTitle().equals(title) &&
@@ -1310,7 +1286,7 @@ public class Staff extends ArrayList<Position> {
       }
     throw new RuntimeException(
       "Position " + title + " not available");
-  }	
+  }    
   public static void main(String[] args) {
     Staff staff = new Staff("President", "CTO",
       "Marketing Manager", "Product Manager",
@@ -1327,7 +1303,7 @@ public class Staff extends ArrayList<Position> {
         new Person("Bob", "Coder", "Bright Light City"));
     System.out.println(staff);
   }
-} /* Output:	
+} /* Output:    
 [Position: President Person: Me Last The Top, Lonely At, Position: CTO NullPerson, Position: Marketing Manager NullPerson, Position: Product Manager NullPerson, Position: Project Lead Person: Janet Planner The Burbs, Position: Software Engineer Person: Bob Coder Bright Light City, Position: Software Engineer NullPerson, Position: Software Engineer NullPerson, Position: Software Engineer NullPerson, Position: Test Engineer NullPerson, Position: Technical Writer NullPerson]
 *///:~
 ```
@@ -1368,7 +1344,6 @@ public interface Robot {
 创建一个扫雪`Robot`:
 
 ```java
-
 //: typeinfo/SnowRemovalRobot.java
 import java.util.*;
 
@@ -1386,7 +1361,7 @@ public class SnowRemovalRobot implements Robot {
         public void command() {
           System.out.println(name + " shoveling snow");
         }
-      },	
+      },    
       new Operation() {
         public String description() {
           return name + " can chip ice";
@@ -1404,7 +1379,7 @@ public class SnowRemovalRobot implements Robot {
         }
       }
     );
-  }	
+  }    
   public static void main(String[] args) {
     Robot.Test.test(new SnowRemovalRobot("Slusher"));
   }
@@ -1441,7 +1416,7 @@ class NullRobotProxyHandler implements InvocationHandler {
     public List<Operation> operations() {
       return Collections.emptyList();
     }
-  }	
+  }    
   public Object invoke(Object proxy, Method method, Object[] args)throws Throwable {
     return method.invoke(proxied, args);
   }
@@ -1453,7 +1428,7 @@ public class NullRobot {
       NullRobot.class.getClassLoader(),
       new Class[]{ Null.class, Robot.class }, //
       new NullRobotProxyHandler(type));//SnowRemovalRobot实现Null接口。
-  }	
+  }    
   public static void main(String[] args) {
     Robot[] bots = {
       new SnowRemovalRobot("SnowBee"),
@@ -1476,10 +1451,10 @@ Robot name: SnowRemovalRobot NullRobot
 Robot model: SnowRemovalRobot NullRobot
 *///:~
 ```
+
 无论何时，如果你需要一个空`Robot`对象，只需调用`newNullRobot()`，并传递需要代理的`Robot`类型。代理会满足`Robot`和`Null`接口的需求，并提供它所代理的类型的确切名字。
 
-
-### 9.接口与类型信息
+## 9.接口与类型信息
 
 ```java
 //: typeinfo/interfacea/A.java
@@ -1515,7 +1490,9 @@ public class InterfaceViolation {
 B
 *///:~
 ```
+
 对实现使用包访问权限，这样在包外部的客户端就不能看到它了：
+
 ```java
 //: typeinfo/packageaccess/HiddenC.java
 package typeinfo.packageaccess;
@@ -1578,7 +1555,6 @@ private C.w()
 
 通过使用反射，仍旧可以到达并调用所有方法，甚至是`private`方法！如果知道方法名，可以在其`Method`对象上调用`setAccessible(true)`，就像在`callHiddenMethod()`中看到的那样。
 
-
 使用命令行：
 
 ```java
@@ -1617,7 +1593,7 @@ class InnerA {
     private void w() { print("private C.w()"); }
   }
   public static A makeA() { return new C(); }
-}	
+}    
 
 public class InnerImplementation {
   public static void main(String[] args) throws Exception {
@@ -1658,7 +1634,7 @@ class AnonymousA {
       private void w() { print("private C.w()"); }
     };
   }
-}	
+}    
 
 public class AnonymousImplementation {
   public static void main(String[] args) throws Exception {
@@ -1728,7 +1704,4 @@ i = 47, I'm totally safe, No, you're not!
 ```
 
 但是，`final`域实际上在遭遇修改时是安全的。运行时系统会在不抛异常的情况下接受任何修改尝试，但是实际上不会发生任何修改。
-
-
-
 

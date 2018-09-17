@@ -1,18 +1,18 @@
 ---
 title: 《Java编程思想》读书笔记 第八章 多态
-date: 2013-10-15 14:31:36
+date: '2013-10-15T14:31:36.000Z'
 tags: Java
 ---
 
-### 1.再论向上转型
+# 第8章 多态
+
+## 8.1再论向上转型
 
 对某个对象的引用视为对其基类型的引用的做法被称作`向上转型`。
-
 
 单独创建一个奏乐符（Note）类：
 
 ```java
-
 //: polymorphism/music/Note.java
 // Notes to play on musical instruments.
 package polymorphism.music;
@@ -70,7 +70,7 @@ Wind.play() MIDDLE_C
 *///:~
 ```
 
-#### 1.1 忘记对象类型
+### 8.1.1 忘记对象类型
 
 ```java
 //: polymorphism/music/Music2.java
@@ -115,17 +115,15 @@ Brass.play() MIDDLE_C
 *///:~
 ```
 
-### 2.转机
+## 8.2转机
 
-
-#### 2.1 方法调用绑定
+### 8.2.1 方法调用绑定
 
 将一个方法调用同一个方法主体关联起来被称作`绑定`。若在程序执行前进行绑定，叫做`前期绑定`。
 
-运行时根据对象的类型进行绑定就是`后期绑定`。后期绑定也叫做`动态绑定`或`运行时绑定`。如果一种语言想要实现后期绑定，就必须具有某种机制，以便在运行时能判断对象的类型，从而调用恰当的方法。也就是说，编译器一直不知道对象的类型，但是方法调用机制能找到正确的方法体，并加以调用
+运行时根据对象的类型进行绑定就是`后期绑定`。后期绑定也叫做`动态绑定`或`运行时绑定`。**如果一种语言想要实现后期绑定，就必须具有某种机制，以便在运行时能判断对象的类型，从而调用恰当的方法。也就是说，编译器一直不知道对象的类型，但是方法调用机制能找到正确的方法体，并加以调用**。
 
-
-#### 2.2 产生正确的行为
+### 8.2.2 产生正确的行为
 
 `Java`中所有方法都是通过动态绑定实现多态。
 
@@ -215,8 +213,7 @@ Circle.draw()
 
 随机选择几何形状是为了让大家理解：在编译时，编译器不需要获得任何特殊信息就能进行正确的调用。对`draw()`方法的所有调用都是通过动态绑定进行的。
 
-
-#### 2.3 可扩展性
+### 8.2.3 可扩展性
 
 ```java
 //: polymorphism/music3/Music3.java
@@ -235,7 +232,7 @@ class Wind extends Instrument {
   void play(Note n) { print("Wind.play() " + n); }
   String what() { return "Wind"; }
   void adjust() { print("Adjusting Wind"); }
-}	
+}    
 
 class Percussion extends Instrument {
   void play(Note n) { print("Percussion.play() " + n); }
@@ -257,7 +254,7 @@ class Brass extends Wind {
 class Woodwind extends Wind {
   void play(Note n) { print("Woodwind.play() " + n); }
   String what() { return "Woodwind"; }
-}	
+}    
 
 public class Music3 {
   // Doesn't care about type, so new types
@@ -269,7 +266,7 @@ public class Music3 {
   public static void tuneAll(Instrument[] e) {
     for(Instrument i : e)
       tune(i);
-  }	
+  }    
   public static void main(String[] args) {
     // Upcasting during addition to the array:
     Instrument[] orchestra = {
@@ -292,7 +289,7 @@ Woodwind.play() MIDDLE_C
 
 多态是一项让程序员“将改变的事物与未变的事物分离开来”的重要技术。
 
-#### 2.4 缺陷：“覆盖”私有方法
+### 8.2.4 缺陷：“覆盖”私有方法
 
 ```java
 //: polymorphism/PrivateOverride.java
@@ -317,7 +314,7 @@ private f()
 
 只有非`private`方法才可以被覆盖；在导出类中，对于基类中的`private`方法，最好采用不同的名字。
 
-#### 2.5 缺陷：域与静态方法
+### 8.2.5 缺陷：域与静态方法
 
 ```java
 //: polymorphism/FieldAccess.java
@@ -357,7 +354,6 @@ sub.field = 1, sub.getField() = 1, sub.getSuperField() = 0
 如果某个方法是静态的，它的行为就不具有多态性：
 
 ```java
-
 //: polymorphism/StaticPolymorphism.java
 // Static methods are not polymorphic.
 
@@ -393,18 +389,15 @@ Derived dynamicGet()
 
 静态方法是与类，而并非与单个对象相关联
 
-
-### 3.构造器和多态
+## 8.3构造器和多态
 
 构造器不具有多态性（它们实际上是`static`方法，只不过该`static`声明是隐式的）。
 
-#### 3.1 构造器的调用顺序
+### 8.3.1 构造器的调用顺序
 
 基类的构造器总是在导出类的构造过程中被调用，而且按照继承层次逐渐向上链接，以使每个基类的构造器都能得到调用。这样做是有意义的，因为构造器具有一项特殊任务：检查对象是否被正确地构造。导出类只能访问它自己的成员，不能访问基类中的成员。只有基类的构造器才具有恰当的知识和权限来对自己的元素进行初始化。因此，必须令所有构造器都得到调用，否则就不可能正确构造完整对象。这正是编译器为什么要强制每个导出类部分都必须调用构造器的原因。
 
-
 ```java
-
 //: polymorphism/Sandwich.java
 // Order of constructor calls.
 package polymorphism;
@@ -453,7 +446,7 @@ Sandwich()
 *///:~
 ```
 
-#### 3.2 继承与清理
+### 8.3.2 继承与清理
 
 ```java
 //: polymorphism/Frog.java
@@ -572,7 +565,6 @@ disposing Characteristic is alive
 *///:~
 ```
 
-
 ```java
 //: polymorphism/ReferenceCounting.java
 // Cleaning up shared member objects.
@@ -634,8 +626,7 @@ Disposing Shared 0
 *///:~
 ```
 
-#### 3.3 构造器内部的多态方法的行为
-
+### 8.3.3 构造器内部的多态方法的行为
 
 ```java
 //: polymorphism/PolyConstructors.java
@@ -650,7 +641,7 @@ class Glyph {
     draw(); //？？为什么调用子类的方法
     print("Glyph() after draw()");
   }
-}	
+}    
 
 class RoundGlyph extends Glyph {
   private int radius = 1;
@@ -661,7 +652,7 @@ class RoundGlyph extends Glyph {
   void draw() {
     print("RoundGlyph.draw(), radius = " + radius);
   }
-}	
+}    
 
 public class PolyConstructors {
   public static void main(String[] args) {
@@ -675,7 +666,7 @@ RoundGlyph.RoundGlyph(), radius = 5
 *///:~
 ```
 
-### 4.协变返回类型
+## 8.4 协变返回类型
 
 `Java SE5`添加了协变返回类型，它表示在导出类中的被覆盖方法可以返回基类方法的返回类型的某种导出类型：
 
@@ -715,11 +706,9 @@ Wheat
 
 `Java SE5`与`Java`较早版本之间的主要差异就是焦躁的版本将强制`process()`的覆盖版本必须返回`Grain`，而不能返回`Wheat`，尽管`Wheat`是从`Grain`导出的，因而也应该是一种合法的返回类型。协变返回类型允许返回更具体的`Wheat`类型。
 
-
-### 8.5 用继承进行设计
+## 8.5 用继承进行设计
 
 ```java
-
 //: polymorphism/Transmogrify.java
 // Dynamically changing the behavior of an object
 // via composition (the "State" design pattern).
@@ -755,5 +744,4 @@ HappyActor
 SadActor
 *///:~
 ```
-
 

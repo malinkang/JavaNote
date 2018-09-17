@@ -1,18 +1,18 @@
 ---
 title: 《Java编程思想》读书笔记 第五章 初始化与清理
-date: 2013-10-5 14:31:36
+date: '2013-10-05T14:31:36.000Z'
 tags: Java
 ---
 
+# 第5章 初始化与清理
 
 **随着计算机革命的发展，“不安全”的编程方式已逐渐成为编程代价高昂的主因之一。**
 
 `初始化和清理（cleanup）`正是涉及安全的两个问题。`C++`引入了"构造器（constructor）"的概念，这是一个在创建对象时被自动调用的特殊方法。`Java`中也采用了构造器，并额外提供了“垃圾回收器”。对于不再使用的内存资源，垃圾回收器能自动将其释放。
 
-### 1.用构造器确保初始化
+## 1.用构造器确保初始化
 
 ```java
-
 //: initialization/SimpleConstructor.java
 // Demonstration of a simple constructor.
 
@@ -58,12 +58,11 @@ Rock 0 Rock 1 Rock 2 Rock 3 Rock 4 Rock 5 Rock 6 Rock 7
 *///:~
 ```
 
-
 在`Java`中，“初始化”和“创建”捆绑在一起，两者不能分离。
 
 构造器是一种特殊类型的方法，因为它没有返回值。这与返回值为空（void）明显不同。对于空返回值，尽管方法本身不会自动返回什么，但仍可选择让它返回别的东西。构造器则不会返回任何东西。
 
-### 2.方法重载
+## 2.方法重载
 
 ```java
 //: initialization/Overloading.java
@@ -81,7 +80,7 @@ class Tree {
     height = initialHeight;
     print("Creating new Tree that is " +
       height + " feet tall");
-  }	
+  }    
   void info() {
     print("Tree is " + height + " feet tall");
   }
@@ -99,7 +98,7 @@ public class Overloading {
     }
     // Overloaded constructor:
     new Tree();
-  }	
+  }    
 } /* Output:
 Creating new Tree that is 0 feet tall
 Tree is 0 feet tall
@@ -120,7 +119,7 @@ Planting a seedling
 *///:~
 ```
 
-#### 2.1 区分重载方法
+### 2.1 区分重载方法
 
 每个重载的方法都必须有一个独一无二的参数类型列表。甚至参数顺序的不同也足以区分两个方法。不过，一般情况下别这么做，因为这会使代码难以维护：
 
@@ -146,12 +145,11 @@ int: 99, String: Int first
 *///:~
 ```
 
-#### 2.2 涉及基本类型的重载
+### 2.2 涉及基本类型的重载
 
 基本类型能从一个“较小”的类型自动提升至一个“较大”的类型，此过程一旦牵涉到重载，可能会造成一些混淆。
 
 ```java
-
 //: initialization/PrimitiveOverloading.java
 // Promotion of primitives and overloading.
 import static net.mindview.util.Print.*;
@@ -327,18 +325,16 @@ f7(char)
 
 在这里，方法接受较小的基本类型作为参数。如果传入的实际参数较大，就得通过类型转换来执行窄化转换。
 
+### 2.3 以返回值区分重载方法
 
-#### 2.3 以返回值区分重载方法
-
-
-```java	
+```java
 void f() {}
 int f() {return 1;}
 ```
 
 只要编译器可以根据语境明确判断出语义，比如在`int x=f()`中，那么的确可以据此区分重载方法。不过，有时你并不关系方法的返回值，你想要的是方法调用的其他效果，这时你可能会调用方法而忽略其返回值。所以，如果像下面这样调用方法`f();`此时`Java`如何才能判断该调用哪一个`f()`呢？因此，根据方法的返回值来区分重载方法是行不通的。
 
-### 3.默认构造器
+## 3.默认构造器
 
 如果你写的类中没有构造器，则编译器会自动帮你创建一个默认构造器。
 
@@ -375,8 +371,7 @@ public class NoSynthesis {
 
 要是你这样写`new Bird2()`编译器就会报错。
 
-### 4.this关键字
-
+## 4.this关键字
 
 如果有同一类型的两个对象，分别是`a`和`b`。你可能想知道，如果才能让这两个对象都能调用`peel()`方法呢：
 
@@ -468,10 +463,9 @@ public class PassingThis {
 } /* Output:
 Yummy
 *///:~
-
 ```
 
-#### 4.1 在构造器中调用构造器
+### 4.1 在构造器中调用构造器
 
 可能为一个类写了多个构造器，有时可能想在一个构造器中调用另一个构造器，以避免重复代码。可用`this`关键字做到这一点。
 
@@ -520,28 +514,26 @@ petalCount = 47 s = hi
 *///:~
 ```
 
-#### 4.2 static的含义
+### 4.2 static的含义
 
+## 5.清理：终结处理和垃圾回收
 
-### 5.清理：终结处理和垃圾回收
+### 5.1 finalize\(\)的用途何在
 
-#### 5.1 finalize()的用途何在
+### 5.2 你必须实施清理
 
+### 5.3 终结条件
 
-#### 5.2 你必须实施清理
+### 5.4 垃圾回收器如何工作
 
-#### 5.3 终结条件
-
-#### 5.4 垃圾回收器如何工作
-
-### 6.成员初始化
+## 6.成员初始化
 
 `Java`尽力保证：所有变量在使用前都能得到恰当的初始化。对于方法的局部变量，`Java`以编译时错误的形式来贯彻这种保证。
 
 ```java
 void f() {
-	int i;
-	i++;// Error i not initializedß
+    int i;
+    i++;// Error i not initializedß
 }
 ```
 
@@ -595,8 +587,7 @@ reference      null
 *///:~
 ```
 
-#### 6.1 指定初始化
-
+### 6.1 指定初始化
 
 在定义类成员变量的地方为其赋值。
 
@@ -631,7 +622,6 @@ public class Measurement {
 甚至可以通过调用某个方法来提供初值：
 
 ```java
-
 //: initialization/MethodInit.java
 public class MethodInit {
   int i = f();
@@ -639,10 +629,9 @@ public class MethodInit {
 } ///:~
 ```
 
-### 7.构造器初始化
+## 7.构造器初始化
 
-
-#### 7.1 初始化顺序
+### 7.1 初始化顺序
 
 在类的内部，变量定义的先后顺序决定了初始化的顺序。即使变量定义散布于方法定义之间，它们仍旧会在任何方法被调用之前得到初始化。
 
@@ -684,7 +673,7 @@ f()
 *///:~
 ```
 
-#### 7.2 静态数据的初始化
+### 7.2 静态数据的初始化
 
 ```java
 //: initialization/StaticInitialization.java
@@ -770,7 +759,7 @@ f3(1)
 5. 执行所有出现于字段定义处的初始化动作。
 6. 执行构造器。
 
-#### 7.3 显式的静态初始化
+### 7.3 显式的静态初始化
 
 `Java`允许将多个静态初始化动作组织成一个特殊的“静态子句”。
 
@@ -825,7 +814,7 @@ f(99)
 *///:~
 ```
 
-#### 7.4 非静态实例初始化
+### 7.4 非静态实例初始化
 
 `Java`中也有被称为实例初始化的类似语法，用来初始化每一个对象的非静态变量。
 
@@ -878,15 +867,14 @@ Mugs(int)
 new Mugs(1) completed
 *///:~
 ```
+
 从输出中可以看到实例初始化子句是在两个构造器之前执行的。
 
-
-### 8.数组初始化
+## 8.数组初始化
 
 定义数组
 
 ```java
-
 int[] a1;
 int a1[];
 ```
@@ -915,7 +903,6 @@ a1[4] = 6
 ```
 
 ```java
-
 //: initialization/ArrayNew.java
 // Creating arrays with new.
 import java.util.*;
@@ -984,9 +971,7 @@ public class ArrayInit {
 *///:~
 ```
 
-
 ```java
-
 //: initialization/DynamicArray.java
 // Array initialization.
 
@@ -1006,7 +991,7 @@ fiddle de dum
 *///:~
 ```
 
-#### 8.1 可变参数列表
+### 8.1 可变参数列表
 
 ```java
 //: initialization/VarArgs.java
@@ -1065,7 +1050,6 @@ A@1bab50a A@c3c749 A@150bd4d
 ```
 
 ```java
-
 //: initialization/OptionalTrailingArguments.java
 
 public class OptionalTrailingArguments {
@@ -1177,7 +1161,6 @@ third
 你可能会通过在某个方法中增加一个非可变参数来解决该问题：
 
 ```java
-
 //: initialization/OverloadingVarargs2.java
 // {CompileTimeError} (Won't compile)
 
@@ -1193,7 +1176,6 @@ public class OverloadingVarargs2 {
    // f('a', 'b'); char可以转型为float
   }
 } ///:~
-
 ```
 
 如果给这两个方法都添加一个非可变参数，就可以解决问题了：
@@ -1218,4 +1200,5 @@ second
 *///:~
 ```
 
-### 5.9枚举类型
+## 5.9枚举类型
+

@@ -1,10 +1,12 @@
 ---
 title: 《Java编程思想》读书笔记 第十六章 数组
-date: 2013-11-7 14:31:36
+date: '2013-11-07T14:31:36.000Z'
 tags: Java
 ---
 
-### 1.数组为什么特殊
+# 第16章 数组
+
+## 1.数组为什么特殊
 
 数组与其他种类的容器之间的区别有三方面：效率、类型和保存基本类型的能力。在`Java`中，数组是一种效率最高的存储和随机访问对象引用序列的方式。数组就是一个简单的线性序列，这使得元素访问非常快速。但是为这种速度所付出的代价是数组对象的大小被固定，并且在其生命周期中不可改变。
 
@@ -50,7 +52,7 @@ Sphere 9
  */
 ```
 
-### 2.数组是第一级对象
+## 2.数组是第一级对象
 
 无论使用哪种类型的数组，数组标识符其实只是一个引用，指向在堆中创建的一个真实对象，**这个对象用以保存指向其他对象的引用**。
 
@@ -115,7 +117,7 @@ e.length = 2
  */
 ```
 
-### 3.返回一个数组
+## 3.返回一个数组
 
 ```java
 public class IceCream {
@@ -160,7 +162,7 @@ public class IceCream {
  */
 ```
 
-### 4.多维数组
+## 4.多维数组
 
 ```java
 public class MultidimensionalPrimitiveArray {
@@ -263,7 +265,6 @@ public class AutoboxingArrays {
 [71, 72, 73, 74, 75, 76, 77, 78, 79, 80]]
 
  */
-
 ```
 
 下面的示例展示了可以如何逐个地、部分地构建一个非基本类型的对象数组：
@@ -286,7 +287,6 @@ public class AssemblingMultidimensionalArrays {
 [[0, 0, 0], [0, 1, 2], [0, 2, 4]]
  */
 ```
-
 
 ```java
 public class MultiDimWrapperArray {
@@ -317,7 +317,7 @@ a3: [[The, Quick, Sly, Fox], [Jumped, Over], [The, Lazy, Brown, Dog, and, friend
  */
 ```
 
-### 5.数组与泛型
+## 5.数组与泛型
 
 通常，数组与泛型不能很好地结合。你不能实例化具有参数化类型的数组：
 
@@ -358,8 +358,8 @@ public class ParameterizedArrayType {
 
 ```java
 List<String>[] ls;
-
 ```
+
 这条语句可以顺利地通过编译器而不报任何错误，而且，尽管你不能创建实际的持有泛型的数组对象，但是你可以创建非泛型的数组，然后将其转型：
 
 ```java
@@ -399,11 +399,11 @@ public class ArrayOfGenericType<T> {
 }
 ```
 
-### 6.创建测试数据
+## 6.创建测试数据
 
 通常，在试验数组和程序时，能够很方便地生成填充了测试数据的数组，将会很有帮助。
 
-#### 6.1 Arrays.fill()
+### 6.1 Arrays.fill\(\)
 
 Java标准类库`Arrays`有一个作用十分有限的`fill()`方法：只能用同一个值填充各个位置，而针对对象而言，就是复制同一个引用进行填充。
 
@@ -456,10 +456,9 @@ a8 = [47.0, 47.0, 47.0, 47.0, 47.0, 47.0]
 a9 = [Hello, Hello, Hello, Hello, Hello, Hello]
 a9 = [Hello, Hello, Hello, World, World, Hello]
  */
-
 ```
 
-#### 6.2 数据生成器
+### 6.2 数据生成器
 
 ```java
 public interface Generator<T>  {
@@ -589,7 +588,6 @@ Boolean:true false true false true false true false true false
 ```
 
 ```java
-
 public class RandomGenerator {
     private static Random r = new Random(47);
 
@@ -687,26 +685,22 @@ Boolean:false true true true true false false true true false
  */
 ```
 
+### 6.3 从Generator中创建数组
 
-#### 6.3 从Generator中创建数组
-
-
-### 7.Arrays实用功能
-
-
+## 7.Arrays实用功能
 
 在`java.util`类库中可以找到`Arrays`类，它有一套用于数组的`static`实用方法，其中有6个基本方法：
 
 * equals用于比较两个数组是否相等；
-* fill()
-* sort()用于对数组排序；
-* binary()用于在已经排序的数组中查找元素；
-* toString()产生数组的`String`表示。
-* hashCode()产生数组的散列码
+* fill\(\)
+* sort\(\)用于对数组排序；
+* binary\(\)用于在已经排序的数组中查找元素；
+* toString\(\)产生数组的`String`表示。
+* hashCode\(\)产生数组的散列码
 
 此外，`Arrays.asList()`接受任意的序列或数组作为其参数，并将其转变为`List`容器。
 
-#### 7.1复制数组
+### 7.1复制数组
 
 `Java`标准类库提供有`static`方法`System.arraycopy()`，用它复制数组比用`for`循环复制要快很多。`System.arraycopy()`针对所有类型做了重载。
 
@@ -764,12 +758,9 @@ u = [47, 47, 47, 47, 47, 99, 99, 99, 99, 99]
 
 `Syste.arraycopy()`不会执行自动包装和自动拆包，两个数组必须具有相同的确切类型。
 
+### 7.2数组的比较
 
-
-
-#### 7.2数组的比较
-
-`Arrays`类提供了重载后的`equals`方法，用来比较整个数组。同样，此方法针对所有基本类型与`Object`都做了重载。数组相等的条件是元素个数必须相等，并且对应位置的元素也相等，这可以通过对每个元素使用`equals()`作比较来判断，对于基本类型，需要使用基本类型的包装器类的`equals()`方法。 
+`Arrays`类提供了重载后的`equals`方法，用来比较整个数组。同样，此方法针对所有基本类型与`Object`都做了重载。数组相等的条件是元素个数必须相等，并且对应位置的元素也相等，这可以通过对每个元素使用`equals()`作比较来判断，对于基本类型，需要使用基本类型的包装器类的`equals()`方法。
 
 ```java
 public class ComparingArrays {
@@ -797,7 +788,7 @@ true
  */
 ```
 
-#### 7.3数组元素的比较
+### 7.3数组元素的比较
 
 排序必须根据对象的实际类型执行比较操作。一种自然的解决方案是位每种不同的类型各编写一个不同的排序方法，但是这样的代码难以被新的类型所复用。
 
@@ -805,19 +796,11 @@ true
 
 也可以编写自己的`Comparator`。
 
-
-#### 7.4数组排序
+### 7.4数组排序
 
 使用内置的排序方法，就可以对任意的基本类型数组排序；也可以对任意的对象数组进行排序，只要该对象实现了`Comparable`接口或具有相关联的`Comparator`。
 
-
-#### 7.5 在已排序的数组中查找
-
+### 7.5 在已排序的数组中查找
 
 如果数组已经排好序了，就可以使用`Arrays.binarySearch()`执行快速查找。如果要对未排序的数组使用`binarySearch()`，那么将产生不可预料的结果。
-
-
-
-
-
 

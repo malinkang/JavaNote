@@ -1,17 +1,16 @@
 ---
 title: 《Java编程思想》读书笔记 第十七章 容器深入研究
-date: 2013-11-10 14:31:36
-tags: Java 
+date: '2013-11-10T14:31:36.000Z'
+tags: Java
 ---
 
-### 1.完整的容器分类法
+# 第17章 容器深入研究
 
+## 1.完整的容器分类法
 
 ![Imgur](https://i.imgur.com/OqAEdC5.png)
 
-
-### 2.填充容器
-
+## 2.填充容器
 
 与`Arrays`版本一样，此`fill()`方法也是只复制同一个对象引用来填充整个容器的，并且只对`List`对象有用，但是所产生的列表可以传递给构造器或`addAll()`方法：
 
@@ -44,7 +43,7 @@ public class FillingLists {
 
 这个示例展示了两种用对单个对象的引用来填充`Collection`的方式，第一种是使用`Collection.nCopies()`创建传递给构造器的`List`，这里填充的是`ArrayList`。第二种使用的`fill()`方法的用处更有限，因为它只能替换已经在`List`中存在的元素，而不能添加新的元素。
 
-#### 2.1 一种Generator解决方案
+### 2.1 一种Generator解决方案
 
 ```java
 //: net/mindview/util/CollectionData.java
@@ -119,7 +118,6 @@ public class CollectionDataTest {
 ```
 
 ```java
-
 //: containers/CollectionDataGeneration.java
 // Using the Generators defined in the Arrays chapter.
 import java.util.*;
@@ -140,9 +138,7 @@ public class CollectionDataGeneration {
 *///:~
 ```
 
-
-
-#### 2.2 Map生成器
+### 2.2 Map生成器
 
 定义第一个`Pair`类。
 
@@ -268,8 +264,7 @@ public class MapDataTest {
 *///:~
 ```
 
-#### 2.3 使用Abstract类
-
+### 2.3 使用Abstract类
 
 ```java
 //: net/mindview/util/Countries.java
@@ -558,22 +553,22 @@ public class CountingMapData extends AbstractMap<Integer,String> {
 *///:~
 ```
 
-### 3.Collection的功能方法
+## 3.Collection的功能方法
 
 `Collection`所有操作：
 
-* boolean add(T)
-* boolean addAll(Collection<? extends T>)
-* void clear()
-* boolean contains(T)
-* boolean isEmpty()
-* Iterator<T> iterator()
-* boolean remove(Object)
-* boolean removeAll(Collection<?>)
-* boolean retainAll(Collection<?>)：交集
-* int size()
-* Object[] toArray()：
-* <T>T[] toArray(T[] a)
+* boolean add\(T\)
+* boolean addAll\(Collection&lt;? extends T&gt;\)
+* void clear\(\)
+* boolean contains\(T\)
+* boolean isEmpty\(\)
+* Iterator iterator\(\)
+* boolean remove\(Object\)
+* boolean removeAll\(Collection&lt;?&gt;\)
+* boolean retainAll\(Collection&lt;?&gt;\)：交集
+* int size\(\)
+* Object\[\] toArray\(\)：
+* T\[\] toArray\(T\[\] a\)
 
 ```java
 //: containers/CollectionMethods.java
@@ -652,7 +647,7 @@ after c.clear():[]
 *///:~
 ```
 
-### 4.可选操作
+## 4.可选操作
 
 最常见的未获支持的操作，都来源于背后由固定尺寸的数据结构支持的容器。当你用`Arrays.asList()`将数组转换为`List`时，就会得到这样的容器。
 
@@ -725,9 +720,7 @@ List.set(): java.lang.UnsupportedOperationException
 
 把`Arrays.asList()`的结果作为构造器的参数传递给任何`Collection`，这样可以生成允许使用所有的方法的普通容器
 
-
-### 5.List的功能方法
-
+## 5.List的功能方法
 
 ```java
 //: containers/Lists.java
@@ -857,9 +850,9 @@ public class Lists {
 } /* (Execute to see output) *///:~
 ```
 
-### 6.Set和存储顺序
+## 6.Set和存储顺序
 
-* Set(interface)：存入`Set`的每个元素都必须是唯一的，因为`Set`不保存重复元素，加入`Set`的元素必须定义`equals()`方法以确保对象的唯一性。`Set`与`Collection`有完全一样的接口。`Set`接口不保证维护元素的次序。
+* Set\(interface\)：存入`Set`的每个元素都必须是唯一的，因为`Set`不保存重复元素，加入`Set`的元素必须定义`equals()`方法以确保对象的唯一性。`Set`与`Collection`有完全一样的接口。`Set`接口不保证维护元素的次序。
 * HashSet：为快速查找而设计的`Set`，存入`HashSet`的元素必须定义`hasCode()`。
 * TreeSet：保持次序的Set，底层为树结构，使用它可以从`Set`中提取有序的序列，元素必须实现`Comparable`接口。
 * LinkedHashSet：具有`HashSet`的查询速度，且内部使用链表维护元素的顺序。于是在使用迭代器遍历`Set`时，结果会按元素插入的次序显示，元素也必须定义`hashCode()`方法。
@@ -943,14 +936,13 @@ java.lang.ClassCastException: HashType cannot be cast to java.lang.Comparable
 
 对于没有重新定义`hashCode()`方法的`SetType`或`TreeType`，如果将它们放置到任何散列实现中都会产生重复值，这样就违反了`Set`的基本契约。如果尝试着在`TreeSet`中使用没有实现`Comparable`的类型，将会抛出一个异常。
 
-#### 6.1 SortedSet
+### 6.1 SortedSet
 
-
-* Object first()：返回容器中的第一个元素
-* Object last()：返回容器中的最末一个元素
-* Sorted subSet(fromElement,toElement)：生成此`Set`的子集，范围从`fromElement`（包含）到`toElement`（不包含）。
-* Sorted headSet(toElement)：生成此`Set`的子集，由小于`toElement`的元素组成。
-* Sorted tailSet(fromElement)：生成此`Set`的子集，由大于或等于`fromElement`的元素组成。
+* Object first\(\)：返回容器中的第一个元素
+* Object last\(\)：返回容器中的最末一个元素
+* Sorted subSet\(fromElement,toElement\)：生成此`Set`的子集，范围从`fromElement`（包含）到`toElement`（不包含）。
+* Sorted headSet\(toElement\)：生成此`Set`的子集，由小于`toElement`的元素组成。
+* Sorted tailSet\(fromElement\)：生成此`Set`的子集，由大于或等于`fromElement`的元素组成。
 
 ```java
 //: containers/SortedSetDemo.java
@@ -993,7 +985,7 @@ two
 *///:~
 ```
 
-### 7.队列
+## 7.队列
 
 ```java
 //: containers/QueueBehavior.java
@@ -1037,8 +1029,7 @@ eight five four nine one seven six ten three two
 
 除了优先级队列，`Queue`将精确地按照元素被置于`Queue`中的顺序产生它们。
 
-
-#### 7.1 优先级队列
+### 7.1 优先级队列
 
 ```java
 //: containers/ToDoList.java
@@ -1094,7 +1085,7 @@ C4: Empty trash
 *///:~
 ```
 
-#### 7.2双向队列
+### 7.2双向队列
 
 在`LinkedList`中包含支持双向队列的方法，但是在`Java`标准类库中没有任何显式的用于双向队列的接口（本书基于JavaSE5，JavaSE6增加了`Deque`的接口）。
 
@@ -1148,12 +1139,11 @@ public class DequeTest {
 *///:~
 ```
 
-### 8.Map
+## 8.Map
 
 ![Imgur](https://i.imgur.com/iwoHbui.png)
 
 ```java
-
 //: containers/AssociativeArray.java
 // Associates keys with values.
 import static net.mindview.util.Print.*;
@@ -1216,7 +1206,7 @@ dancing
 *///:~
 ```
 
-#### 8.1 性能
+### 8.1 性能
 
 * HashMap：`Map`基于散列表的实现（它取代了Hashtable），插入和查询键值对的开销是固定的。可以通过构造器设置`容量`和`负载因子`，以调整容器的性能。
 * LinkedHashMap：类似于`HashMap`，但是迭代遍历的顺序是插入次序，或者是**最近最少使用（LRU）**的次序。只比`HashMap`慢一点，而在迭代访问时反而更快，因为它使用链表维护内部次序。
@@ -1290,16 +1280,16 @@ map.isEmpty(): true
 *///:~
 ```
 
-#### 8.2 SortedMap
+### 8.2 SortedMap
 
 使用`SortedMap`，可以确保键处于排序状态。
 
-* Comparator comparator()：返回当前`Map`使用的`Comparator`；或者返回 `null`，表示以自然方式排序。
-* T firstKey()：返回Map中的第一个键。
-* T lastKey()：返回Map中最末一个键。
-* SortedMap subMap(fromKey,toKey)：生成此Map的子集，范围由`fromKey`到`toKey`的键确定。
-* SortedMap headMap(toKey)：由键小于`toKey`的所有键值对组成。
-* SortedMap tailMap(fromKey)：由键大于或等于`fromKey`的所有键值对组成。
+* Comparator comparator\(\)：返回当前`Map`使用的`Comparator`；或者返回 `null`，表示以自然方式排序。
+* T firstKey\(\)：返回Map中的第一个键。
+* T lastKey\(\)：返回Map中最末一个键。
+* SortedMap subMap\(fromKey,toKey\)：生成此Map的子集，范围由`fromKey`到`toKey`的键确定。
+* SortedMap headMap\(toKey\)：由键小于`toKey`的所有键值对组成。
+* SortedMap tailMap\(fromKey\)：由键大于或等于`fromKey`的所有键值对组成。
 
 ```java
 //: containers/SortedMapDemo.java
@@ -1341,14 +1331,11 @@ public class SortedMapDemo {
 *///:~
 ```
 
-
-#### 8.3 LinkedHashMap
-
+### 8.3 LinkedHashMap
 
 `LinkedHashMap`散列化所有的元素，但是在遍历键值对时，却又以元素的插入顺序返回键值对。此外，可以在构造器中设定`LinkedHashMap`，使之采用基于访问的`最近最少使用（LRU）`算法，于是没有被访问过的元素就会出现在队列的前面。
 
 ```java
-
 //: containers/LinkedHashMapDemo.java
 // What you can do with a LinkedHashMap.
 import java.util.*;
@@ -1377,7 +1364,7 @@ public class LinkedHashMapDemo {
 *///:~
 ```
 
-### 9.散列和散列码
+## 9.散列和散列码
 
 ```java
 //: containers/Groundhog.java
@@ -1440,15 +1427,9 @@ Key not found: Groundhog #3
 *///:~
 ```
 
-正确的`equals()`方法必须满足下列5个条件：
-1. 自反性。对任意x，x.equals(x)一定返回`true`。
-2. 对称性。对任意x和y，如果`y.equals(x)`返回`true`，则`x.equals(y)`也返回`true`。
-3. 传递性。对任意x、y、z，如果有`x.equals(y)`返回`true`，则`x.equals(z)`一定返回`true`。
-4. 一致性。对任意x和y，如果对象中用于等价比较的信息没有改变，那么无论调用`x.equals(y)`多少次，返回的结果应该保持一致，要么一直是`true`，要么一直是`false`。
-5. 对任何不是`null`的x，`x.equals(null)`一定返回`false`。
+正确的`equals()`方法必须满足下列5个条件： 1. 自反性。对任意x，x.equals\(x\)一定返回`true`。 2. 对称性。对任意x和y，如果`y.equals(x)`返回`true`，则`x.equals(y)`也返回`true`。 3. 传递性。对任意x、y、z，如果有`x.equals(y)`返回`true`，则`x.equals(z)`一定返回`true`。 4. 一致性。对任意x和y，如果对象中用于等价比较的信息没有改变，那么无论调用`x.equals(y)`多少次，返回的结果应该保持一致，要么一直是`true`，要么一直是`false`。 5. 对任何不是`null`的x，`x.equals(null)`一定返回`false`。
 
 同时重载`hashCode()`和`equals()`：
-
 
 ```java
 //: containers/Groundhog2.java
@@ -1478,7 +1459,7 @@ Early Spring!
 *///:~
 ```
 
-#### 9.1 理解hashCode()
+### 9.1 理解hashCode\(\)
 
 ```java
 //: containers/SlowMap.java
@@ -1560,7 +1541,8 @@ public class MapEntry<K,V> implements Map.Entry<K,V> {
   public String toString() { return key + "=" + value; }
 } ///:~
 ```
-#### 9.2 为速度而散列
+
+### 9.2 为速度而散列
 
 散列将键保存在某处，以便能够很快找到。存储一组元素最快的数据结构是数组，所以使用它来表示键的信息。数组并不保存键本来。而是通过键对象生成一个数字，将其作为数组的下标。这个数字就是散列码，由定义在`Object`中的，且可能由你的类覆盖的`hashCode()`方法生成。
 
@@ -1634,12 +1616,11 @@ public class SimpleHashMap<K,V> extends AbstractMap<K,V> {
 Asmara
 [CAMEROON=Yaounde, CONGO=Brazzaville, CHAD=N'djamena, COTE D'IVOIR (IVORY COAST)=Yamoussoukro, CENTRAL AFRICAN REPUBLIC=Bangui, GUINEA=Conakry, BOTSWANA=Gaberone, BISSAU=Bissau, EGYPT=Cairo, ANGOLA=Luanda, BURKINA FASO=Ouagadougou, ERITREA=Asmara, THE GAMBIA=Banjul, KENYA=Nairobi, GABON=Libreville, CAPE VERDE=Praia, ALGERIA=Algiers, COMOROS=Moroni, EQUATORIAL GUINEA=Malabo, BURUNDI=Bujumbura, BENIN=Porto-Novo, BULGARIA=Sofia, GHANA=Accra, DJIBOUTI=Dijibouti, ETHIOPIA=Addis Ababa]
 *///:~
-
 ```
 
 由于散列表中“槽位”通常称为`桶位（bucket）`，因此我们将表示实际散列表的数组命名为`bucket`，为使散列分布均匀，桶的数量通常使用质数。注意，为了能够自动处理冲突，使用一个`LinkedList`的数组；每一个新的元素只是直接添加到list末尾的某个特定桶位中。
 
-#### 9.3 覆盖hashCode()
+### 9.3 覆盖hashCode\(\)
 
 首先，你无法控制`bucket`数组的下标值的产生。这个值依赖于具体的`HashMap`对象的容量，而容量的改变与容器的充满程度和负载因子有关。`hashCode()`生成的结果，经过处理后成为桶位的下标。
 
@@ -1647,26 +1628,23 @@ Asmara
 
 此外，也不应该使`hashCode()`依赖于具有唯一性的对象信息，尤其是使用`this`的值，这只能产生很糟糕的`hashCode()`。因为这样无法生成一个新的键，使之与`put()`中原始的键值对中的键相同。
 
-Effective Java 为怎样写出一份像样`hashCode()`给出了基本的指导：
-1.给int变量result赋予某个非零值常量，例如17
-2.为对象内每个有意义的域f（即每个可以做equals()操作的域）计算出一个int散列码c:
+Effective Java 为怎样写出一份像样`hashCode()`给出了基本的指导： 1.给int变量result赋予某个非零值常量，例如17 2.为对象内每个有意义的域f（即每个可以做equals\(\)操作的域）计算出一个int散列码c:
 
-|域类型       |计算    |
-|------------|--------|
-|boolean| c=(f?0:1)|
-|byte、char、short或int|c=(int)f|
-|long|c=(int)(f^f>>>32)|
-|float|c=Float.floatToIntBits(f)|
-|double|long l= Double.doubleToLongBits();c=(int)(l^(l>>>32))|
-|Object,其equals()调用这个域的equals()|c=f.hashCode()|
-|数组|对每个元素应用上述规则|
+| 域类型 | 计算 |
+| :--- | :--- |
+| boolean | c=\(f?0:1\) |
+| byte、char、short或int | c=\(int\)f |
+| long | c=\(int\)\(f^f&gt;&gt;&gt;32\) |
+| float | c=Float.floatToIntBits\(f\) |
+| double | long l= Double.doubleToLongBits\(\);c=\(int\)\(l^\(l&gt;&gt;&gt;32\)\) |
+| Object,其equals\(\)调用这个域的equals\(\) | c=f.hashCode\(\) |
+| 数组 | 对每个元素应用上述规则 |
 
 3.合并计算得到的散列码
 
-result = 37*result+c;
+result = 37\*result+c;
 
-4.返回result.
-5.检查hashCode()最后生成的结果，确保相同的对象有相同的散列码。
+4.返回result. 5.检查hashCode\(\)最后生成的结果，确保相同的对象有相同的散列码。
 
 ```java
 //: containers/CountedString.java
@@ -1735,40 +1713,35 @@ Looking up String: hi id: 5 hashCode(): 146451
 *///:~
 ```
 
+## 10.选择接口的不同实现
 
-### 10.选择接口的不同实现
+### 10.1 性能测试框架
 
-#### 10.1 性能测试框架
+### 10.2 对List的选择
 
-#### 10.2 对List的选择
+### 10.3 微基准测试的危险
 
+### 10.4 对Set的选择
 
-#### 10.3 微基准测试的危险
+### 10.5 对Map的选择
 
-#### 10.4 对Set的选择
+## 11.实用方法
 
-#### 10.5 对Map的选择
+### 11.1 List的排序和查询
 
-### 11.实用方法
+### 11.2 设定Collection或Map为不可修改
 
-#### 11.1 List的排序和查询
+### 11.3 Collection或Map的同步控制
 
-#### 11.2 设定Collection或Map为不可修改
+## 12.持有引用
 
-#### 11.3 Collection或Map的同步控制
+### 12.1 WeakHashMap
 
-### 12.持有引用
+## 13.Java1.0/1.1的容器
 
-#### 12.1 WeakHashMap
+### 13.2 Hashtable
 
-### 13.Java1.0/1.1的容器
+### 13.3 Stack
 
-#### 13.2 Hashtable
-
-#### 13.3 Stack
-
-#### 13.4 BitSet
-
-
-
+### 13.4 BitSet
 

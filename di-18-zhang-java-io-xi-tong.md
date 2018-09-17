@@ -1,12 +1,14 @@
 ---
 title: 《Java编程思想》读书笔记 第十八章 Java I/O系统
-date: 2013-11-18 14:31:36
-tags: Java 
+date: '2013-11-18T14:31:36.000Z'
+tags: Java
 ---
 
-### 1.File类
+# 第18章 Java I/O系统
 
-#### 1.1 目录列表器
+## 1.File类
+
+### 1.1 目录列表器
 
 ```java
 //: io/DirList.java
@@ -47,7 +49,6 @@ DirList3.java
 ```
 
 `DirFilter`这个类存在的唯一原因就是将`accept()`方法提供给`list()`使用。
-
 
 用一个匿名内部类进行改写。
 
@@ -123,7 +124,7 @@ DirList3.java
 *///:~
 ```
 
-#### 1.2 目录实用工具
+### 1.2 目录实用工具
 
 ```java
 //: net/mindview/util/Directory.java
@@ -266,7 +267,6 @@ public class DirectoryDemo {
 *///:~
 ```
 
-
 ```java
 //: net/mindview/util/ProcessFiles.java
 package net.mindview.util;
@@ -319,7 +319,7 @@ public class ProcessFiles {
 } /* (Execute to see output) *///:~
 ```
 
-#### 1.3 目录的检查及创建
+### 1.3 目录的检查及创建
 
 ```java
 //: io/MakeDirectories.java
@@ -405,32 +405,31 @@ It's a directory
 *///:~
 ```
 
-### 2.输入输出
+## 2.输入输出
 
-#### 2.1 InputStream类型
+### 2.1 InputStream类型
 
-#### 2.2 OutputStream类型
+### 2.2 OutputStream类型
 
-### 3.添加属性和有用的接口
+## 3.添加属性和有用的接口
 
-#### 3.1 通过FilterInputStream从InputStream读取数据
+### 3.1 通过FilterInputStream从InputStream读取数据
 
-#### 3.2 通过FilterOutputStream向OutputStream写入
+### 3.2 通过FilterOutputStream向OutputStream写入
 
+## 4.Reader和Writer
 
-### 4.Reader和Writer
+### 4.1 数据的来源和去处
 
-#### 4.1 数据的来源和去处
+### 4.2 更改流的行为
 
-#### 4.2 更改流的行为
+### 4.3 未发生变化的类
 
-#### 4.3 未发生变化的类
+## 5.自我独立的类：RandomAccessFile
 
-### 5.自我独立的类：RandomAccessFile
+## 6.I/O流的典型使用方式
 
-### 6.I/O流的典型使用方式
-
-#### 6.1 缓冲输入文件
+### 6.1 缓冲输入文件
 
 ```java
 public class BufferedInputFile {
@@ -451,15 +450,15 @@ public class BufferedInputFile {
 }
 ```
 
-#### 6.2 从内存输入
+### 6.2 从内存输入
 
-#### 6.3 格式化的内存输入
+### 6.3 格式化的内存输入
 
-#### 6.4 基本的文件输出
+### 6.4 基本的文件输出
 
-#### 6.5 存储和恢复数据
+### 6.5 存储和恢复数据
 
-#### 6.6 读写随机访问文件
+### 6.6 读写随机访问文件
 
 ```java
 //: io/UsingRandomAccessFile.java
@@ -508,55 +507,55 @@ The end of the file
 *///:~
 ```
 
-#### 6.7 管道流
+### 6.7 管道流
 
-### 7.文件读写的实用工具
+## 7.文件读写的实用工具
 
-#### 7.1 读取二进制文件
+### 7.1 读取二进制文件
 
-### 8.标准I/O
+## 8.标准I/O
 
-#### 8.1 从标准输入中读取
+### 8.1 从标准输入中读取
 
-#### 8.2 将System.out转换为PrintWriter
+### 8.2 将System.out转换为PrintWriter
 
-#### 8.3 标准I/O重定向
+### 8.3 标准I/O重定向
 
-### 9.进程控制
+## 9.进程控制
 
-### 10.新I/O
+## 10.新I/O
 
-#### 10.1 转换数据
+### 10.1 转换数据
 
-#### 10.2 获取基本类型
+### 10.2 获取基本类型
 
+### 10.3 视图缓冲器
 
-#### 10.3 视图缓冲器
+### 10.4 用缓冲器操纵数据
 
-#### 10.4 用缓冲器操纵数据
+### 10.5 缓冲器的细节
 
-#### 10.5 缓冲器的细节
+### 10.6 内存映射文件
 
-#### 10.6 内存映射文件
+### 10.7 文件加锁
 
-#### 10.7 文件加锁
+## 11.压缩
 
-### 11.压缩
+### 11.1 用GZIP进行简单压缩
 
-#### 11.1 用GZIP进行简单压缩
+### 11.2 用Zip进行多文件保存
 
-#### 11.2 用Zip进行多文件保存
+### 11.3 Java档案文件
 
-#### 11.3 Java档案文件
+## 12.对象序列化
 
-### 12.对象序列化
+### 12.1 寻找类
 
-#### 12.1 寻找类
+### 12.2 序列化的控制
 
-#### 12.2 序列化的控制
+### 12.3 使用“持久性”
 
-#### 12.3 使用“持久性”
+## 13.XML
 
-### 13.XML
+## 14.Preference
 
-### 14.Preference

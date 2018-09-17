@@ -1,10 +1,12 @@
 ---
 title: 《Java编程思想》读书笔记 第十九章 枚举类型
-date: 2013-11-25 14:31:36
-tags: Java 
+date: '2013-11-25T14:31:36.000Z'
+tags: Java
 ---
 
-### 1.基本enum特性
+# 第19章 枚举类型
+
+## 1.基本enum特性
 
 调用`enum`的`values()`方法，可以遍历`enum`实例。`values()`方法返回`enum`实例的数组，而且该数组中的元素严格保持其在`enum`中声明时的顺序。
 
@@ -54,7 +56,6 @@ HANGING
 CRAWLING
 GROUND
 *///:~
-
 ```
 
 `ordinal()`方法返回一个int值，这是每个`enum`实例在声明时的次序，从0开始。
@@ -63,7 +64,7 @@ GROUND
 
 `valueOf()`是在`Enum`中定义的`static`方法，它根据给定的名字返回相应的`enum`实例，如果不存在给定名字的实例，将会抛出异常。
 
-#### 1.1 将静态导入用于enum
+### 1.1 将静态导入用于enum
 
 ```java
 //: enumerated/Spiciness.java
@@ -93,7 +94,7 @@ Burrito is HOT
 *///:~
 ```
 
-### 2.向enum中添加新方法
+## 2.向enum中添加新方法
 
 ```java
 //: enumerated/OzWitch.java
@@ -127,8 +128,7 @@ SOUTH: Good by inference, but missing
 
 如果你打算定义自己的方法，那么必须在`emum`实例序列的最后添加一个分号。同时，`Java`要求你必须先定义`enum`实例。如果在定义`enum`实例之前定义了任何方法或属性，那么在编译时就会得到错误信息。
 
-
-#### 2.1 覆盖enum的方法
+### 2.1 覆盖enum的方法
 
 ```java
 //: enumerated/SpaceShip.java
@@ -154,7 +154,7 @@ Mothership
 *///:~
 ```
 
-### 3.Switch语句中的enum
+## 3.Switch语句中的enum
 
 ```java
 //: enumerated/TrafficLight.java
@@ -199,7 +199,7 @@ The traffic light is RED
 *///:~
 ```
 
-### 4.values()的神秘之处
+## 4.values\(\)的神秘之处
 
 编译器为你创建的`enum`类都继承自`Enum`类。然而，如果你研究一下`Enum`类就会发现，它并没有`values()`方法。我们可以利用反射机制编写一个简单的程序，来查看其中的究竟。
 
@@ -265,7 +265,6 @@ final class Explore extends java.lang.Enum{
 
 `values()`由编译器添加的`static`方法。可以看出，在创建`Explore`的过程中，编译器还为其添加了`valueOf()`方法。这可能有点令人迷惑，`Enum`类不会已经有`valueOf()`方法了吗。不过`Enum`中的`valueOf()`方法需要两个参数，而这个新增的方法只需一个参数。由于这里使用的`Set`只存储方法的名字，而不考虑方法的签名，所以在调用`Explore.removeAll(Enum)`之后，就只剩下`[values]`了。
 
-
 由于`values()`方法是由编译器插入到`enum`定义中的`static`方法，所以，如果你将`enum`实例向上转型为`Enum`，那么`values()`方法就不可访问了。不过，在`Class`中有一个`getEnumConstants()`方法，所以即便`Enum`接口中没有`values()`方法，我们仍然可以通过`Class`对象取得所有`enum`实例：
 
 ```java
@@ -310,7 +309,7 @@ java.lang.NullPointerException
 
 只不过，此时该方法返回`null`，所以当你试图使用其返回的结果时会发生异常。
 
-### 5.实现，而非继承
+## 5.实现，而非继承
 
 所有的`enum`都继承自`java.lang.Enum`类。由于`Java`不支持多重继承，所以你的`enum`不能再继承其他类。然而，在我们创建一个新的`enum`时，可以同时实现一个或多个接口：
 
@@ -344,10 +343,9 @@ BOB, PUNCHY, BOB, SPANKY, NUTTY, PUNCHY, SLAPPY, NUTTY, NUTTY, SLAPPY,
 *///:~
 ```
 
-### 6.随机选取
+## 6.随机选取
 
 ```java
-
 //: net/mindview/util/Enums.java
 package net.mindview.util;
 import java.util.*;
@@ -382,7 +380,7 @@ STANDING FLYING RUNNING STANDING RUNNING STANDING LYING DODGING SITTING RUNNING 
 *///:~
 ```
 
-### 7.使用接口组织枚举
+## 7.使用接口组织枚举
 
 假设你想用`enum`来表示不同类型的食物，同时还希望每个`enum`元素仍然保持`Food`类型。
 
@@ -584,7 +582,7 @@ public enum Meal2 {
 } /* Same output as Meal.java *///:~
 ```
 
-### 8.使用EnumSet替代标志
+## 8.使用EnumSet替代标志
 
 `Java SE5`引入`EnumSet`，是为了通过`enum`创建一种替代品，以替代传统的基于`int`的“位标志”。这种标志可以用来表示某种“开/关”信息。
 
@@ -638,7 +636,7 @@ public class EnumSets {
 
 `EnumSet`的基础是`long`，一个`long`值有64位，而一个`enum`实例只需一位`bit`表示其是否存在。也就是说，在不超过一个`long`的表达能力的情况下，你的`EnumSet`可以应用于最多不超过64个元素的`enum`。如果`enum`超过了64个元素会发生什么呢？
 
-```language
+```text
 //: enumerated/BigEnumSet.java
 import java.util.*;
 
@@ -661,8 +659,7 @@ public class BigEnumSet {
 
 显然，`EnumSet`可以应用于多过64个元素的`enum`，所以我猜测，`Enum`会在必要的时候增加一个`long`。
 
-
-### 9.使用EnumMap
+## 9.使用EnumMap
 
 `EnumMap`是一种特殊的`Map`，它要求其中的键必须来自一个`enum`。由于enum本身的限制，所以`EnumMap`在内部可由数组实现。因此`EnumMap`的速度很快，我们可以放心地使用`enum`实例在`EnumMap`中进行查找操作。不过，我们只能将`enum`的实例作为键来调用`put()`方法，其他操作与使用一般的`Map`差不多。
 
@@ -705,7 +702,7 @@ java.lang.NullPointerException
 
 与`EnumSet`一样，`enum`实例定义时的次序决定了其在`EnumMap`中声明时的顺序。
 
-### 10.常量相关的方法
+## 10.常量相关的方法
 
 `Java`的`enum`有一个非常有趣的特性，即它允许程序员为`enum`实例编写方法，从而为每个`enum`实例赋予各自不同的行为。要实现常量相关的方法，你需要为`enum`定义一个或多个`abstract`方法，然后为每个`enum`实例实现该抽象方法。
 
@@ -831,7 +828,6 @@ Blowing dry
 
 除了实现`abstarct`方法以外，程序员是否可以覆盖常量相关的方法呢？答案是肯定的。
 
-
 ```java
 //: enumerated/OverrideConstantSpecific.java
 import static net.mindview.util.Print.*;
@@ -855,7 +851,7 @@ WASHER: Overridden method
 *///:~
 ```
 
-#### 10.1使用enum的职责链
+### 10.1使用enum的职责链
 
 ```java
 //: enumerated/PostOffice.java
@@ -1012,7 +1008,7 @@ Delivering Mail 9 normally
 *///:~
 ```
 
-#### 10.2 使用enum的状态机
+### 10.2 使用enum的状态机
 
 ```java
 //: enumerated/Input.java
@@ -1031,7 +1027,7 @@ public enum Input {
     public int amount() { // Disallow
       throw new RuntimeException("SHUT_DOWN.amount()");
     }
-  };	
+  };    
   int value; // In cents
   Input(int value) { this.value = value; }
   Input() {}
@@ -1043,8 +1039,6 @@ public enum Input {
   }
 } ///:~
 ```
-
-
 
 ```java
 //: enumerated/VendingMachine.java
@@ -1061,7 +1055,7 @@ enum Category {
   QUIT_TRANSACTION(ABORT_TRANSACTION),
   SHUT_DOWN(STOP);
   private Input[] values;
-  Category(Input... types) { values = types; }	
+  Category(Input... types) { values = types; }    
   private static EnumMap<Input,Category> categories =
     new EnumMap<Input,Category>(Input.class);
   static {
@@ -1072,7 +1066,7 @@ enum Category {
   public static Category categorize(Input input) {
     return categories.get(input);
   }
-}	
+}    
 
 public class VendingMachine {
   private static State state = State.RESTING;
@@ -1092,7 +1086,7 @@ public class VendingMachine {
           default:
         }
       }
-    },	
+    },    
     ADDING_MONEY {
       void next(Input input) {
         switch(Category.categorize(input)) {
@@ -1113,7 +1107,7 @@ public class VendingMachine {
           default:
         }
       }
-    },	
+    },    
     DISPENSING(StateDuration.TRANSIENT) {
       void next() {
         print("here is your " + selection);
@@ -1129,7 +1123,7 @@ public class VendingMachine {
         }
         state = RESTING;
       }
-    },	
+    },    
     TERMINAL { void output() { print("Halted"); } };
     private boolean isTransient = false;
     State() {}
@@ -1143,7 +1137,7 @@ public class VendingMachine {
         "StateDuration.TRANSIENT states");
     }
     void output() { print(amount); }
-  }	
+  }    
   static void run(Generator<Input> gen) {
     while(state != State.TERMINAL) {
       state.next(gen.next());
@@ -1158,7 +1152,7 @@ public class VendingMachine {
       gen = new FileInputGenerator(args[0]);
     run(gen);
   }
-}	
+}    
 
 // For a basic sanity check:
 class RandomInputGenerator implements Generator<Input> {
@@ -1205,7 +1199,7 @@ Halted
 *///:~
 ```
 
-```
+```text
 QUARTER; QUARTER; QUARTER; CHIPS;
 DOLLAR; DOLLAR; TOOTHPASTE;
 QUARTER; DIME; ABORT_TRANSACTION;
@@ -1215,9 +1209,9 @@ ABORT_TRANSACTION;
 STOP;
 ```
 
-### 11.多路分发
+## 11.多路分发
 
-```language
+```text
 //: enumerated/Outcome.java
 package enumerated;
 public enum Outcome { WIN, LOSE, DRAW } ///:~
@@ -1241,7 +1235,7 @@ class Paper implements Item {
   public Outcome eval(Scissors s) { return WIN; }
   public Outcome eval(Rock r) { return LOSE; }
   public String toString() { return "Paper"; }
-}	
+}    
 
 class Scissors implements Item {
   public Outcome compete(Item it) { return it.eval(this); }
@@ -1257,7 +1251,7 @@ class Rock implements Item {
   public Outcome eval(Scissors s) { return LOSE; }
   public Outcome eval(Rock r) { return DRAW; }
   public String toString() { return "Rock"; }
-}	
+}    
 
 public class RoShamBo1 {
   static final int SIZE = 20;
@@ -1278,7 +1272,7 @@ public class RoShamBo1 {
     for(int i = 0; i < SIZE; i++)
       match(newItem(), newItem());
   }
-} /* Output:	
+} /* Output:    
 Rock vs. Rock: DRAW
 Paper vs. Rock: WIN
 Paper vs. Rock: WIN
@@ -1302,9 +1296,9 @@ Paper vs. Scissors: LOSE
 *///:~
 ```
 
-#### 11.1 使用enum分发
+### 11.1 使用enum分发
 
-#### 11.2 使用常量相关的方法
+### 11.2 使用常量相关的方法
 
-#### 11.4 使用二维数组
+### 11.4 使用二维数组
 

@@ -1,14 +1,14 @@
 ---
 title: 《Java编程思想》读书笔记 第十章 内部类
-date: 2013-10-21 14:31:36
-tags:
+date: '2013-10-21T14:31:36.000Z'
+tags: null
 ---
 
-### 1.创建内部类
+# 第10章 内部类
+
+## 1.创建内部类
 
 创建内部类的方式就是把类的定义置于外围类的里面。
-
-<!--more-->
 
 ```java
 public class Parcel1 {
@@ -97,12 +97,11 @@ public class Parcel2 {
  */
 ```
 
-### 2.链接到外部类
+## 2.链接到外部类
 
 当某个外围类的对象创建了一个内部类对象时，此内部类对象必定会秘密地捕获一个指向那个外围类对象的引用。然后，在你访问此外围类的成员时，就是用那个引用来选择外围类的成员。
 
 ```java
-
 public interface Selector {
     boolean end();
     Object current();
@@ -157,11 +156,9 @@ public class Sequence {
         }
     }
 }
-
-
 ```
 
-### 3.使用.this与.new
+## 3.使用.this与.new
 
 如果需要生成对外部类对象的引用，可以使用外部类的名字后面紧跟圆点和`this`。这样产生的引用自动地具有正确的类型，这一点在编译期酒杯知晓并接受检查，因此没有任何运行时的开销。
 
@@ -202,8 +199,8 @@ public class DotNew {
         DotNew.Inner dni = dn.new Inner();
     }
 }
-
 ```
+
 这也解决了内部类名字作用域的问题，因此你不必声明`dn.new DotNew.Inner()`。
 
 `.new`应用于`Parcel`示例。
@@ -235,7 +232,7 @@ public class Parcel3 {
 }
 ```
 
-### 4.内部类与向上转型
+## 4.内部类与向上转型
 
 当将内部类向上转型为其基类，尤其是转型为一个接口的时候，内部类某个接口的实现能够完全不可见，并且不可用。所得到的只是指向基类或接口的引用，所以能够很方便地隐藏实现细节。
 
@@ -285,8 +282,7 @@ public class TestParcel {
 }
 ```
 
-
-### 5.在方法和作用域内的内部类
+## 5.在方法和作用域内的内部类
 
 到目前为止，看到的都是内部类的典型用途。内部类的语法覆盖了大量其他的更加难以理解的技术。例如，可以在一个方法里面或者任意的作用域内定义内部类。
 
@@ -343,10 +339,9 @@ public class Parcel6 {
         p.track();
     }
 }
-
 ```
 
-### 6.匿名内部类
+## 6.匿名内部类
 
 ```java
 public class Parcel7 {
@@ -374,7 +369,7 @@ public class Wrapping {
     }
 }
 public class Parcel8 {
-	//只需简单地传递合适的参数给基类的构造函数即可
+    //只需简单地传递合适的参数给基类的构造函数即可
     public Wrapping wrapping(int x){
         return new Wrapping(x){
             public int value(){
@@ -389,7 +384,6 @@ public class Parcel8 {
     }
 
 }
-
 ```
 
 在匿名类中定义字段时，还能够对其执行初始化操作。
@@ -411,7 +405,6 @@ public class Parcel9 {
         Destination d = p.destination("Tasmania");
     }
 }
-
 ```
 
 如果定义一个匿名内部类，并且希望它使用一个在其外部定义的对象，那么编译器会要求其参数引用是`final`的。
@@ -451,13 +444,11 @@ Base constructor.i = 47
 Inside instance initializer
 In anonymous f()
  */
-
 ```
 
-#### 6.1 再访工厂方法
+### 6.1 再访工厂方法
 
 ```java
-
 public interface Service {
     void method1();
     void method2();
@@ -528,7 +519,6 @@ Implementation1 method2
 Implementation1 method1
 Implementation1 method2
  */
-
 ```
 
 ```java
@@ -597,14 +587,14 @@ Chess move 2
 Chess move 3
  */
 ```
-### 7.嵌套类
+
+## 7.嵌套类
 
 如果不需要内部类与外围类对象之间有联系，那么可以将内部类声明为`static`，这通常称为`嵌套类`。普通的内部类对象隐式地保存了一个引用，指向创建它的外围类对象。当内部类是static时，要创建嵌套类的对象，并不需要其外围类的对象。不能从嵌套类的对象中访问非静态的外围类对象。
 
 嵌套类与普通的内部类还有一个区别。普通内部类的字段与方法，只能放在类的外部层次上，所以**普通的内部类不能有static数据和static字段，也不能包含嵌套类。**但嵌套类可以包含所有这些东西。
 
 ```java
-
 public class Parcel11 {
     private static class ParcelContents implements Contents {
         private int i = 11;
@@ -654,10 +644,9 @@ public class Parcel11 {
     }
 
 }
-
 ```
 
-#### 7.1 接口内部的类
+### 7.1 接口内部的类
 
 正常情况下，不能再接口内部放置任何代码，单嵌套类可以作为接口的一部分。你放到接口中的任何类都自动地是`public`和`static`的。因为类是`static`的，只是将嵌套类置于接口的命名空间内，这并不违法接口的规则。
 
@@ -681,7 +670,7 @@ Howdy!
 */
 ```
 
-#### 7.2 从多层嵌套类中访问外部类的成员
+### 7.2 从多层嵌套类中访问外部类的成员
 
 ```java
 public class MNA {
@@ -706,7 +695,7 @@ public class MultiNestingAccess {
 }
 ```
 
-### 8.为什么需要内部类
+## 8.为什么需要内部类
 
 每个内部类都能独立地集成自一个接口的实现，所以无论外围类是否已经集成了某个接口的实现，对于内部类都没有影响。
 
@@ -760,7 +749,7 @@ public class MultiImplementation {
 }
 ```
 
-#### 8.1 闭包与回调
+### 8.1 闭包与回调
 
 **闭包（closure）**是一个可调用的对象，它记录了一些信息，这些信息来自创建它的作用域。通过这个定义，可以看出内部类是面向对象的闭包，因为它不仅包含外围类对象的信息，还自动拥有一个指向外围类对象的引用，在此作用域内，内部类有权操作所有的成员，包括`private`成员。
 
@@ -841,10 +830,9 @@ Other operation
  */
 ```
 
+### 8.2 内部类与控制框架
 
-#### 8.2 内部类与控制框架
-
-### 9.内部类的集成
+## 9.内部类的集成
 
 创建构造器，不能只是传递一个指向外围类对象的引用。必须在构造器内部使用如下语法。
 
@@ -863,7 +851,7 @@ public class InheritInner extends WithInner.Inner {
 }
 ```
 
-### 10.内部类可以被覆盖吗
+## 10.内部类可以被覆盖吗
 
 ```java
 public class Egg {
@@ -949,7 +937,7 @@ BigEgg2.Yolk.f()
  */
 ```
 
-### 11.局部内部类
+## 11.局部内部类
 
 ```java
 public interface Counter {
@@ -1013,19 +1001,20 @@ Anonymous inner9
  */
 ```
 
-### 12.内部类标识符
+## 12.内部类标识符
 
 每个类都会产生一个`.class`文件，其中包含了如何创建该类型的对象的全部信息。内部类也必须生成一个`.class`文件以包含它们的Class对象信息。这些类文件的命名有严格的规则：外围类的名字，加上`$`,再加上内部类的名字。例如，`LocalInnerClass.java`生成的`.class`文件包括：
 
-```
+```text
 Counter.class
 LocalInnerClass$1.class
 LocalInnerClass$1LocalCounter.class
 LocalInnserClass.class
 ```
+
 如果内部类是匿名的，编译器会简单地产生一个数字作为其标识符。如果内部类是嵌套在别的内部类之中，只需直接将它们的名字加载其外围类标识符与`$`的后面。
 
-
-### 参考
+## 参考
 
 * Java编程思想
+

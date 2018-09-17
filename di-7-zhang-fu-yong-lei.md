@@ -1,11 +1,12 @@
 ---
 title: 《Java编程思想》读书笔记 第七章 复用类
-date: 2013-10-11 14:31:36
+date: '2013-10-11T14:31:36.000Z'
 tags: Java
 ---
 
-### 1.组合语法
+# 第7章 复用类
 
+## 1.组合语法
 
 ```java
 //: reusing/SprinklerSystem.java
@@ -18,7 +19,7 @@ class WaterSource {
     s = "Constructed";
   }
   public String toString() { return s; }
-}	
+}    
 
 public class SprinklerSystem {
   private String valve1, valve2, valve3, valve4;
@@ -33,7 +34,7 @@ public class SprinklerSystem {
       "valve4 = " + valve4 + "\n" +
       "i = " + i + " " + "f = " + f + " " +
       "source = " + source;
-  }	
+  }    
   public static void main(String[] args) {
     SprinklerSystem sprinklers = new SprinklerSystem();
     System.out.println(sprinklers);
@@ -46,7 +47,6 @@ i = 0 f = 0.0 source = Constructed
 ```
 
 ```java
-
 //: reusing/Bath.java
 // Constructor initialization with composition.
 import static net.mindview.util.Print.*;
@@ -58,7 +58,7 @@ class Soap {
     s = "Constructed";
   }
   public String toString() { return s; }
-}	
+}    
 
 public class Bath {
   private String // Initializing at point of definition:
@@ -73,7 +73,7 @@ public class Bath {
     s3 = "Joy";
     toy = 3.14f;
     castille = new Soap();
-  }	
+  }    
   // Instance initialization:
   { i = 47; }
   public String toString() {
@@ -87,7 +87,7 @@ public class Bath {
       "i = " + i + "\n" +
       "toy = " + toy + "\n" +
       "castille = " + castille;
-  }	
+  }    
   public static void main(String[] args) {
     Bath b = new Bath();
     print(b);
@@ -105,7 +105,7 @@ castille = Constructed
 *///:~
 ```
 
-### 2.继承语法
+## 2.继承语法
 
 ```java
 //: reusing/Detergent.java
@@ -124,7 +124,7 @@ class Cleanser {
     x.dilute(); x.apply(); x.scrub();
     print(x);
   }
-}	
+}    
 
 public class Detergent extends Cleanser {
   // Change a method:
@@ -144,7 +144,7 @@ public class Detergent extends Cleanser {
     print(x);
     print("Testing base class:");
     Cleanser.main(args);
-  }	
+  }    
 } /* Output:
 Cleanser dilute() apply() Detergent.scrub() scrub() foam()
 Testing base class:
@@ -152,7 +152,7 @@ Cleanser dilute() apply() scrub()
 *///:~
 ```
 
-#### 2.1 初始化基类
+### 2.1 初始化基类
 
 ```java
 //: reusing/Cartoon.java
@@ -197,7 +197,7 @@ class BoardGame extends Game {
     super(i);
     print("BoardGame constructor");
   }
-}	
+}    
 
 public class Chess extends BoardGame {
   Chess() {
@@ -214,11 +214,9 @@ Chess constructor
 *///:~
 ```
 
-
-### 3.代理
+## 3.代理
 
 ```java
-
 //: reusing/SpaceShipControls.java
 
 public class SpaceShipControls {
@@ -287,10 +285,9 @@ public class SpaceShipDelegation {
 } ///:~
 ```
 
-### 4.结合使用组合和继承
+## 4.结合使用组合和继承
 
 ```java
-
 //: reusing/PlaceSetting.java
 // Combining composition & inheritance.
 import static net.mindview.util.Print.*;
@@ -306,7 +303,7 @@ class DinnerPlate extends Plate {
     super(i);
     print("DinnerPlate constructor");
   }
-}	
+}    
 
 class Utensil {
   Utensil(int i) {
@@ -326,7 +323,7 @@ class Fork extends Utensil {
     super(i);
     print("Fork constructor");
   }
-}	
+}    
 
 class Knife extends Utensil {
   Knife(int i) {
@@ -340,7 +337,7 @@ class Custom {
   Custom(int i) {
     print("Custom constructor");
   }
-}	
+}    
 
 public class PlaceSetting extends Custom {
   private Spoon sp;
@@ -372,7 +369,7 @@ PlaceSetting constructor
 *///:~
 ```
 
-#### 4.1 确保正确清理
+### 4.1 确保正确清理
 
 ```java
 //: reusing/CADSystem.java
@@ -479,7 +476,7 @@ Shape dispose
 *///:~
 ```
 
-#### 4.2 名称屏蔽
+### 4.2 名称屏蔽
 
 ```java
 //: reusing/Hide.java
@@ -522,7 +519,7 @@ doh(Milhouse)
 *///:~
 ```
 
-### 7.5 在组合与继承之间选择
+## 7.5 在组合与继承之间选择
 
 ```java
 //: reusing/Car.java
@@ -567,7 +564,7 @@ public class Car {
 } ///:~
 ```
 
-### 6.protected关键字
+## 6.protected关键字
 
 ```java
 //: reusing/Orc.java
@@ -581,7 +578,7 @@ class Villain {
   public String toString() {
     return "I'm a Villain and my name is " + name;
   }
-}	
+}    
 
 public class Orc extends Villain {
   private int orcNumber;
@@ -595,7 +592,7 @@ public class Orc extends Villain {
   }
   public String toString() {
     return "Orc " + orcNumber + ": " + super.toString();
-  }	
+  }    
   public static void main(String[] args) {
     Orc orc = new Orc("Limburger", 12);
     print(orc);
@@ -608,7 +605,7 @@ Orc 19: I'm a Villain and my name is Bob
 *///:~
 ```
 
-### 7.向上转型
+## 7.向上转型
 
 ```java
 //: reusing/Wind.java
@@ -630,16 +627,15 @@ public class Wind extends Instrument {
     Instrument.tune(flute); // Upcasting
   }
 } ///:~
-
 ```
 
-#### 7.1 为什么称为向上转型
+### 7.1 为什么称为向上转型
 
-#### 7.2 再论组合与继承
+### 7.2 再论组合与继承
 
-### 8.final关键字
+## 8.final关键字
 
-#### 8.1 final数据
+### 8.1 final数据
 
 ```java
 //: reusing/FinalData.java
@@ -736,7 +732,6 @@ public class BlankFinal {
 `Java`允许在参数列表中以声明的方式将参数指明为`final`。
 
 ```java
-
 //: reusing/FinalArguments.java
 // Using "final" with method arguments.
 
@@ -763,10 +758,9 @@ public class FinalArguments {
 } ///:~
 ```
 
-#### 8.2 final方法
+### 8.2 final方法
 
 使用`final`方法的原因有两个。第一个原因是把方法锁定，以防任何继承类修改它的含义。这是出于设计的考虑：想要确保在继承中使方法行为保持不变，并且不会被覆盖。
-
 
 **final和private关键字**
 
@@ -824,7 +818,7 @@ OverridingPrivate2.g()
 *///:~
 ```
 
-#### 8.3 final类
+### 8.3 final类
 
 当将某个类的整体定义为`final`时，就表明了你不打算继承该类，而且也不允许别人这样做。换句话说，出于某种考虑，你对该类的设计永不需要做任何变动，或者出于安全的考虑，你不希望它有子类。
 
@@ -854,11 +848,11 @@ public class Jurassic {
 } ///:~
 ```
 
-#### 8.4 有关final的忠告
+### 8.4 有关final的忠告
 
-### 9.初始化及类的加载
+## 9.初始化及类的加载
 
-#### 9.1 继承与初始化
+### 9.1 继承与初始化
 
 了解包括继承在内的初始化全过程，以对所发生的一切有个全局性的把握，是很有益的。
 
@@ -908,8 +902,4 @@ j = 39
 如果该基类还有其自身的基类，那么第二个基类就会被加载，如此类推。接下来，根基类中的`static`初始化即会被执行，然后是下一个导出类，以此类推。这种方式很重要，因为导出类的`static`初始化可能会依赖于基类成员能否被正确初始化。
 
 至此为止，必要的类都已加载完毕，对象就可以被创建了。首先，对象中所有的基本类型都会被设为默认值，对象引用被设为null。然后，基类的构造器会被调用。
-
-
-
-
 

@@ -1,13 +1,14 @@
 ---
 title: 《Java编程思想》读书笔记 第十五章 泛型
-date: 2013-11-5 14:31:36
+date: '2013-11-05T14:31:36.000Z'
 tags: Java
 ---
 
-### 1.与C++的比较
+# 第15章 泛型
 
+## 1.与C++的比较
 
-### 2.简单泛型
+## 2.简单泛型
 
 一个只能持有单个对象的类。
 
@@ -24,7 +25,6 @@ public class Holder1 {
 ```
 
 在`Java SE5`之前，可以让这个类直接持有`Object`类型的对象。
-
 
 ```java
 //: generics/Holder2.java
@@ -64,8 +64,7 @@ public class Holder3<T> {
 } ///:
 ```
 
-#### 2.1 一个元组类库
-
+### 2.1 一个元组类库
 
 ```java
 //: net/mindview/util/TwoTuple.java
@@ -84,7 +83,6 @@ public class TwoTuple<A,B> {
 利用继承机制实现长度更长的元组。
 
 ```java
-
 //: net/mindview/util/ThreeTuple.java
 package net.mindview.util;
 
@@ -159,15 +157,14 @@ public class TupleTest {
 *///:~
 ```
 
-#### 2.2 一个堆栈类
-
+### 2.2 一个堆栈类
 
 ```java
 //: generics/LinkedStack.java
 // A stack implemented with an internal linked structure.
 
 public class LinkedStack<T> {
-	//Node类
+    //Node类
   private static class Node<U> {
     U item;
     Node<U> next;
@@ -181,7 +178,7 @@ public class LinkedStack<T> {
   private Node<T> top = new Node<T>(); // End sentinel
   public void push(T item) {
     top = new Node<T>(item, top);
-  }	
+  }    
   public T pop() {
     T result = top.item;
     if(!top.end())
@@ -203,7 +200,7 @@ Phasers
 *///:~
 ```
 
-#### 2.3 RandomList
+### 2.3 RandomList
 
 ```java
 //: generics/RandomList.java
@@ -229,7 +226,7 @@ brown over fox quick quick dog brown The brown lazy brown
 *///:~
 ```
 
-### 3.泛型接口
+## 3.泛型接口
 
 泛型也可以应用于接口。
 
@@ -241,7 +238,6 @@ public interface Generator<T> { T next(); } ///:~
 ```
 
 ```java
-
 //: generics/coffee/Coffee.java
 package generics.coffee;
 
@@ -274,14 +270,11 @@ public class Americano extends Coffee {} ///:~
 //: generics/coffee/Breve.java
 package generics.coffee;
 public class Breve extends Coffee {} ///:~
-
 ```
 
 编写一个类，实现`Generator<Coffee>`接口。
 
-
 ```java
-
 //: generics/coffee/CoffeeGenerator.java
 // Generate different types of Coffee:
 package generics.coffee;
@@ -295,7 +288,7 @@ public class CoffeeGenerator implements Generator<Coffee>, Iterable<Coffee> {
   public CoffeeGenerator() {}
   // For iteration:
   private int size = 0;
-  public CoffeeGenerator(int sz) { size = sz; }	
+  public CoffeeGenerator(int sz) { size = sz; }    
   public Coffee next() {
     try { //随机生成一种类型
       return (Coffee)types[rand.nextInt(types.length)].newInstance();
@@ -315,7 +308,7 @@ public class CoffeeGenerator implements Generator<Coffee>, Iterable<Coffee> {
     public void remove() { // Not implemented
       throw new UnsupportedOperationException();
     }
-  };	
+  };    
   public Iterator<Coffee> iterator() {
     return new CoffeeIterator();
   }
@@ -339,8 +332,8 @@ Cappuccino 8
 Cappuccino 9
 *///:~
 ```
-下面的类是`Generator<T>`接口的另一个实现，它负责生成`Fibonacci`数列：
 
+下面的类是`Generator<T>`接口的另一个实现，它负责生成`Fibonacci`数列：
 
 ```java
 //: generics/Fibonacci.java
@@ -388,7 +381,7 @@ extends Fibonacci implements Iterable<Integer> {
         throw new UnsupportedOperationException();
       }
     };
-  }	
+  }    
   public static void main(String[] args) {
     for(int i : new IterableFibonacci(18))
       System.out.print(i + " ");
@@ -398,7 +391,7 @@ extends Fibonacci implements Iterable<Integer> {
 *///:~
 ```
 
-### 4.泛型方法
+## 4.泛型方法
 
 到目前为止，我们看到的泛型，都是应用于整个类上。但同样可以在类中包含参数化方法，而这个方法所在的类可以是泛型类，也可以不是泛型类。
 
@@ -432,7 +425,7 @@ GenericMethods
 *///:~
 ```
 
-#### 4.1 杠杆利用类型参数推断
+### 4.1 杠杆利用类型参数推断
 
 创建一个持有`List`的`Map`
 
@@ -463,7 +456,7 @@ public class New {
   }
   public static <T> Set<T> set() {
     return new HashSet<T>();
-  }	
+  }    
   public static <T> Queue<T> queue() {
     return new LinkedList<T>();
   }
@@ -478,7 +471,6 @@ public class New {
 } ///:~
 ```
 
-
 ```java
 //: generics/SimplerPets.java
 import typeinfo.pets.*;
@@ -492,6 +484,7 @@ public class SimplerPets {
   }
 } ///:~
 ```
+
 类型推断只对赋值操作有效，其他时候并不起作用。
 
 ```java
@@ -526,8 +519,7 @@ public class ExplicitTypeSpecification {
 } ///:~
 ```
 
-#### 4.2 可变参数与泛型方法
-
+### 4.2 可变参数与泛型方法
 
 ```java
 //: generics/GenericVarargs.java
@@ -555,7 +547,7 @@ public class GenericVarargs {
 *///:~
 ```
 
-#### 4.3 用于Generator的泛型方法
+### 4.3 用于Generator的泛型方法
 
 ```java
 //: generics/Generators.java
@@ -569,7 +561,7 @@ public class Generators {
     for(int i = 0; i < n; i++)
       coll.add(gen.next());
     return coll;
-  }	
+  }    
   public static void main(String[] args) {
     Collection<Coffee> coffee = fill(new ArrayList<Coffee>(), new CoffeeGenerator(), 4);
     for(Coffee c : coffee)
@@ -588,8 +580,7 @@ Mocha 3
 *///:~
 ```
 
-
-#### 4.4 一个通用的Generator
+### 4.4 一个通用的Generator
 
 ```java
 //: net/mindview/util/BasicGenerator.java
@@ -628,7 +619,6 @@ public class CountedObject {
 
 使用`BasicGenerator`，可以很容易地位`CountedObject`创建一个`Generator`：
 
-
 ```java
 //: generics/BasicGeneratorDemo.java
 import net.mindview.util.*;
@@ -649,8 +639,7 @@ CountedObject 4
 *///:~
 ```
 
-
-#### 4.5 简化元组的使用
+### 4.5 简化元组的使用
 
 ```java
 //: net/mindview/util/Tuple.java
@@ -710,7 +699,7 @@ public class TupleTest2 {
 *///:~
 ```
 
-#### 4.6 一个Set实用工具
+### 4.6 一个Set实用工具
 
 ```java
 //: net/mindview/util/Sets.java
@@ -718,7 +707,7 @@ package net.mindview.util;
 import java.util.*;
 
 public class Sets {
-	//两个集合合并
+    //两个集合合并
   public static <T> Set<T> union(Set<T> a, Set<T> b) {
     Set<T> result = new HashSet<T>(a);
     result.addAll(b);
@@ -728,7 +717,7 @@ public class Sets {
     Set<T> result = new HashSet<T>(a);
     result.retainAll(b);
     return result;
-  }	
+  }    
   //移除subset中的元素
   // Subtract subset from superset:
   public static <T> Set<T> difference(Set<T> superset, Set<T> subset) {
@@ -757,9 +746,7 @@ public enum Watercolors {
 } ///:~
 ```
 
-
 ```java
-
 //: generics/WatercolorSets.java
 import generics.watercolors.*;
 import java.util.*;
@@ -778,10 +765,10 @@ public class WatercolorSets {
     print("union(set1, set2): " + union(set1, set2));
     Set<Watercolors> subset = intersection(set1, set2);
     print("intersection(set1, set2): " + subset);
-    print("difference(set1, subset): " + difference(set1, subset));	
+    print("difference(set1, subset): " + difference(set1, subset));    
     print("difference(set2, subset): " + difference(set2, subset));
     print("complement(set1, set2): " + complement(set1, set2));
-  }	
+  }    
 } /* Output: (Sample)
 set1: [BRILLIANT_RED, CRIMSON, MAGENTA, ROSE_MADDER, VIOLET, CERULEAN_BLUE_HUE, PHTHALO_BLUE, ULTRAMARINE, COBALT_BLUE_HUE, PERMANENT_GREEN, VIRIDIAN_HUE]
 set2: [CERULEAN_BLUE_HUE, PHTHALO_BLUE, ULTRAMARINE, COBALT_BLUE_HUE, PERMANENT_GREEN, VIRIDIAN_HUE, SAP_GREEN, YELLOW_OCHRE, BURNT_SIENNA, RAW_UMBER, BURNT_UMBER]
@@ -793,7 +780,7 @@ complement(set1, set2): [SAP_GREEN, ROSE_MADDER, YELLOW_OCHRE, BURNT_UMBER, VIOL
 *///:~
 ```
 
-### 5.匿名内部类
+## 5.匿名内部类
 
 泛型还可以应用于内部类以及匿名内部类。
 
@@ -814,7 +801,7 @@ class Customer {
       public Customer next() { return new Customer(); }
     };
   }
-}	
+}    
 
 class Teller {
   private static long counter = 1;
@@ -825,7 +812,7 @@ class Teller {
   public static Generator<Teller> generator = new Generator<Teller>() {
       public Teller next() { return new Teller(); }
     };
-}	
+}    
 
 public class BankTeller {
   public static void serve(Teller t, Customer c) {
@@ -839,7 +826,7 @@ public class BankTeller {
     Generators.fill(tellers, Teller.generator, 4);
     for(Customer c : line)
       serve(tellers.get(rand.nextInt(tellers.size())), c);
-  }	
+  }    
 } /* Output:
 Teller 3 serves Customer 1
 Teller 2 serves Customer 2
@@ -859,7 +846,7 @@ Teller 1 serves Customer 15
 *///:~
 ```
 
-### 6.构建复杂模型
+## 6.构建复杂模型
 
 泛型的一个重要好处是能够简单而安全地创建复杂的模型。例如，我们可以很容易地创建`List`元组。
 
@@ -920,7 +907,7 @@ class Shelf extends ArrayList<Product> {
   public Shelf(int nProducts) {
     Generators.fill(this, Product.generator, nProducts);
   }
-}	
+}    
 //走廊 
 class Aisle extends ArrayList<Shelf> {
   public Aisle(int nShelves, int nProducts) {//走廊摆放货架
@@ -965,8 +952,7 @@ public class Store extends ArrayList<Aisle> {
 *///:~
 ```
 
-### 7.擦除的神秘之处
-
+## 7.擦除的神秘之处
 
 ```java
 //: generics/ErasedTypeEquivalence.java
@@ -1015,13 +1001,11 @@ public class LostInformation {
 *///:~
 ```
 
-
 `Class.getTypeParameters()`将返回一个`TypeVariable`对象数组，表示有泛型声明所声明的类型参数。但是，正如你从输出中看到的，你能够发现的只是用作参数占位符的标识符，这并非有用的信息。
 
 **在泛型代码内部，无法获得任何有关反省参数类型的信息。**
 
-
-#### 7.1 C++的方式
+### 7.1 C++的方式
 
 ```cpp
 //: generics/Templates.cpp
@@ -1113,14 +1097,13 @@ class ReturnGenericType<T extends HasF> {
 } ///:~
 ```
 
-#### 7.2 迁移兼容性
+### 7.2 迁移兼容性
 
 擦除不是一个语言特性。它是`Java`泛型实现中的一种折中，因为泛型不是`Java`语言出现时就有的组成部分，所以这种折中是必须的。
 
-
 在基于擦除的实现中，泛型类型被当做第二类型处理，即不能在某些重要的上下文环境中使用类型。泛型类型只有在静态类型检查期间才出现，在此之后，程序中的所有泛型类型都将被擦除，替换为它们的非泛型上界。例如，诸如`List<T>`这样的类型注解将被擦除为`List`，而普通的类型变量在未指定边界的情况下将被擦除为`Object`。
 
-#### 7.3 擦除的问题
+### 7.3 擦除的问题
 
 擦除的代价是显著的。泛型不能用于显式地引用运行时类型的操作之中，例如`转型`、`instanceof`和`new表达式`。
 
@@ -1140,7 +1123,7 @@ class Derived2 extends GenericBase {} // No warning
 // class Derived3 extends GenericBase<?> {}
 // Strange error:
 //   unexpected type found : ?
-//   required: class or interface without bounds	
+//   required: class or interface without bounds    
 
 public class ErasureAndInheritance {
   @SuppressWarnings("unchecked")
@@ -1152,7 +1135,7 @@ public class ErasureAndInheritance {
 } ///:~
 ```
 
-#### 7.4 边界处的动作
+### 7.4 边界处的动作
 
 正是因为有了擦除，我发现泛型最令人困惑的方面源自这样一个事实，即可以表示没有任何意义的事物。
 
@@ -1220,7 +1203,7 @@ public class FilledListMaker<T> {
 
 即使编译器无法知道有关`create()`中的`T`的任何信息，但是它仍旧可以在编译期确保你放置到`result`中的对象具有`T`类型，使其适合`ArrayList<T>`。因此，即使擦除在方法或类内部移除了有关实际类型的信息，编译器仍旧可以确保在方法或类中使用的类型的内部一致性。
 
-**因为擦除在方法体中移除了类型信息，所以在运行时的问题就是`边界`：即对象进入和离开方法的地点。这些正是编译器在编译期执行类型检查并插入转型代码的地点。**
+**因为擦除在方法体中移除了类型信息，所以在运行时的问题就是**`边界`**：即对象进入和离开方法的地点。这些正是编译器在编译期执行类型检查并插入转型代码的地点。**
 
 ```java
 //: generics/SimpleHolder.java
@@ -1339,7 +1322,7 @@ public class typeinfo.GenericHolder<T> {
 
 由于所产生的`get()`和`set()`的字节码相同，所以在泛型中的所有动作都发生在边界处：对传递进来的值进行额外的编译器检查，并插入对传递出去的值的转型。
 
-### 8.擦除的补偿
+## 8.擦除的补偿
 
 擦除丢失了在泛型代码中执行某些操作的能力。任何在运行时需要知道确切类型信息的操作都将无法工作：
 
@@ -1375,7 +1358,7 @@ public class ClassTypeCapture<T> {
   }
   public boolean f(Object arg) {
     return kind.isInstance(arg);
-  }	
+  }    
   public static void main(String[] args) {
     ClassTypeCapture<Building> ctt1 = new ClassTypeCapture<Building>(Building.class);
     System.out.println(ctt1.f(new Building()));
@@ -1392,7 +1375,7 @@ true
 *///:~
 ```
 
-#### 8.1 创建类型实例
+### 8.1 创建类型实例
 
 在`Erased.java`中对创建一个`new T()`的尝试将无法实现，部分原因是因为擦除，而另一部分原因是因为编译器不能验证`T`具有默认构造器。但是在`C++`中，这种操作很自然，很直观，并且很安全：
 
@@ -1419,7 +1402,6 @@ int main() {
 `Java`中的解决方案是传递一个工厂对象，并使用它来创建新的实例。最便利的工厂对象就是`Class`对象，因此如果使用类型标签，那么你就可以使用`newInstance()`来创建这个类型的新对象。
 
 ```java
-
 //: generics/InstantiateGenericType.java
 import static net.mindview.util.Print.*;
 
@@ -1434,7 +1416,7 @@ class ClassAsFactory<T> {
   }
 }
 
-class Employee {}	
+class Employee {}    
 
 public class InstantiateGenericType {
   public static void main(String[] args) {
@@ -1473,7 +1455,7 @@ class IntegerFactory implements FactoryI<Integer> {
   public Integer create() {
     return new Integer(0);
   }
-}	
+}    
 
 class Widget {//内部类
   public static class Factory implements FactoryI<Widget> {
@@ -1491,11 +1473,9 @@ public class FactoryConstraint {
 } ///:~
 ```
 
-
 另一种方式是`模版方法`设计模式。
 
 ```java
-
 //: generics/CreatorGeneric.java
 
 abstract class GenericWithCreate<T> {
@@ -1511,7 +1491,7 @@ class Creator extends GenericWithCreate<X> {
   void f() {
     System.out.println(element.getClass().getSimpleName());
   }
-}	
+}    
 
 public class CreatorGeneric {
   public static void main(String[] args) {
@@ -1523,7 +1503,7 @@ X
 *///:~
 ```
 
-#### 8.2 泛型数组
+### 8.2 泛型数组
 
 正如你在`Erased.java`中所见，不能创建泛型数组。一般的解决方案是在任何想要创建泛型数组的地方都使用`ArrayList`：
 
@@ -1550,7 +1530,6 @@ public class ArrayOfGenericReference {
 } ///:~
 ```
 
-
 ```java
 //: generics/ArrayOfGeneric.java
 
@@ -1559,7 +1538,7 @@ public class ArrayOfGeneric {
   static Generic<Integer>[] gia;
   @SuppressWarnings("unchecked")
   public static void main(String[] args) {
-  	// 可以将子类转换为父类，但不能讲父类转换为子类 所以这里创建Object数组也是不可以的
+      // 可以将子类转换为父类，但不能讲父类转换为子类 所以这里创建Object数组也是不可以的
     // Compiles; produces ClassCastException:
     //! gia = (Generic<Integer>[])new Object[SIZE];
     // Runtime type is the raw (erased) type:
@@ -1575,10 +1554,7 @@ Generic[]
 *///:~
 ```
 
-
-
 `gia`已经被转型为`Generic<Integer>[]`，但是这个信息只存在于编译期（并且如果没有@Suppress Warnings注解，你将得到有关这个转型的警告）。在运行时，它仍旧是`Object`数组，而这将引发问题。**成功创建泛型数组的唯一方式就是创建一个被擦除类型的新数组，然后对其转型。**
-
 
 ```java
 //: generics/GenericArray.java
@@ -1594,7 +1570,7 @@ public class GenericArray<T> {
   }
   public T get(int index) { return array[index]; }
   // Method that exposes the underlying representation:
-  public T[] rep() { return array; }	
+  public T[] rep() { return array; }    
   public static void main(String[] args) {
     GenericArray<Integer> gai = new GenericArray<Integer>(10);
     // This causes a ClassCastException:
@@ -1604,7 +1580,6 @@ public class GenericArray<T> {
   }
 } ///:~
 ```
-
 
 ```java
 //: generics/GenericArray2.java
@@ -1622,7 +1597,7 @@ public class GenericArray2<T> {
   @SuppressWarnings("unchecked")
   public T[] rep() {
     return (T[])array; // Warning: unchecked cast
-  }	
+  }    
   public static void main(String[] args) {
     GenericArray2<Integer> gai =  new GenericArray2<Integer>(10);
     for(int i = 0; i < 10; i ++)
@@ -1644,7 +1619,6 @@ java.lang.ClassCastException: [Ljava.lang.Object; cannot be cast to [Ljava.lang.
 
 `rep()`方法将返回`T[]`，它在`main()`中将用于`gai`，因此应该是`Integer[]`，但是如果调用它，并尝试着将结果作为`Integer[]`引用来捕获，就会得到`ClassCastException`。
 
-
 ```java
 //: generics/GenericArrayWithTypeToken.java
 import java.lang.reflect.*;
@@ -1660,7 +1634,7 @@ public class GenericArrayWithTypeToken<T> {
   }
   public T get(int index) { return array[index]; }
   // Expose the underlying representation:
-  public T[] rep() { return array; }	
+  public T[] rep() { return array; }    
   public static void main(String[] args) {
     GenericArrayWithTypeToken<Integer> gai = new GenericArrayWithTypeToken<Integer>(Integer.class, 10);
     // This now works:
@@ -1669,11 +1643,9 @@ public class GenericArrayWithTypeToken<T> {
 } ///:~
 ```
 
-
-### 9.边界
+## 9.边界
 
 ```java
-
 //: generics/BasicBounds.java
 
 interface HasColor { java.awt.Color getColor(); }
@@ -1690,7 +1662,7 @@ class Dimension { public int x, y, z; }
 
 // This won't work -- class must be first, then interfaces:
 // class ColoredDimension<T extends HasColor & Dimension> {
-	
+
 // Multiple bounds:
 class ColoredDimension<T extends Dimension & HasColor> {
   T item;
@@ -1702,7 +1674,7 @@ class ColoredDimension<T extends Dimension & HasColor> {
   int getZ() { return item.z; }
 }
 
-interface Weight { int weight(); }	
+interface Weight { int weight(); }    
 
 // As with inheritance, you can have only one
 // concrete class but multiple interfaces:
@@ -1720,7 +1692,7 @@ class Solid<T extends Dimension & HasColor & Weight> {
 class Bounded extends Dimension implements HasColor, Weight {
   public java.awt.Color getColor() { return null; }
   public int weight() { return 0; }
-}	
+}    
 
 public class BasicBounds {
   public static void main(String[] args) {
@@ -1735,7 +1707,6 @@ public class BasicBounds {
 继承的每个层次上添加边界限制：
 
 ```java
-
 //: generics/InheritBounds.java
 
 class HoldItem<T> {
@@ -1769,13 +1740,11 @@ public class InheritBounds {
     solid2.weight();
   }
 } ///:~
-
 ```
 
 具有更多层次的示例：
 
 ```java
-
 //: generics/EpicBattle.java
 // Demonstrating bounds in Java generics.
 import java.util.*;
@@ -1838,8 +1807,7 @@ public class EpicBattle {
 } ///:~
 ```
 
-### 10.通配符
-
+## 10.通配符
 
 可以向导出类型的数组赋予基类型的数组引用：
 
@@ -1904,11 +1872,9 @@ public class GenericsAndCovariance {
 } ///:~
 ```
 
-#### 10.1 编译器有多聪明
-
+### 10.1 编译器有多聪明
 
 ```java
-
 //: generics/CompilerIntelligence.java
 import java.util.*;
 
@@ -1936,7 +1902,7 @@ public class Holder<T> {
   public T get() { return value; }
   public boolean equals(Object obj) {
     return value.equals(obj);
-  }	
+  }    
   public static void main(String[] args) {
     Holder<Apple> Apple = new Holder<Apple>(new Apple());
     Apple d = Apple.get();
@@ -1958,7 +1924,7 @@ true
 *///:~
 ```
 
-#### 10.2 逆变
+### 10.2 逆变
 
 还可以走另外一条路，即使用`超类型通配符`。
 
@@ -1975,8 +1941,7 @@ public class SuperTypeWildcards {
 } ///:~
 ```
 
-
-```java	
+```java
 //: generics/GenericWriting.java
 import java.util.*;
 
@@ -1993,7 +1958,7 @@ public class GenericWriting {
   }
   static <T> void writeWithWildcard(List<? super T> list, T item) {
     list.add(item);
-  }	
+  }    
   static void f2() {
     writeWithWildcard(apples, new Apple());
     writeWithWildcard(fruit, new Apple());
@@ -2022,7 +1987,7 @@ public class GenericReading {
   // established when the class is instantiated:
   static class Reader<T> {
     T readExact(List<T> list) { return list.get(0); }
-  }	
+  }    
   static void f2() {
     Reader<Fruit> fruitReader = new Reader<Fruit>();
     Fruit f = fruitReader.readExact(fruit);
@@ -2040,13 +2005,14 @@ public class GenericReading {
       new CovariantReader<Fruit>();
     Fruit f = fruitReader.readCovariant(fruit);
     Fruit a = fruitReader.readCovariant(apples);
-  }	
+  }    
   public static void main(String[] args) {
     f1(); f2(); f3();
   }
 } ///:~
 ```
-#### 10.3 无界通配符
+
+### 10.3 无界通配符
 
 `无界通配符<?>`看起来意味着“任何事物”，因此使用无界通配符好像等价于使用原生类型。
 
@@ -2068,7 +2034,7 @@ public class UnboundedWildcards1 {
     list1 = list;
     list2 = list;
     list3 = list;
-  }	
+  }    
   static void assign3(List<? extends Object> list) {
     list1 = list;
     list2 = list;
@@ -2134,7 +2100,7 @@ public class Wildcards {
 
     // OK, but type information has been lost:
     Object obj = holder.get();
-  }	
+  }    
   // Similar to rawArgs(), but errors instead of warnings:
   static void unboundedArg(Holder<?> holder, Object arg) {
     // holder.set(arg); // Error:
@@ -2147,7 +2113,7 @@ public class Wildcards {
 
     // OK, but type information has been lost:
     Object obj = holder.get();
-  }	
+  }    
   static <T> T exact1(Holder<T> holder) {
     T t = holder.get();
     return t;
@@ -2164,7 +2130,7 @@ public class Wildcards {
     //   cannot be applied to (T)
     T t = holder.get();
     return t;
-  }	
+  }    
   static <T> void wildSupertype(Holder<? super T> holder, T arg) {
     holder.set(arg);
     // T t = holder.get();  // Error:
@@ -2186,7 +2152,7 @@ public class Wildcards {
     rawArgs(qualified, lng);
     rawArgs(unbounded, lng);
     rawArgs(bounded, lng);
-	
+
     unboundedArg(raw, lng);
     unboundedArg(qualified, lng);
     unboundedArg(unbounded, lng);
@@ -2199,7 +2165,7 @@ public class Wildcards {
     Long r2 = exact1(qualified);
     Object r3 = exact1(unbounded); // Must return Object
     Long r4 = exact1(bounded);
-	
+
     // Long r5 = exact2(raw, lng); // Warnings:
     //   Unchecked conversion from Holder to Holder<Long>
     //   Unchecked method invocation: exact2(Holder<T>,T)
@@ -2211,7 +2177,7 @@ public class Wildcards {
     // Long r8 = exact2(bounded, lng); // Error:
     //   exact2(Holder<T>,T) cannot be applied
     //   to (Holder<capture of ? extends Long>,Long)
-	
+
     // Long r9 = wildSubtype(raw, lng); // Warnings:
     //   Unchecked conversion from Holder
     //   to Holder<? extends Long>
@@ -2222,7 +2188,7 @@ public class Wildcards {
     // OK, but can only return Object:
     Object r11 = wildSubtype(unbounded, lng);
     Long r12 = wildSubtype(bounded, lng);
-	
+
     // wildSupertype(raw, lng); // Warnings:
     //   Unchecked conversion from Holder
     //   to Holder<? super Long>
@@ -2240,7 +2206,7 @@ public class Wildcards {
 } ///:~
 ```
 
-#### 10.4 捕获转换
+### 10.4 捕获转换
 
 ```java
 //: generics/CaptureConversion.java
@@ -2252,7 +2218,7 @@ public class CaptureConversion {
   }
   static void f2(Holder<?> holder) {
     f1(holder); // Call with captured type
-  }	
+  }    
   @SuppressWarnings("unchecked")
   public static void main(String[] args) {
     Holder raw = new Holder<Integer>(1);
@@ -2272,24 +2238,23 @@ Double
 *///:~
 ```
 
-### 11.问题
+## 11.问题
 
-#### 1.任何基本类型都不能作为类型参数
+### 1.任何基本类型都不能作为类型参数
 
-#### 2.实现参数化接口
+### 2.实现参数化接口
 
-#### 3.转型和警告
+### 3.转型和警告
 
-#### 4.重载
+### 4.重载
 
-#### 5.基类劫持了接口
+### 5.基类劫持了接口
 
-### 12.自限定的类型
+## 12.自限定的类型
 
-#### 12.1 古怪的循环泛型
+### 12.1 古怪的循环泛型
 
 ```java
-
 //: generics/CuriouslyRecurringGeneric.java
 
 class GenericType<T> {}
@@ -2332,7 +2297,7 @@ Subtype
 
 新类`Subtype`接受的参数和返回的值具有`Subtype`类型而不仅仅是基类`BasicHolder`类型。这就是`CRG`的本质：基类用到处类替代其参数。这意味着泛型基类变成了一种其所有到处类的公共功能的模版，但是这些功能对于其所有参数和返回值，将使用导出类型。也就是说，在所产生的类中将使用确切类型而不是基类型。因此，在`Subtype`中，传递给`set()`的参数和`get()`返回的类型都是确切的`Subtype`。
 
-#### 12.2 自限定
+### 12.2 自限定
 
 `BasicHolder`可以使用任何类型作为其泛型参数，就像下面看到的那样：
 
@@ -2371,7 +2336,7 @@ class B extends SelfBounded<A> {} // Also OK
 
 class C extends SelfBounded<C> {
   C setAndGet(C arg) { set(arg); return get(); }
-}	
+}    
 
 class D {}
 // Can't do this:
@@ -2394,7 +2359,6 @@ public class SelfBounding {
 ```
 
 ```java
-
 //: generics/NotSelfBounded.java
 
 public class NotSelfBounded<T> {
@@ -2411,7 +2375,7 @@ class B2 extends NotSelfBounded<A2> {}
 
 class C2 extends NotSelfBounded<C2> {
   C2 setAndGet(C2 arg) { set(arg); return get(); }
-}	
+}    
 
 class D2 {}
 // Now this is OK:
@@ -2419,7 +2383,6 @@ class E2 extends NotSelfBounded<D2> {} ///:~
 ```
 
 ```java
-
 //: generics/SelfBoundingMethods.java
 
 public class SelfBoundingMethods {
@@ -2431,8 +2394,8 @@ public class SelfBoundingMethods {
   }
 } ///:~
 ```
-#### 12.3 参数协变
 
+### 12.3 参数协变
 
 ```java
 //: generics/CovariantReturnTypes.java
@@ -2486,7 +2449,7 @@ class DerivedSetter extends OrdinarySetter {
   void set(Derived derived) {
     System.out.println("DerivedSetter.set(Derived)");
   }
-}	
+}    
 
 public class OrdinaryArguments {
   public static void main(String[] args) {
@@ -2500,7 +2463,6 @@ public class OrdinaryArguments {
 DerivedSetter.set(Derived)
 OrdinarySetter.set(Base)
 *///:~
-
 ```
 
 ```java
@@ -2535,7 +2497,7 @@ class DerivedGS extends GenericSetter<Base> {
   void set(Derived derived){
     System.out.println("DerivedGS.set(Derived)");
   }
-}	
+}    
 
 public class PlainGenericInheritance {
   public static void main(String[] args) {
@@ -2549,10 +2511,9 @@ public class PlainGenericInheritance {
 DerivedGS.set(Derived)
 GenericSetter.set(Base)
 *///:~
-
 ```
 
-### 13.动态类型安全
+## 13.动态类型安全
 
 ```java
 //: generics/CheckedList.java
@@ -2564,7 +2525,7 @@ public class CheckedList {
   @SuppressWarnings("unchecked")
   static void oldStyleMethod(List probablyDogs) {
     probablyDogs.add(new Cat());
-  }	
+  }    
   public static void main(String[] args) {
     List<Dog> dogs1 = new ArrayList<Dog>();
     oldStyleMethod(dogs1); // Quietly accepts a Cat
@@ -2586,12 +2547,11 @@ java.lang.ClassCastException: Attempt to insert class typeinfo.pets.Cat element 
 *///:~
 ```
 
-### 14.异常
+## 14.异常
 
-### 15.混型
+## 15.混型
 
-
-#### 15.1 C++中的混型
+### 15.1 C++中的混型
 
 ```cpp
 //: generics/Mixins.cpp
@@ -2623,7 +2583,7 @@ class Basic {
 public:
   void set(string val) { value = val; }
   string get() { return value; }
-};	
+};    
 
 int main() {
   TimeStamped<SerialNumbered<Basic> > mixin1, mixin2;
@@ -2637,10 +2597,9 @@ int main() {
 test string 1 1129840250 1
 test string 2 1129840250 2
 *///:~
-
 ```
 
-#### 15.2 与接口混合
+### 15.2 与接口混合
 
 一种更常见的推荐解决方案是使用接口来产生混型效果，就像下面这样：
 
@@ -2700,11 +2659,9 @@ public class Mixins {
 test string 1 1132437151359 1
 test string 2 1132437151359 2
 *///:~
-
 ```
 
-
-#### 15.3 使用装饰器模式
+### 15.3 使用装饰器模式
 
 ```java
 //: generics/decorator/Decoration.java
@@ -2722,7 +2679,7 @@ class Decorator extends Basic {
   public Decorator(Basic basic) { this.basic = basic; }
   public void set(String val) { basic.set(val); }
   public String get() { return basic.get(); }
-}	
+}    
 
 class TimeStamped extends Decorator {
   private final long timeStamp;
@@ -2738,7 +2695,7 @@ class SerialNumbered extends Decorator {
   private final long serialNumber = counter++;
   public SerialNumbered(Basic basic) { super(basic); }
   public long getSerialNumber() { return serialNumber; }
-}	
+}    
 
 public class Decoration {
   public static void main(String[] args) {
@@ -2754,7 +2711,7 @@ public class Decoration {
 } ///:~
 ```
 
-#### 15.4 与动态代理混合
+### 15.4 与动态代理混合
 
 ```java
 //: generics/DynamicProxyMixin.java
@@ -2776,7 +2733,7 @@ class MixinProxy implements InvocationHandler {
           delegatesByMethod.put(methodName, pair.first);
       }
     }
-  }	
+  }    
   public Object invoke(Object proxy, Method method,
     Object[] args) throws Throwable {
     String methodName = method.getName();
@@ -2793,7 +2750,7 @@ class MixinProxy implements InvocationHandler {
     return Proxy.newProxyInstance(
       cl, interfaces, new MixinProxy(pairs));
   }
-}	
+}    
 
 public class DynamicProxyMixin {
   public static void main(String[] args) {
@@ -2815,17 +2772,19 @@ Hello
 1
 *///:~
 ```
-### 16.潜在类型机制
 
-### 17.对缺乏潜在类型机制的补偿
+## 16.潜在类型机制
 
-### 18.将函数对象用作策略
+## 17.对缺乏潜在类型机制的补偿
 
-### 19.总结：转型真的如此之糟吗？
+## 18.将函数对象用作策略
 
-### 相关资料
+## 19.总结：转型真的如此之糟吗？
+
+## 相关资料
 
 * [Java Generics Tutorial](http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf)
 * [Java Generics and Collections](https://book.douban.com/subject/2303830/)
 * [Java Generics FAQs](http://www.angelikalanger.com/GenericsFAQ/JavaGenericsFAQ.html)
-* [Java 泛型 <? super T> 中 super 怎么 理解？与 extends 有何不同？](https://www.zhihu.com/question/20400700)
+* [Java 泛型 &lt;? super T&gt; 中 super 怎么 理解？与 extends 有何不同？](https://www.zhihu.com/question/20400700)
+

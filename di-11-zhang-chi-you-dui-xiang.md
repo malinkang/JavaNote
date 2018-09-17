@@ -1,13 +1,14 @@
 ---
 title: 《Java编程思想》读书笔记 第十一章 持有对象
-date: 2013-10-24 14:31:36
-tags:
+date: '2013-10-24T14:31:36.000Z'
+tags: null
 ---
 
-### 1.泛型和类型安全的容器
+# 第11章 持有对象
+
+## 1.泛型和类型安全的容器
 
 `Apple`和`Orange`都放置在了容器中，然后将它们取出。正常情况下，`Java`编译器会报告警告信息，因为这个示例没有使用泛型。在这里，我们使用`Java SE5`所特有的注解来抑制了警告信息。注解以“@”符号开头，可以接受参数，这里的`@SuppressWarnings`注解及其参数标识只有有关“不受检查的异常”的警告信息应该被压制。
-
 
 ```java
 class Apple{
@@ -94,7 +95,7 @@ Braeburn@266474c2
  */
 ```
 
-### 2.基本概念
+## 2.基本概念
 
 `Java`容器类类库用途是“保存对象”，并将其划分为两个不同的概念。
 
@@ -118,7 +119,7 @@ public class SimpleCollection {
  */
 ```
 
-### 3.添加一组元素
+## 3.添加一组元素
 
 ```java
 public class AddingGoups {
@@ -155,12 +156,12 @@ public class AsListInference {
     }
 }
 ```
+
 当试图创建`snow2`时，`Arrays.asList()`中只有`Powder`类型，因此它会创建`List<Powder>`而不是`List<Snow>`。`Collection.addAll()`工作的很好，因为它从第一个参数中了解到了目标类型是什么。
 
 正如你从创建`snow4`的操作中所看到的，可以在`Arrays.asList()`中间插入一条“线索”，以告诉编译器对于由`Arrays.asList()`产生的`List`类型，实际的目标类型应该是什么。这称为`显式类型参考说明`。
 
-
-### 4.容器的打印
+## 4.容器的打印
 
 ```java
 public class PrintingContainers {
@@ -209,13 +210,12 @@ public class PrintingContainers {
 
 `TreeMap`按照比较结果的升序保存键，而`LinkedHashMap`则按照插入顺序保存键。
 
-### 5.List
+## 5.List
 
 有两种类型的List：
 
 * 基本的`ArrayList`，它长于随机访问元素，但是在`List`的中间插入和移除元素时比较慢。
 * `LinkedList`，它通过代价较低的在`List`中间进行的插入和删除操作，提供了优化的顺序访问。`LinkedList`在随机访问方面相对比较慢，但是它的特性集较`ArrayList`更大。
-
 
 `pets`:
 
@@ -332,7 +332,7 @@ public abstract class PetCreator {
     } catch(IllegalAccessException e) {
       throw new RuntimeException(e);
     }
-  }	
+  }    
   public Pet[] createArray(int size) {
     Pet[] result = new Pet[size];
     for(int i = 0; i < size; i++)
@@ -359,7 +359,7 @@ public class ForNameCreator extends PetCreator {
     "pets.Rat",
     "pets.Mouse",
     "pets.Hamster"
-  };	
+  };    
   @SuppressWarnings("unchecked")
   private static void loader() {
     try {
@@ -387,7 +387,7 @@ public class LiteralPetCreator extends PetCreator {
       allTypes.size());
   public List<Class<? extends Pet>> types() {
     return types;
-  }	
+  }    
   public static void main(String[] args) {
     System.out.println(types);
   }
@@ -408,8 +408,6 @@ public class Pets {
   }
 }
 ```
-
-
 
 ```java
 public class ListFeatures {
@@ -472,13 +470,14 @@ public class ListFeatures {
 }
 ```
 
-### 6.迭代器
+## 6.迭代器
 
 如果原本是对着`List`编码的，但是后来发现如果能够把相同的代码应用于`Set`，将会显得非常方便，此时应该怎么做？或者打算从头开始编写通用的代码，它们只是使用容器，不知道或者说不关心容器的类型，那么如何才能不重写代码就可以应用于不同类型的容器？
 
 `迭代器`的概念可以用于达成此目的。迭代器是一个对象，它的工作是遍历并选择序列中的对象，而客户端程序员不必知道或关心该序列底层的结构。
 
 `Java`的`Iterator`只能单向移动，这个`Iterator`只能用来：
+
 * 使用方法`iterator()`要求容器返回一个`Iterator`。`Iterator`将准备好返回序列的第一个元素。
 * 使用`next()`获得序列中的下一个元素。
 * 使用`hasNext()`检查序列中是否还有元素。
@@ -515,7 +514,6 @@ public class SimpleIteration {
  */
 ```
 
-
 ```java
 public class CrossContainerIteration {
     public static void display(Iterator<Pet> it){
@@ -547,7 +545,7 @@ public class CrossContainerIteration {
 
 `display()`方法不包含任何有关它所遍历的序列的类型信息，而这也展示了`Iterator`的真正威力：能够将遍历蓄力的操作与序列底层的结构分离。正由于此，我们有时会说：迭代器统一了对容器的访问方式。
 
-#### 6.1 ListIterator
+### 6.1 ListIterator
 
 `ListIterator`是一个更加强大的`Iterator`的子类型，它只能用于各种`List`类的访问。尽管`Iterator`只能向前移动，但是`ListIterator`可以双向移动。它还可以产生相对于迭代器在列表中指向的当前位置的前一个和后一个元素的索引，并且可以使用`set()`方法替换它访问过的最后一个元素。你可以通过调用`listIterator()`方法产生一个指向`List`开始处的`ListIterator`，并且还可以通过调用`listIterator(n)`方法创建一个一开始就指向列表索引为`n`的元素处的`ListIterator`。
 
@@ -580,10 +578,9 @@ Rat, 1, 0; Manx, 2, 1; Cymric, 3, 2; Mutt, 4, 3; Pug, 5, 4; Cymric, 6, 5; Pug, 7
 [Rat, Manx, Cymric, Mutt, Pug, Cymric, Pug, Manx]
 [Rat, Manx, Cymric, Cymric, Rat, EgyptianMau, Hamster, EgyptianMau]
  */
-
 ```
 
-### 7.LinkedList
+## 7.LinkedList
 
 `LinkedList`添加了可以使其用作栈、队列或双端队列的方法。
 
@@ -635,8 +632,7 @@ pets.removeLast(): Manx
  */
 ```
 
-
-### 8.Stack
+## 8.Stack
 
 ”栈“通常是指“后进先出”（LIFO）的容器。有时候也被称为`叠加栈`，因为最后“压入”栈的元素，第一个”弹出“栈。
 
@@ -667,7 +663,6 @@ public class Stack<T> {
         return storage.toString();
     }
 }
-
 ```
 
 ```java
@@ -706,8 +701,7 @@ fleas has dog My
  */
 ```
 
-
-### 9.Set
+## 9.Set
 
 `Set`具有与`Collection`完全一样的接口，因此没有任何额外的功能，不像前面有两个不同的`List`。
 
@@ -726,10 +720,9 @@ public class SetOfInteger {
 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
  */
-
 ```
 
-### 10.Map
+## 10.Map
 
 ```java
 public class Statistics {
@@ -773,7 +766,7 @@ true
  */
 ```
 
-### Queue
+## Queue
 
 队列是一种典型的`先进先出（FIFO）`的容器。
 
@@ -810,15 +803,13 @@ B r o n t o s a u r u s
 
 `offer()`方法是`Queue`相关的方法之一，它在允许的情况下，将一个元素插入到队尾，或者返回`false`。`peek()`和`element()`都将在不移除的情况下返回队头，但是`peek()`方法在队列为空时返回`null`，而`element()`会抛出`NoSuchElementException`异常。`poll()`和`remove()`方法将移除并返回队头，但是`poll()`在队列为空时返回`null`，而`remove()`会抛出`NoSuchElementException`异常。
 
-
-#### 11.1 PriorityQueue
+### 11.1 PriorityQueue
 
 `优先级队列`声明下一个弹出元素是最需要的元素。
 
 当在`PriorityQueue`上调用`offer()`方法来插入一个对象时，这个对象会在队列中被排序。默认的排序将使用对象在队列中的`自然顺序`，但是你可以通过提供自己的`Comparator`来修改这个顺序。`PriorityQueue`可以确保你调用`peek()`、`poll()`和`remove()`方法时，获取的元素将是队列中优先级最高的元素。
 
 ```java
-
 public class PriorityQueueDemo {
     public static void main(String[] args) {
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<Integer>();
@@ -859,10 +850,9 @@ public class PriorityQueueDemo {
 W U U U T T S S S O O O O N N L I I H H F E E E D D C C C B A A       
   A B C D E F H I L N O S T U W 
  */
-
 ```
 
-### 12.Collection和Iterator
+## 12.Collection和Iterator
 
 ```java
 public class InterfaceVsIterator {
@@ -978,8 +968,7 @@ public class NonCollectionSequence extends PetSequence {
  */
 ```
 
-### 13.Foreach与迭代器
-
+## 13.Foreach与迭代器
 
 ```java
 public class ForEachCollections {
@@ -1032,7 +1021,6 @@ public class IterableClass implements Iterable<String> {
  */
 ```
 
-
 显示所有的操作系统环境变量：
 
 ```java
@@ -1043,7 +1031,6 @@ public class EnvironmentVariables {
         }
     }
 }
-
 ```
 
 `foreach`语句可以用于数组或其他任何`Iterable`，但是这并不意味着数组肯定也是一个`Iterable`。
@@ -1070,9 +1057,7 @@ public class ArrayIsNotIterable {
  */
 ```
 
-
-#### 13.1 适配器方法惯用法
-
+### 13.1 适配器方法惯用法
 
 ```java
 public class ReversibleArrayList<T> extends ArrayList<T> {
@@ -1119,9 +1104,7 @@ public class AdapterMethodiom {
 To be or not to be
 be to not or be To
  */
-
 ```
-
 
 ```java
 public class MultiIterableClass extends IterableClass {
@@ -1179,7 +1162,6 @@ And that is how we know the Earth to be banana-shaped.
  */
 ```
 
-
 ```java
 public class ModifyingArraysAsList {
     public static void main(String[] args) {
@@ -1209,6 +1191,4 @@ array: [9, 1, 6, 3, 7, 2, 5, 10, 4, 8]
 ```
 
 在第一种情况中，`Arrays.asList()`的输出被传递给了`ArrayList()`的构造器，这将创建一个引用`ia`的元素的`ArrayList`，因此打乱这些引用不会修改该数组。但是，如果直接使用`Arrays.asList(ia)`的结果，这种打乱就会修改`ia`的顺序。
-
-
 
