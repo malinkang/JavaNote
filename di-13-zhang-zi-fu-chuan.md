@@ -235,13 +235,13 @@ public class InfiniteRecursion {
 
 ## 13.5 格式化输出
 
-### 5.1 printf\(\)
+### 13.5.1 printf\(\)
 
 ```java
 System.out.printf("Row 1:[%d %f] \n",10,2.5);// Row 1:[10 2.500000]
 ```
 
-### 5.2 System.out.format\(\)
+### 13.5.2 System.out.format\(\)
 
 `Java SE5`引入的`format`方法可用于`PrintStream`或`PrintWriter`对象，其中也包括`System.out`对象。
 
@@ -267,7 +267,7 @@ Row 1: [5 5.332542]
 
 可以看到，`format()`与`printf()`是等价的。
 
-### 5.3 Formatter类
+### 13.5.3 Formatter类
 
 ```java
 public class Turtle {
@@ -306,7 +306,7 @@ Terry The Turtle is at (3,3)
  */
 ```
 
-### 5.4 格式化说明符
+### 13.5.4 格式化说明符
 
 在插入数据时，如果想要控制空格与对齐，你需要更精细复杂的格式修饰符，一下是其抽象的语法：
 
@@ -361,7 +361,7 @@ Total                      25.06
  */
 ```
 
-### 5.5 Formatter转换
+### 13.5.5 Formatter转换
 
 类型转换字符：
 
@@ -532,9 +532,9 @@ public class Hex {
 }
 ```
 
-## 6.正则表达式
+## 13.6 正则表达式
 
-### 6.1 基础
+### 13.6.1 基础
 
 ```java
 public class Splitting {
@@ -575,7 +575,7 @@ public class Replacing {
 }
 ```
 
-### 6.2 创建正则表达式
+### 13.6.2 创建正则表达式
 
 字符类（character classes）:
 
@@ -596,7 +596,7 @@ public class Replacing {
 
 * XY：Y跟在X后面
 * X\|Y：X或Y
-* \(X\): 捕获组，可以子啊表达式中用\i引用第i个捕获组
+* \(X\): 捕获组，可以在表达式中用\i引用第i个捕获组
 
 边界匹配符
 
@@ -623,7 +623,7 @@ true
  */
 ```
 
-### 6.3 量词
+### 13.6.3 量词
 
 量词描述了一个模式吸收输入文本的方式：
 
@@ -631,7 +631,7 @@ true
 * `勉强型`：用问好来指定，这个量词匹配满足模式所需要的最少字符数。因此也称作懒惰的、最少匹配的、非贪婪的、或不贪婪的。
 * `占有型`：目前，这种类型的量词只有在`Java`语言中才可用（在其他语言中不可用），并且也更高级，因此我们大概不会立刻用到它。当正则表达式被应用于字符串时，它会产生相当多的状态，以便在匹配失败时可以回溯。而“占有的”量词并不保存这些中间状态，因此它们可以防止回溯。它们常常用于防止正则表达式失控，因此可以使正则表达式执行起来更有效。
 
-### 6.4 Pattern和Matcher
+### 13.6.4 Pattern和Matcher
 
 比起功能有限的`String`类。我们更愿意构建功能强大的正则表达式对象。用`Pattern.compile()`方法来编译你的正则表达式。它会根据你的`String`类型的正则表达式生成一个`Pattern`对象。接下来，把你想要检索的字符串传入`Pattern`对象的`matcher()`方法。`matcher()`方法会生成一个`Matcher`对象。
 
@@ -639,8 +639,7 @@ true
 public class TestRegularExpression {
     public static void main(String[] args) {
         if (args.length < 2) {
-            System.out.println("Usage:\njava TestRegularExpression " + 
-                    "characterSequence regularExpression+");
+            System.out.println("Usage:\njava TestRegularExpression characterSequence regularExpression+");
             System.exit(0);
         }
         System.out.println("Input: \"" + args[0] + "\"");
@@ -649,15 +648,14 @@ public class TestRegularExpression {
             Pattern p = Pattern.compile(arg);
             Matcher m = p.matcher(args[0]);
             while (m.find()) {
-                System.out.println("Match \"" + m.group() + "\" at positions " +
-                        m.start() + "-" + (m.end() - 1));
+                System.out.println("Match \"" + m.group() + "\" at positions " + m.start() + "-" + (m.end() - 1));
             }
         }
     }
 }
 ```
 
-```text
+```
 java strings.TestRegularExpression "abcabcabcdefabc" "abc+" "(abc)+" "(abc){2,}"
 ```
 
@@ -696,7 +694,7 @@ static boolean matches(String regex,CharSequence input)
 
 其中`matches()`方法用来判断整个输入字符串是否匹配正则表达式模式，而`lookingAt()`则用来判断该字符串（不必是整个字符串）的始部分是否能够匹配模式。
 
-**find\(\)**
+#### find\(\)
 
 `Matcher.find()`方法可用来在`CharSequence`中查找多个匹配。
 
@@ -725,11 +723,11 @@ the, the, he, e, linnet, linnet, innet, nnet, net, et, t, s, s, wings, wings, in
  */
 ```
 
-**组（Groups）**
+#### 组（Groups）
 
 组是用括号划分的正则表达式，可以根据组的编号来引用某个组。组号为0表示整个表达式，组号1表示被第一对括号括起来的组，依次类推。因此，在下面这个表达式,
 
-```text
+```
 A(B(C))D
 ```
 
@@ -910,7 +908,7 @@ JAVA
  */
 ```
 
-### 6.5 split\(\)
+### 13.6.5 split\(\)
 
 ```java
 public class SplitDemo {
@@ -927,7 +925,7 @@ public class SplitDemo {
  */
 ```
 
-### 6.6 替换操作
+### 13.6.6 替换操作
 
 * replaceFirst\(String replacement\)
 * replaceAll\(String replacement\)：替换所有匹配成功的部分。
@@ -993,7 +991,7 @@ ExtrActEd blOck.
  */
 ```
 
-### 6.7 reset\(\)
+### 13.6.7 reset\(\)
 
 通过`reset()`方法，可以将现有的`Matcher`对象应用于一个新的字符序列：
 
@@ -1014,7 +1012,7 @@ public class Resetting {
 }
 ```
 
-### 6.8 正则表达式与Java I/O
+### 13.6.8 正则表达式与Java I/O
 
 ```java
 public class JGrep {
@@ -1036,7 +1034,7 @@ public class JGrep {
 }
 ```
 
-## 7.扫描输入
+## 13.7 扫描输入
 
 从文件或标准输入读取数据时一件相当痛苦的事情。一般的解决之道就是读入一行文本，对其进行粉刺，然后使用`Integer`、`Double`等类的各种解析方法来解析数据：
 
@@ -1164,7 +1162,7 @@ Threat on 02/12/2005 from 58.27.82.161
  */
 ```
 
-## 8.StringTokenizer
+## 13.8 StringTokenizer
 
 在`Java`引入正则表达式和`Scanner`类之前，分割字符串的唯一方法是使用`StringTokenizer`来分词。
 
