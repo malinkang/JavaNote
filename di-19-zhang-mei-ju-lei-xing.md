@@ -1,12 +1,6 @@
----
-title: 《Java编程思想》读书笔记 第十九章 枚举类型
-date: '2013-11-25T14:31:36.000Z'
-tags: Java
----
-
 # 第19章 枚举类型
 
-## 1.基本enum特性
+## 19.1 基本enum特性
 
 调用`enum`的`values()`方法，可以遍历`enum`实例。`values()`方法返回`enum`实例的数组，而且该数组中的元素严格保持其在`enum`中声明时的顺序。
 
@@ -64,7 +58,7 @@ GROUND
 
 `valueOf()`是在`Enum`中定义的`static`方法，它根据给定的名字返回相应的`enum`实例，如果不存在给定名字的实例，将会抛出异常。
 
-### 1.1 将静态导入用于enum
+### 19.1.1 将静态导入用于enum
 
 ```java
 //: enumerated/Spiciness.java
@@ -94,7 +88,7 @@ Burrito is HOT
 *///:~
 ```
 
-## 2.向enum中添加新方法
+## 19.2 向enum中添加新方法
 
 ```java
 //: enumerated/OzWitch.java

@@ -1,9 +1,3 @@
----
-title: 《Java编程思想》读书笔记 第十八章 Java I/O系统
-date: '2013-11-18T14:31:36.000Z'
-tags: Java
----
-
 # 第18章 Java I/O系统
 
 ## 1.File类
