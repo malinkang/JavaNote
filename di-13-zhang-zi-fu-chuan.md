@@ -6,7 +6,7 @@ tags: Java
 
 # 第13章 字符串
 
-## 1.不可变String
+## 13.1 不可变String
 
 ```java
 public class Immutable {
@@ -28,7 +28,7 @@ public class Immutable {
 
 回到`upcase()`的定义，传入其中的引用有了名字`s`,只有`upcase()`运行的时候，局部引用`s`才存在。一旦`upcase()`运行结束，`s`就消失了。当然了，`upcase()`的返回值，其实只是最终结果的引用。这足以说明，`upcase()`返回的引用已经指向了一个新的对象，而原本的`q`则还在原地。
 
-## 2.重载“+”与StringBuilder
+## 13.2 重载“+”与StringBuilder
 
 操作符“+”可以用来连接`String`。
 
@@ -161,7 +161,7 @@ Code:
   34: areturn
 ```
 
-可以看到，不仅循环部分的代码更简短、更简单，并且它只生成了一个`StringBuilder`对象。显式地创建`StringBUilder`还允许你预先指定`StringBuilder`的大小，避免多次重新分配缓存。
+可以看到，不仅循环部分的代码更简短、更简单，并且它只生成了一个`StringBuilder`对象。显式地创建`StringBuilder`还允许你预先指定`StringBuilder`的大小，避免多次重新分配缓存。
 
 因此，当为一个类编写`toString()`方法时，如果字符串操作比较简单，那就可以信赖编译器，他会为你合理地构造最终的字符串结果。但是，如果你要在`toString()`方法中使用循环，那么最好自己创建一个`StringBuilder`对象，用它来构造最终的结果。
 
@@ -180,7 +180,6 @@ public class UsingStringBuilder {
         result.append("]");
         return result.toString();
     }
-
     public static void main(String[] args) {
         UsingStringBuilder usb = new UsingStringBuilder();
         System.out.println(usb);
@@ -189,11 +188,10 @@ public class UsingStringBuilder {
 /*
 [58, 55, 93, 61, 61, 29, 68, 0, 22, 7, 88, 28, 51, 89, 
 9, 78, 98, 61, 20, 58, 16, 40, 11, 22, 4]
-
  */
 ```
 
-## 3.无意识的递归
+## 13.3 无意识的递归
 
 `Java`中的每个类从根本上都是继承自`Object`，标准容器类自然也不例外。因此容器类都有`toString()`方法，覆写了该方法，使得它生成的`String`结果能够表达容器自身，以及容器所包含的对象。例如`ArrayList.toString()`，它会遍历`ArrayList`中包含的所有对象，调用每个元素上的`toString()`方法：
 
@@ -221,7 +219,6 @@ public class InfiniteRecursion {
     public String toString() {
         return "InfiniteRecursion address: " + this + "\n";
     }
-
     public static void main(String[] args) {
         List<InfiniteRecursion> v = new ArrayList<InfiniteRecursion>();
         for (int i = 0; i < 10; i++) {
@@ -232,28 +229,11 @@ public class InfiniteRecursion {
 }
 ```
 
-如果你希望`toString()`方法打一次拿出对象的内存地址，也许你会考虑使用`this`关键字：
-
-```java
-public class InfiniteRecursion {
-    public String toString() {
-        return " InfiniteRecursion address: " + this + "\n";
-    }
-    public static void main(String[] args) {
-        List<InfiniteRecursion> v =
-                new ArrayList<InfiniteRecursion>();
-        for(int i = 0; i < 10; i++)
-            v.add(new InfiniteRecursion());
-        System.out.println(v);
-    }
-}
-```
-
 执行代码会得到一串非常长的异常。这里发生了自动类型转换，由`InfiniteRecursion`类型转换成`String`类型。因为编译器看到一个`String`对象后面跟着一个“+”，而在后面的对象不是`String`，于是编译器试着将`this`转换成一个`String`。调用`this`上的`toString()`方法进行转换，于是就发生了递归调用。所以不该使用`this`，而是应该调用`super.toString()`方法。
 
-## 4.String上的操作
+## 13.4 String上的操作
 
-## 5.格式化输出
+## 13.5 格式化输出
 
 ### 5.1 printf\(\)
 
@@ -284,6 +264,8 @@ Row 1: [5 5.332542]
 Row 1: [5 5.332542]
  */
 ```
+
+可以看到，`format()`与`printf()`是等价的。
 
 ### 5.3 Formatter类
 
