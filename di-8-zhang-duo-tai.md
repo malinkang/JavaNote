@@ -1,6 +1,6 @@
 # 第8章 多态
 
-## 8.1再论向上转型
+## 8.1 再论向上转型
 
 对某个对象的引用视为对其基类型的引用的做法被称作`向上转型`。
 
@@ -622,6 +622,8 @@ Disposing Shared 0
 
 ### 8.3.3 构造器内部的多态方法的行为
 
+如果要调用构造器内部的一个动态绑定方法，就要用到那个方法的被覆盖后的定义。然而，这个调用的效果可能相当难以预料，因为被覆盖的方法在对象完全构造之前就会被调用。这可能会造成一些难于发现的隐藏错误。
+
 ```java
 //: polymorphism/PolyConstructors.java
 // Constructors and polymorphism
@@ -659,6 +661,8 @@ Glyph() after draw()
 RoundGlyph.RoundGlyph(), radius = 5
 *///:~
 ```
+
+很早之前看了篇文章[JAVA构造时成员初始化的陷阱](https://coolshell.cn/articles/1106.html#comment-345)觉得很神奇，重读《Java编程思想》才发现，书中早有讲解。
 
 ## 8.4 协变返回类型
 

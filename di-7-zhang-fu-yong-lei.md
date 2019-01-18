@@ -1,6 +1,6 @@
 # 第7章 复用类
 
-## 1.组合语法
+## 7.1 组合语法
 
 ```java
 //: reusing/SprinklerSystem.java
@@ -99,7 +99,7 @@ castille = Constructed
 *///:~
 ```
 
-## 2.继承语法
+## 7.2 继承语法
 
 ```java
 //: reusing/Detergent.java
@@ -208,7 +208,7 @@ Chess constructor
 *///:~
 ```
 
-## 3.代理
+## 7.3 代理
 
 ```java
 //: reusing/SpaceShipControls.java
@@ -279,7 +279,7 @@ public class SpaceShipDelegation {
 } ///:~
 ```
 
-## 4.结合使用组合和继承
+## 7.4 结合使用组合和继承
 
 ```java
 //: reusing/PlaceSetting.java
@@ -558,7 +558,7 @@ public class Car {
 } ///:~
 ```
 
-## 6.protected关键字
+## 7.6 protected关键字
 
 ```java
 //: reusing/Orc.java
@@ -599,7 +599,7 @@ Orc 19: I'm a Villain and my name is Bob
 *///:~
 ```
 
-## 7.向上转型
+## 7.7 向上转型
 
 ```java
 //: reusing/Wind.java
@@ -627,9 +627,9 @@ public class Wind extends Instrument {
 
 ### 7.2 再论组合与继承
 
-## 8.final关键字
+## 7.8 final关键字
 
-### 8.1 final数据
+### 7.8.1 final数据
 
 ```java
 //: reusing/FinalData.java
@@ -752,7 +752,7 @@ public class FinalArguments {
 } ///:~
 ```
 
-### 8.2 final方法
+### 7.8.2 final方法
 
 使用`final`方法的原因有两个。第一个原因是把方法锁定，以防任何继承类修改它的含义。这是出于设计的考虑：想要确保在继承中使方法行为保持不变，并且不会被覆盖。
 
@@ -812,7 +812,7 @@ OverridingPrivate2.g()
 *///:~
 ```
 
-### 8.3 final类
+### 7.8.3 final类
 
 当将某个类的整体定义为`final`时，就表明了你不打算继承该类，而且也不允许别人这样做。换句话说，出于某种考虑，你对该类的设计永不需要做任何变动，或者出于安全的考虑，你不希望它有子类。
 
@@ -842,11 +842,11 @@ public class Jurassic {
 } ///:~
 ```
 
-### 8.4 有关final的忠告
+### 7.8.4 有关final的忠告
 
-## 9.初始化及类的加载
+## 7.9 初始化及类的加载
 
-### 9.1 继承与初始化
+### 7.9.1 继承与初始化
 
 了解包括继承在内的初始化全过程，以对所发生的一切有个全局性的把握，是很有益的。
 
@@ -896,4 +896,6 @@ j = 39
 如果该基类还有其自身的基类，那么第二个基类就会被加载，如此类推。接下来，根基类中的`static`初始化即会被执行，然后是下一个导出类，以此类推。这种方式很重要，因为导出类的`static`初始化可能会依赖于基类成员能否被正确初始化。
 
 至此为止，必要的类都已加载完毕，对象就可以被创建了。首先，对象中所有的基本类型都会被设为默认值，对象引用被设为null。然后，基类的构造器会被调用。
+
+
 
