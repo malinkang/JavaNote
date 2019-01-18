@@ -80,3 +80,10 @@ java -Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError HeapOOM
 
 ![](../.gitbook/assets/image%20%281%29.png)
 
+### 1.4.1 Java堆溢出
+
+### 1.4.2 虚拟机栈和本地方法栈溢出
+
+### 1.4.3 方法区和运行时常量池溢出
+
+### 1.4.4 本机直接内存溢出
