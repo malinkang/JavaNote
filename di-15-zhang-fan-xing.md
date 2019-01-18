@@ -151,7 +151,7 @@ public class TupleTest {
 *///:~
 ```
 
-### 2.2 一个堆栈类
+### 15.2.2 一个堆栈类
 
 ```java
 //: generics/LinkedStack.java
@@ -194,7 +194,7 @@ Phasers
 *///:~
 ```
 
-### 2.3 RandomList
+### 15.2.3 RandomList
 
 ```java
 //: generics/RandomList.java
@@ -419,7 +419,7 @@ GenericMethods
 *///:~
 ```
 
-### 4.1 杠杆利用类型参数推断
+### 15.4.1 杠杆利用类型参数推断
 
 创建一个持有`List`的`Map`
 
@@ -495,7 +495,7 @@ public class LimitsOfInference {
 } ///:~
 ```
 
-**显式的类型说明**
+#### 显式的类型说明
 
 在泛型方法中，可以显式地指明类型。
 
@@ -513,7 +513,7 @@ public class ExplicitTypeSpecification {
 } ///:~
 ```
 
-### 4.2 可变参数与泛型方法
+### 15.4.2 可变参数与泛型方法
 
 ```java
 //: generics/GenericVarargs.java
@@ -541,7 +541,7 @@ public class GenericVarargs {
 *///:~
 ```
 
-### 4.3 用于Generator的泛型方法
+### 15.4.3 用于Generator的泛型方法
 
 ```java
 //: generics/Generators.java
@@ -574,7 +574,7 @@ Mocha 3
 *///:~
 ```
 
-### 4.4 一个通用的Generator
+### 15.4.4 一个通用的Generator
 
 ```java
 //: net/mindview/util/BasicGenerator.java
@@ -633,7 +633,7 @@ CountedObject 4
 *///:~
 ```
 
-### 4.5 简化元组的使用
+### 15.4.5 简化元组的使用
 
 ```java
 //: net/mindview/util/Tuple.java
@@ -693,7 +693,7 @@ public class TupleTest2 {
 *///:~
 ```
 
-### 4.6 一个Set实用工具
+### 15.4.6 一个Set实用工具
 
 ```java
 //: net/mindview/util/Sets.java
@@ -999,7 +999,7 @@ public class LostInformation {
 
 **在泛型代码内部，无法获得任何有关反省参数类型的信息。**
 
-### 7.1 C++的方式
+### 15.7.1 C++的方式
 
 ```cpp
 //: generics/Templates.cpp
@@ -1091,13 +1091,13 @@ class ReturnGenericType<T extends HasF> {
 } ///:~
 ```
 
-### 7.2 迁移兼容性
+### 15.7.2 迁移兼容性
 
 擦除不是一个语言特性。它是`Java`泛型实现中的一种折中，因为泛型不是`Java`语言出现时就有的组成部分，所以这种折中是必须的。
 
 在基于擦除的实现中，泛型类型被当做第二类型处理，即不能在某些重要的上下文环境中使用类型。泛型类型只有在静态类型检查期间才出现，在此之后，程序中的所有泛型类型都将被擦除，替换为它们的非泛型上界。例如，诸如`List<T>`这样的类型注解将被擦除为`List`，而普通的类型变量在未指定边界的情况下将被擦除为`Object`。
 
-### 7.3 擦除的问题
+### 15.7.3 擦除的问题
 
 擦除的代价是显著的。泛型不能用于显式地引用运行时类型的操作之中，例如`转型`、`instanceof`和`new表达式`。
 
@@ -1129,7 +1129,7 @@ public class ErasureAndInheritance {
 } ///:~
 ```
 
-### 7.4 边界处的动作
+### 15.7.4 边界处的动作
 
 正是因为有了擦除，我发现泛型最令人困惑的方面源自这样一个事实，即可以表示没有任何意义的事物。
 
@@ -1369,7 +1369,7 @@ true
 *///:~
 ```
 
-### 8.1 创建类型实例
+### 15.8.1 创建类型实例
 
 在`Erased.java`中对创建一个`new T()`的尝试将无法实现，部分原因是因为擦除，而另一部分原因是因为编译器不能验证`T`具有默认构造器。但是在`C++`中，这种操作很自然，很直观，并且很安全：
 
@@ -1497,7 +1497,7 @@ X
 *///:~
 ```
 
-### 8.2 泛型数组
+### 15.8.2 泛型数组
 
 正如你在`Erased.java`中所见，不能创建泛型数组。一般的解决方案是在任何想要创建泛型数组的地方都使用`ArrayList`：
 
@@ -2392,7 +2392,7 @@ public class SelfBoundingMethods {
 } ///:~
 ```
 
-### 12.3 参数协变
+### 15.12.3 参数协变
 
 ```java
 //: generics/CovariantReturnTypes.java
