@@ -1,8 +1,8 @@
 # 第15章 泛型
 
-## 1.与C++的比较
+## 15.1 与C++的比较
 
-## 2.简单泛型
+## 15.2 简单泛型
 
 一个只能持有单个对象的类。
 
@@ -58,7 +58,7 @@ public class Holder3<T> {
 } ///:
 ```
 
-### 2.1 一个元组类库
+### 15.2.1 一个元组类库
 
 ```java
 //: net/mindview/util/TwoTuple.java
@@ -220,7 +220,7 @@ brown over fox quick quick dog brown The brown lazy brown
 *///:~
 ```
 
-## 3.泛型接口
+## 15.3 泛型接口
 
 泛型也可以应用于接口。
 
@@ -385,7 +385,7 @@ extends Fibonacci implements Iterable<Integer> {
 *///:~
 ```
 
-## 4.泛型方法
+## 15.4 泛型方法
 
 到目前为止，我们看到的泛型，都是应用于整个类上。但同样可以在类中包含参数化方法，而这个方法所在的类可以是泛型类，也可以不是泛型类。
 
@@ -774,7 +774,7 @@ complement(set1, set2): [SAP_GREEN, ROSE_MADDER, YELLOW_OCHRE, BURNT_UMBER, VIOL
 *///:~
 ```
 
-## 5.匿名内部类
+## 15.5 匿名内部类
 
 泛型还可以应用于内部类以及匿名内部类。
 
@@ -840,7 +840,7 @@ Teller 1 serves Customer 15
 *///:~
 ```
 
-## 6.构建复杂模型
+## 15.6 构建复杂模型
 
 泛型的一个重要好处是能够简单而安全地创建复杂的模型。例如，我们可以很容易地创建`List`元组。
 
@@ -946,7 +946,7 @@ public class Store extends ArrayList<Aisle> {
 *///:~
 ```
 
-## 7.擦除的神秘之处
+## 15.7 擦除的神秘之处
 
 ```java
 //: generics/ErasedTypeEquivalence.java
@@ -1316,7 +1316,7 @@ public class typeinfo.GenericHolder<T> {
 
 由于所产生的`get()`和`set()`的字节码相同，所以在泛型中的所有动作都发生在边界处：对传递进来的值进行额外的编译器检查，并插入对传递出去的值的转型。
 
-## 8.擦除的补偿
+## 15.8 擦除的补偿
 
 擦除丢失了在泛型代码中执行某些操作的能力。任何在运行时需要知道确切类型信息的操作都将无法工作：
 
@@ -1637,7 +1637,9 @@ public class GenericArrayWithTypeToken<T> {
 } ///:~
 ```
 
-## 9.边界
+## 15.9 边界
+
+因为擦除移除了类型信息，所以，无界泛型参数调用的方法只是那些可以用`Object`调用的方法。但是，如果能够将这个参数限制为某个类型自己，那么就可以用这些类型子集来调用方法。为了执行这种限制，`Java`泛型重用了`extends`关键字。
 
 ```java
 //: generics/BasicBounds.java
@@ -1654,6 +1656,7 @@ class Colored<T extends HasColor> {
 
 class Dimension { public int x, y, z; }
 
+//类必须在前
 // This won't work -- class must be first, then interfaces:
 // class ColoredDimension<T extends HasColor & Dimension> {
 
@@ -1801,7 +1804,7 @@ public class EpicBattle {
 } ///:~
 ```
 
-## 10.通配符
+## 15.10 通配符
 
 可以向导出类型的数组赋予基类型的数组引用：
 
@@ -1866,7 +1869,7 @@ public class GenericsAndCovariance {
 } ///:~
 ```
 
-### 10.1 编译器有多聪明
+### 15.10.1 编译器有多聪明
 
 ```java
 //: generics/CompilerIntelligence.java
@@ -1918,7 +1921,7 @@ true
 *///:~
 ```
 
-### 10.2 逆变
+### 15.10.2 逆变
 
 还可以走另外一条路，即使用`超类型通配符`。
 
@@ -2006,7 +2009,7 @@ public class GenericReading {
 } ///:~
 ```
 
-### 10.3 无界通配符
+### 15.10.3 无界通配符
 
 `无界通配符<?>`看起来意味着“任何事物”，因此使用无界通配符好像等价于使用原生类型。
 
@@ -2200,7 +2203,7 @@ public class Wildcards {
 } ///:~
 ```
 
-### 10.4 捕获转换
+### 15.10.4 捕获转换
 
 ```java
 //: generics/CaptureConversion.java
@@ -2232,21 +2235,21 @@ Double
 *///:~
 ```
 
-## 11.问题
+## 15.11 问题
 
-### 1.任何基本类型都不能作为类型参数
+### 15.11.1.任何基本类型都不能作为类型参数
 
-### 2.实现参数化接口
+### 15.11.2.实现参数化接口
 
-### 3.转型和警告
+### 15.11.3 转型和警告
 
-### 4.重载
+### 15.11.4 重载
 
-### 5.基类劫持了接口
+### 15.11.5 基类劫持了接口
 
-## 12.自限定的类型
+## 15.12 自限定的类型
 
-### 12.1 古怪的循环泛型
+### 15.12.1 古怪的循环泛型
 
 ```java
 //: generics/CuriouslyRecurringGeneric.java
@@ -2291,7 +2294,7 @@ Subtype
 
 新类`Subtype`接受的参数和返回的值具有`Subtype`类型而不仅仅是基类`BasicHolder`类型。这就是`CRG`的本质：基类用到处类替代其参数。这意味着泛型基类变成了一种其所有到处类的公共功能的模版，但是这些功能对于其所有参数和返回值，将使用导出类型。也就是说，在所产生的类中将使用确切类型而不是基类型。因此，在`Subtype`中，传递给`set()`的参数和`get()`返回的类型都是确切的`Subtype`。
 
-### 12.2 自限定
+### 15.12.2 自限定
 
 `BasicHolder`可以使用任何类型作为其泛型参数，就像下面看到的那样：
 
@@ -2507,7 +2510,7 @@ GenericSetter.set(Base)
 *///:~
 ```
 
-## 13.动态类型安全
+## 15.13 动态类型安全
 
 ```java
 //: generics/CheckedList.java
@@ -2541,11 +2544,11 @@ java.lang.ClassCastException: Attempt to insert class typeinfo.pets.Cat element 
 *///:~
 ```
 
-## 14.异常
+## 15.14异常
 
-## 15.混型
+## 15.15 混型
 
-### 15.1 C++中的混型
+### 15.15.1 C++中的混型
 
 ```cpp
 //: generics/Mixins.cpp
@@ -2767,13 +2770,13 @@ Hello
 *///:~
 ```
 
-## 16.潜在类型机制
+## 15.16 潜在类型机制
 
-## 17.对缺乏潜在类型机制的补偿
+## 15.17 对缺乏潜在类型机制的补偿
 
-## 18.将函数对象用作策略
+## 15.18 将函数对象用作策略
 
-## 19.总结：转型真的如此之糟吗？
+## 15.19 总结：转型真的如此之糟吗？
 
 ## 相关资料
 
