@@ -649,7 +649,7 @@ public class TestRegularExpression {
 }
 ```
 
-```
+```text
 java strings.TestRegularExpression "abcabcabcdefabc" "abc+" "(abc)+" "(abc){2,}"
 ```
 
@@ -721,7 +721,7 @@ the, the, he, e, linnet, linnet, innet, nnet, net, et, t, s, s, wings, wings, in
 
 组是用括号划分的正则表达式，可以根据组的编号来引用某个组。组号为0表示整个表达式，组号1表示被第一对括号括起来的组，依次类推。因此，在下面这个表达式,
 
-```
+```text
 A(B(C))D
 ```
 
