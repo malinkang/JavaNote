@@ -23,6 +23,7 @@
   * [第19章 枚举类型](java-se/di-19-zhang-mei-ju-lei-xing.md)
   * [第20章 注解](java-se/di-20-zhang-zhu-jie.md)
   * [第21章 并发](java-se/di-21-zhang-bing-fa.md)
+  * [Effective Java](java-se/effective-java.md)
 * [Java虚拟机](java-xu-ni-ji/README.md)
   * [第1章 Java内存区域与内存溢出](java-xu-ni-ji/di-1-zhang-java-nei-cun-qu-yu-yu-nei-cun-yi-chu.md)
   * [第2章 垃圾收集器与内存分配策略](java-xu-ni-ji/di-2-zhang-la-ji-shou-ji-qi-yu-nei-cun-fen-pei-ce-lve.md)
