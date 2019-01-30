@@ -207,3 +207,165 @@ public class NutritionFacts {
 `Builder`模式也有自身的不足。为了创建对象，必须先创建它的构造器。虽然创建构造器的开销在实践中可能不那么明显，但是在某些时分注重性能的情况下，可能就成问题了。`Builder`模式还比重叠构造器模式更加冗长，因此它只在有很多参数的时候才使用。
 
 简而言之，如果类的构造器或者静态工厂具有多个参数，设计这种类时，`Builder`模式就是种不错的选择，特别是当大多数参数都是可选的时候。与使用传统的重叠构造器模式相比，使用`Builder`的客户端代码将更易于阅读和编写，构建起也比`JavaBeans`更加安全。
+
+## 第3条：用私有构造器或者枚举类型强化Singleton属性
+
+`Signleton`指仅仅被实例化一次的类。`Singleton`通常被用来代表那些本质上唯一的系统组件，比如窗口管理器或者文件系统。当类成为`Singleton`会使它的客户端测试变得十分困难，因为无法给`Singleton`替换模拟实现，除非它实现一个充当其类型的接口。
+
+在`Java 1.5`发行版本之前，实现`Singleton`有两种方法：
+
+```java
+public class Elvis {
+    public static final Elvis INSTANCE = new Elvis();
+    private Elvis() {}
+    public void leaveTheBuilding() {}
+}
+```
+在实现`Singleton`的第二种方法中，公有的成员是个静态工厂方法：
+
+```java
+public class Elvis {
+    private static final Elvis INSTANCE = new Elvis();
+    public static Elvis getInstance() {
+        return INSTANCE;
+    }
+    private Elvis() {}
+    public void leaveTheBuilding() {}
+}
+```
+从`Java 1.5`发型版本起，实现`Singleton`还有第三种方法。只需编写一个包含单个元素的枚举类型。
+
+```java
+public enum Elvis {
+    INSTANCE;
+    public void leaveTheBuilding(){}
+}
+```
+这种方法在功能上与公有域方法相近，但是它更加简洁，武昌地提供了序列化机制，绝对防止多次序列化，即使是在面对复杂的序列化或者反射攻击的时候。虽然这种方法还没有广泛采用，但是单元素的枚举类型已经成为实现Singleton的最佳方法。
+
+## 第4条：通过私有构造器强化不可实例化的能力
+
+有时候，你可能需要编写只包含静态方法和静态域的类。这些类的名声很不好，因为有些人在面向对象的语言中滥用这样的类来编写过程化的程序。尽管如此，它们也确实有它们特有的用处。我们可以利用这种类，以`java.lang.Math`或者`java.lang.Arrays`的方法，把基本类型的值或者数组类型上的相关方法组织起来。我们也可以通过`java.util.Collection`的方式，把实现特定接口的对象上的静态方法组织起来。最后，还可以利用这种类把final类上的方法组织起来，以取代扩展该类的做法。
+
+这样的工具类（utility class）不希望被实例化，实例化它没有任何意义。然而，在缺少显式构造器的情况下，编译器会自动提供一个公有的、无参的缺省构造器（default constructor）。对于用户而言，这个构造器与其他的构造器没有任何区别。在已发行的API中常常可以看到一些被无意识地实例化的类。
+
+```java
+public class UtilityClass {
+    private UtilityClass(){
+        throw new AssertionError();
+    }
+}
+```
+
+## 第5条：避免创建不必要的对象
+
+一般来说，最好能重用对象而不是在每次需要的时候就创建一个相同功能的新对象。重用方式既快速，又流行。如果对象是不可变的，它就始终可以被重用。
+
+```java
+//该语句每次被执行的时候都创建一个新的String实例
+String s = new String("stringette"); 
+```
+
+
+```java
+String s = "stringette";
+```
+这个版本只用了一个`String`实例，而不是每次执行的时候都创建一个新的实例。而且，它可以保证，对于所有在同一台虚拟机中运行的代码，只要它们包含相同的字符串字面常量，该对象就会被重用。
+
+除了重用不可变的对象之外，也可以重用那些已知不会被修改的可变对象。
+
+```java
+public class Person {
+    private final Date birthDate;
+    public Person(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+    //检验这个人是否出生于1946年至1964年
+    public boolean isBabyBoomer() {
+        Calendar gmtCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        gmtCal.set(1946, Calendar.JANUARY, 1, 0, 0, 0);
+        Date boomStart = gmtCal.getTime();
+        gmtCal.set(1965, Calendar.JANUARY, 1, 0, 0, 0);
+        Date boomEnd = gmtCal.getTime();
+        return birthDate.compareTo(boomStart) >= 0 &&
+                birthDate.compareTo(boomEnd) < 0;
+    }
+}
+```
+
+`isBabyBoomer`每次被调用的时候，都会新建一个`Calendar`、一个`TimeZone`和两个`Date`实例，这是不必要的。下面的版本用一个静态的初始化器（initializer），避免了这种效率低下的情况：
+
+```java
+public class Person {
+    private final Date birthDate;
+
+    public Person(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    private static final Date BOOM_START;
+    private static final Date BOOM_END;
+    static {
+        Calendar gmtCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        gmtCal.set(1946, Calendar.JANUARY, 1, 0, 0, 0);
+        BOOM_START = gmtCal.getTime();
+        gmtCal.set(1965, Calendar.JANUARY, 1, 0, 0, 0);
+        BOOM_END = gmtCal.getTime();
+    }
+
+    //检验这个人是否出生于1946年至1964年
+    public boolean isBabyBoomer() {
+ 
+        return birthDate.compareTo(BOOM_START) >= 0 &&
+                birthDate.compareTo(BOOM_END) < 0;
+    }
+}
+```
+
+## 第6条：消除过期的对象引用
+
+```java
+public class Stack {
+    private Object[] elements;
+    private int size = 0;
+    private static final int DEFAULT_INITIAL_CAPACITY = 16;
+
+    public Stack() {
+        elements = new Object[DEFAULT_INITIAL_CAPACITY];
+    }
+
+    public void push(Object e) {
+        ensureCapacity();
+        elements[size++] = e;
+    }
+
+    public Object pop() {
+        if (size == 0)
+            throw new EmptyStackException();
+        return elements[--size];
+    }
+
+    private void ensureCapacity() {
+        if (elements.length == size)
+            elements = Arrays.copyOf(elements, 2 * size + 1);
+    }
+}
+```
+
+如果一个栈先是增长，然后再收缩，那么，从栈中弹出来的对象将不会被当作垃圾回收，即使使用栈的程序不再引用这些对象，它们也不会被回收。这是因为，栈内部维护着对这些对象的`过期引用（obsolete reference）`。所谓的过期引用，是指永远也不会再被解除的引用。在本例中，凡是`elements`数组的“活动部分”之外的任何引用都是过期的。活动部分是指`elements`中下标小于`size`的那些元素。
+
+这类问题的修复方法很简单：一旦对象引用已经过期，只需清空这些引用即可。
+
+```java
+public Object pop() {
+    if (size == 0)
+        throw new EmptyStackException();
+    Object result = elements[--size];
+    elements[size] = null;
+    return result;
+}
+```
+
+## 第7条：避免使用终结方法
+
+终结方法通常是不可预测的，也是很危险的，一般情况下是不必要的。
