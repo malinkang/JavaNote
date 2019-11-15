@@ -1,0 +1,13 @@
+@startuml
+abstract class Writer{
+    public void write(int c);
+    public void write(char cbuf[], int off, int len);
+}
+Writer <|-- OutputStreamWriter
+OutputStreamWriter <|--FileWriter
+Writer <|-- BufferedWriter
+Writer <|-- CharArrayWriter
+Writer <|-- StringWriter
+Writer <|-- PipedWriter
+Writer <|-- FilterWriter
+@enduml

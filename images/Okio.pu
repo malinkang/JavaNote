@@ -1,0 +1,10 @@
+@startuml
+interface Sink
+interface Source
+Sink <|-- BufferedSink
+BufferedSink <|-- RealBufferedSink
+Source <|--BufferedSource
+BufferedSource <|-- RealBufferedSource
+
+
+@enduml
