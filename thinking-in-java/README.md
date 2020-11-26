@@ -1,2 +1,4 @@
-# Java SE
+# Introduction
+
+> An awesome project.
 

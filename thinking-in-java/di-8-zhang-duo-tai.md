@@ -743,3 +743,80 @@ SadActor
 *///:~
 ```
 
+## 扩展阅读
+
+#### [\[老人的讨论帖\]你知道为什么嘛？](https://bbs.csdn.net/topics/310238132)
+
+
+
+```java
+//属性不存在动态绑定
+class A {
+   public int i = 10;
+}
+ 
+class B extends A{
+   public int i = 20;
+}
+ 
+public class TestPolm1{
+   public static void main(String args[]){
+      B b = new B();
+      A a = b;
+      System.out.println(b.i); //20 
+      System.out.println(a.i); //10
+   }
+}
+```
+
+```java
+class A {
+   private int i = 10;
+    
+   public void printI(){
+      System.out.println(i);
+   }
+}
+ 
+class B extends A{
+   private int i = 20;
+}
+ 
+public class TestPolm2{
+   public static void main(String args[]){
+      B b = new B();
+      A a = b;
+      //都是调用的B的printI方法
+      b.printI();//20
+      a.printI();//20
+   }
+}
+```
+
+```java
+class A {
+   private int i = 10;
+    
+   public void printI(){
+      System.out.println(i);
+   }
+}
+ 
+class B extends A{
+   private int i = 20;
+   
+   public void printI(){
+      System.out.println(i);
+   }
+}
+//这个其实和上个例子一样，都是访问的B的方法
+public class TestPolm3{
+   public static void main(String args[]){
+      B b = new B();
+      A a = b;
+      b.printI(); //20
+      a.printI(); //20 
+   }
+}
+```
+

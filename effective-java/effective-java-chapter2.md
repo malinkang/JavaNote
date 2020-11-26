@@ -1,13 +1,5 @@
----
-title: 《Effective Java》读书笔记 第2章 创建和销毁对象
-date: 2019-01-05 15:52:23
-tags: ["Java", "读书笔记"]
-toc: true
----
+# 第2章 创建和销毁对象
 
->《Effective Java》经常出现在各个Java推荐书单里，自己也曾买过一本看了几章，便被束之高阁。最近发现[第三版](https://book.douban.com/subject/30412517/)也已经出版了。所以把读完这本书也再次提上日程。我看的依旧是[第二版](https://book.douban.com/subject/3360807/)，在京东上查了一下第三版竟然卖90多块钱，这也是纸质书不方便的地方，大多数内容都一样，却仍然要买一本新书来，造成不必要的资源浪费。
-
-* [源码](https://github.com/jbloch/effective-java-3e-source-code)
 
 ## 第1条：考虑用静态工厂方法替代构造器
 
@@ -27,7 +19,6 @@ public static Boolean valueOf(boolean b) {
 
 **静态工厂方法与构造器不同的第三大优势在于，它们可以返回原返回类型的任何子类型的对象。**
 
-
 **仅提供静态工厂方法的主要限制是没有公共或受保护构造函数的类不能被子类化。**
 
 **静态工厂方法的第二个缺点是程序员很难找到它们。**在API文档中，它们没有像构造器那样在API文档中明确标识出来，因此，对于提供了静态工厂方法而不是构造器的类来说，要想查明如何实例化一个类，这是非常困难的。
@@ -39,18 +30,13 @@ public static Boolean valueOf(boolean b) {
 ```java
 Date date = Date.from(instant);
 ```
+
 * of
-
 * valueOf
-
 * instance或者getInstance
-
 * create 或 newInstance
-
 * getType
-
 * newType
-
 * type
 
 ## 第2条：遇到多个构造器参数时要考虑用构建器
@@ -133,6 +119,7 @@ public class NutritionFacts {
     }
 }
 ```
+
 ```java
 NutritionFacts cocaCola = new NutritionFacts();
 cocaCola.setServingSize(240);
@@ -141,6 +128,7 @@ cocaCola.setCalories(100);
 cocaCola.setSodium(35);
 cocaCola.setCarbohydrate(27);
 ```
+
 遗憾的是，`JavaBeans`模式自身有着很严重的缺点。因为构造过程被分到了几个调用中，在构造过程中`JavaBean`可能处于不一致的状态。另一点不足在于，`JavaBeans`模式阻止了把类做成不可变的可能。
 
 第三种替代方法`Builder`模式，既能保证像重叠构造器模式那样的安全性，也能保证像`JavaBeans`模式那么好的可读性。
@@ -230,6 +218,7 @@ public class Elvis {
     public void leaveTheBuilding() {}
 }
 ```
+
 在实现`Singleton`的第二种方法中，公有的成员是个静态工厂方法：
 
 ```java
@@ -242,6 +231,7 @@ public class Elvis {
     public void leaveTheBuilding() {}
 }
 ```
+
 从`Java 1.5`发型版本起，实现`Singleton`还有第三种方法。只需编写一个包含单个元素的枚举类型。
 
 ```java
@@ -250,6 +240,7 @@ public enum Elvis {
     public void leaveTheBuilding(){}
 }
 ```
+
 这种方法在功能上与公有域方法相近，但是它更加简洁，武昌地提供了序列化机制，绝对防止多次序列化，即使是在面对复杂的序列化或者反射攻击的时候。虽然这种方法还没有广泛采用，但是单元素的枚举类型已经成为实现Singleton的最佳方法。
 
 ## 第4条：通过私有构造器强化不可实例化的能力
@@ -272,13 +263,13 @@ public class UtilityClass {
 
 ```java
 //该语句每次被执行的时候都创建一个新的String实例
-String s = new String("stringette"); 
+String s = new String("stringette");
 ```
-
 
 ```java
 String s = "stringette";
 ```
+
 这个版本只用了一个`String`实例，而不是每次执行的时候都创建一个新的实例。而且，它可以保证，对于所有在同一台虚拟机中运行的代码，只要它们包含相同的字符串字面常量，该对象就会被重用。
 
 除了重用不可变的对象之外，也可以重用那些已知不会被修改的可变对象。
@@ -324,7 +315,7 @@ public class Person {
 
     //检验这个人是否出生于1946年至1964年
     public boolean isBabyBoomer() {
- 
+
         return birthDate.compareTo(BOOM_START) >= 0 &&
                 birthDate.compareTo(BOOM_END) < 0;
     }
@@ -361,7 +352,6 @@ public class Stack {
 }
 ```
 
-
 如果一个栈先是增长，然后再收缩，那么，从栈中弹出来的对象将不会被当作垃圾回收，即使使用栈的程序不再引用这些对象，它们也不会被回收。这是因为，栈内部维护着对这些对象的`过期引用（obsolete reference）`。所谓的过期引用，是指永远也不会再被解除的引用。在本例中，凡是`elements`数组的“活动部分”之外的任何引用都是过期的。活动部分是指`elements`中下标小于`size`的那些元素。
 
 这类问题的修复方法很简单：一旦对象引用已经过期，只需清空这些引用即可。
@@ -379,5 +369,4 @@ public Object pop() {
 ## 第7条：避免使用终结方法
 
 终结方法通常是不可预测的，也是很危险的，一般情况下是不必要的。
-
 
