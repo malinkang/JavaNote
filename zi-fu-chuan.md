@@ -1,14 +1,14 @@
-## Java字符串
+# 字符串
 
-
-<h3>使用正则表达式</h3>
+## 使用正则表达式
 
 在jdk 1.4的版本中，java添加了支持正则表达式的包`java.util.regex`。
 
 Pattern对象常用方法
-* compile()
-* split()
-* matches()
+
+* compile\(\)
+* split\(\)
+* matches\(\)
 
 ```java
   // 获取正则表达式 输出 \d+
@@ -39,9 +39,9 @@ Pattern对象常用方法
         // 6
 
         System.out.println(matcher.end());
-
 ```
 
-<h3>参考</h3>
+## 参考
 
 * [正则表达式30分钟入门教程](http://deerchao.net/tutorials/regex/regex.htm)
+

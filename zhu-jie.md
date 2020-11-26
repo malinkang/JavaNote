@@ -1,6 +1,6 @@
-## 注解
+# 注解
 
-<h3>1.注解定义</h3>
+## 1.注解定义
 
 使用@interface自定义注解时，自动继承了java.lang.annotation.Annotation接口，由编译程序自动完成其他细节。在定义注解时，不能继承其他的注解或接口。@interface用来声明一个注解，其中的每一个方法实际上是声明了一个配置参数。方法的名称就是参数的名称，返回值类型就是参数的类型。可以通过default来声明参数的默认值。
 
@@ -17,18 +17,11 @@ Annotation类型参数只能用public或者默认这两个访问权限。
 
 如果参数名设置成value，则使用时不必指定参数名。
 
+## 2.元注解
 
-<h3>2.元注解</h3>
+元注解的作用就是负责注解其他注解。Java5.0定义了4个原注解，它们被用来提供对其它 annotation类型作说明。Java5.0定义的元注解： 1. @Target 2. @Retention 3. @Documented 4. @Inherited
 
-元注解的作用就是负责注解其他注解。Java5.0定义了4个原注解，它们被用来提供对其它 annotation类型作说明。Java5.0定义的元注解：
-1. @Target
-2. @Retention
-3. @Documented
-4. @Inherited
-
-<h4 id="2.1@Target">2.1@Target</h4>
-@Target用于描述注解的使用范围。
-取值范围
+2.1@Target @Target用于描述注解的使用范围。 取值范围
 
 ```java
 public enum ElementType {
@@ -71,10 +64,11 @@ public enum ElementType {
     TYPE_USE
 }
 ```
-<h4 id="2.2@Retention">2.2@Retention</h4>
-@Retention表示需要在什么级别保存该注释信息，用于描述注解的生命周期。
+
+2.2@Retention @Retention表示需要在什么级别保存该注释信息，用于描述注解的生命周期。
 
 取值范围
+
 ```java
 public enum RetentionPolicy {
     /**
@@ -99,8 +93,7 @@ public enum RetentionPolicy {
 }
 ```
 
-
-<h3>3.提取注解</h3>
+## 3.提取注解
 
 方法
 
@@ -110,4 +103,6 @@ public enum RetentionPolicy {
 * isAnnotationPresent:判断该程序元素上是否包含指定类型的注解，存在返回true，不存在返回false
 
 注解的方法
+
 * annotationType
+

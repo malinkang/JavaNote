@@ -1,21 +1,17 @@
-## 枚举
+# 枚举
 
-
-<h3 id="1.定义一个枚举">1.定义一个枚举<h3>
+## 1.定义一个枚举 <a id="1.&#x5B9A;&#x4E49;&#x4E00;&#x4E2A;&#x679A;&#x4E3E;"></a>
 
 ```java
-
 public enum  WeekDay {
 
     SUN,MON,TUES,WED,THUR,FRI,SAT
 }
-
 ```
 
 枚举中的方法
 
 ```java
-
  WeekDay weekDay=WeekDay.FRI;
         System.out.println(weekDay);
         System.out.println(weekDay.name());
