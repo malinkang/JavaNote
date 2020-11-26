@@ -19,8 +19,6 @@
 
 ## 《Java编程思想》读书笔记
 
-# Table of contents
-
 * [Introduction](README.md)
 * [第1章 对象导论](thinking-in-java/di-1-zhang-dui-xiang-dao-lun.md)
 * [第2章 一切都是对象](thinking-in-java/di-2-zhang-yi-qie-du-shi-dui-xiang.md)
