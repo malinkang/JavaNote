@@ -17,7 +17,79 @@
 * [时间和日期](shi-jian-he-ri-qi.md)
 * [Java8介绍](java8.md)
 
+## 《Java编程思想》读书笔记
+
+# Table of contents
+
+* [Introduction](README.md)
+* [第1章 对象导论](thinking-in-java/di-1-zhang-dui-xiang-dao-lun.md)
+* [第2章 一切都是对象](thinking-in-java/di-2-zhang-yi-qie-du-shi-dui-xiang.md)
+* [第3章 操作符](thinking-in-java/di-3-zhang-cao-zuo-fu.md)
+* [第4章 控制执行流程](thinking-in-java/di-4-zhang-kong-zhi-zhi-hang-liu-cheng.md)
+* [第5章 初始化与清理](thinking-in-java/di-5-zhang-chu-shi-hua-yu-qing-li.md)
+* [第6章 访问权限控制](thinking-in-java/di-6-zhang-fang-wen-quan-xian-kong-zhi.md)
+* [第7章 复用类](thinking-in-java/di-7-zhang-fu-yong-lei.md)
+* [第8章 多态](thinking-in-java/di-8-zhang-duo-tai.md)
+* [第9章 接口](thinking-in-java/di-9-zhang-jie-kou.md)
+* [第10章 内部类](thinking-in-java/di-10-zhang-nei-bu-lei.md)
+* [第11章 持有对象](thinking-in-java/di-11-zhang-chi-you-dui-xiang.md)
+* [第12章 通过异常处理错误](thinking-in-java/di-12-zhang-tong-guo-yi-chang-chu-li-cuo-wu.md)
+* [第13章 字符串](thinking-in-java/di-13-zhang-zi-fu-chuan.md)
+* [第14章 类型信息](thinking-in-java/di-14-zhang-lei-xing-xin-xi.md)
+* [第15章 泛型](thinking-in-java/di-15-zhang-fan-xing.md)
+* [第16章 数组](thinking-in-java/di-16-zhang-shu-zu.md)
+* [Java集合](thinking-in-java/java-ji-he/README.md)
+  * [Iterable](thinking-in-java/java-ji-he/iterable.md)
+  * [Collection](thinking-in-java/java-ji-he/collection/README.md)
+    * [List](thinking-in-java/java-ji-he/collection/list/README.md)
+      * [ArrayList](thinking-in-java/java-ji-he/collection/list/arraylist.md)
+      * [LinkedList](thinking-in-java/java-ji-he/collection/list/linkedlist.md)
+    * [Set](thinking-in-java/java-ji-he/collection/set.md)
+    * [Queue](thinking-in-java/java-ji-he/collection/queue.md)
+* [第17章 容器深入研究](thinking-in-java/di-17-zhang-rong-qi-shen-ru-yan-jiu/README.md)
+  * [Untitled](thinking-in-java/di-17-zhang-rong-qi-shen-ru-yan-jiu/untitled-1.md)
+  * [Untitled](thinking-in-java/di-17-zhang-rong-qi-shen-ru-yan-jiu/untitled.md)
+  * [Map](thinking-in-java/di-17-zhang-rong-qi-shen-ru-yan-jiu/map.md)
+  * [HashMap源码分析](thinking-in-java/di-17-zhang-rong-qi-shen-ru-yan-jiu/hashmap.md)
+* [第18章 Java I/O系统](thinking-in-java/di-18-zhang-java-io-xi-tong.md)
+* [第19章 枚举类型](thinking-in-java/di-19-zhang-mei-ju-lei-xing.md)
+* [第20章 注解](thinking-in-java/di-20-zhang-zhu-jie.md)
+* [第21章 并发](thinking-in-java/di-21-zhang-bing-fa/README.md)
+  * [创建线程](thinking-in-java/di-21-zhang-bing-fa/untitled.md)
+  * [线程状态](thinking-in-java/di-21-zhang-bing-fa/xian-cheng-zhuang-tai.md)
+  * [使用wait和notify](thinking-in-java/di-21-zhang-bing-fa/shi-yong-wait-he-notify.md)
+  * [生产者消费者模式](thinking-in-java/di-21-zhang-bing-fa/sheng-chan-zhe-xiao-fei-zhe-mo-shi.md)
+  * [synchronized](thinking-in-java/di-21-zhang-bing-fa/synchronized.md)
+  * [volatile](thinking-in-java/di-21-zhang-bing-fa/volatile.md)
+  * [Lock](thinking-in-java/di-21-zhang-bing-fa/lock.md)
+  * [ThreadLocal](thinking-in-java/di-21-zhang-bing-fa/threadlocal.md)
+  * [线程池](thinking-in-java/di-21-zhang-bing-fa/xian-cheng-chi.md)
+
+
+
 ## 《Effective Java》读书笔记
 
-* [Untitled](effective-java-du-shu-bi-ji/untitled.md)
+* [第2章 创建和销毁对象](effective-java/effective-java-chapter2.md)
+* [第3章 对于所有对象都通用的方法](effective-java/effective-java-chapter3.md)
+* [第4章 类和接口](effective-java/effective-java-chapter4.md)
+* [第5章 类和接口](effective-java/effective-java-chapter5.md)
+* [第6章 枚举和注解](effective-java/effective-java-chapter6.md)
+* [第7章 方法](effective-java/effective-java-chapter7.md)
+* [第8章 通用程序设计](effective-java/effective-java-chapter8.md)
+
+## 《深入理解Java虚拟机》读书笔记
+
+* [第2章 Java内存区域与内存溢出](understanding-the-jvm/understanding-the-jvm-chapter2.md)
+* [第3章 垃圾收集器与内存分配策略](understanding-the-jvm/understanding-the-jvm-chapter3.md)
+* [第4章 虚拟机性能监控与故障处理工具](understanding-the-jvm/understanding-the-jvm-chapter4.md)
+* [第5章 调优案例分析与实战](understanding-the-jvm/understanding-the-jvm-chapter5.md)
+* [第6章 类文件结构](understanding-the-jvm/understanding-the-jvm-chapter6.md)
+* [第7章 虚拟机类加载机制](understanding-the-jvm/understanding-the-jvm-chapter7.md)
+* [第8章 虚拟机字节码执行引擎](understanding-the-jvm/understanding-the-jvm-chapter8.md)
+* [第9章 类加载及执行子系统的案例与实战](understanding-the-jvm/understanding-the-jvm-chapter9.md)
+* [第10章 Java内存区域与内存溢出](understanding-the-jvm/understanding-the-jvm-chapter10.md)
+* [第11章 晚期（运行期）优化](understanding-the-jvm/understanding-the-jvm-chapter11.md)
+* [第12章 Java内存模型与线程](understanding-the-jvm/understanding-the-jvm-chapter12.md)
+* [第13章 线程安全与锁优化](understanding-the-jvm/understanding-the-jvm-chapter13.md)
+
 

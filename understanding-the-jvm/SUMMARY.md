@@ -3,7 +3,7 @@
 * [Initial page](README.md)
 * [第2章 Java内存区域与内存溢出](understanding-the-jvm-chapter2.md)
 * [第3章 垃圾收集器与内存分配策略](understanding-the-jvm-chapter3.md)
-* [ 第4章 虚拟机性能监控与故障处理工具](understanding-the-jvm-chapter4.md)
+* [第4章 虚拟机性能监控与故障处理工具](understanding-the-jvm-chapter4.md)
 * [第5章 调优案例分析与实战](understanding-the-jvm-chapter5.md)
 * [第6章 类文件结构](understanding-the-jvm-chapter6.md)
 * [第7章 虚拟机类加载机制](understanding-the-jvm-chapter7.md)
