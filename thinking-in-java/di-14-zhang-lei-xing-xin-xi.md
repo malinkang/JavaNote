@@ -1,6 +1,6 @@
 # 第14章 类型信息
 
-## 1.为什么需要RTTI
+## 14.1 为什么需要RTTI
 
 ```java
 abstract class Shape{
@@ -53,7 +53,7 @@ Triangle.draw()
 
 接下来就是多态机制的事情了，`Shape`对象实际执行什么样的代码，是由引用所指向的具体对象`Circle`、`Square`或者`Triangle`而决定的。通常，也正是这样要求的；你希望大部分代码尽可能少地了解对象的具体类型，而是只与对象家族中的一个通用表示打交道（在这个例子中是`Shape`\)。这样代码更容易写，更容易读，且更便于维护；设计也更容易实现、理解和改变。所以"多态"是面向对象编程的基本目标。
 
-## 2.Class对象
+## 14.2 Class对象
 
 要理解`RTTI`在`Java`中的工作原理，首先必须知道类型信息在运行时是如何表示的。
 
@@ -138,7 +138,7 @@ Canonical name : typeinfo.toys.Toy
 * getSuperclass\(\)：获取直接基类。
 * newInstance\(\)：
 
-### 2.1类字面常量
+### 14.2.1 类字面常量
 
 `Java`还提供了另一种方法来生成对`Class`对象的引用，即使用`类字面常量`。对上述程序来说，就像下面这样：
 
@@ -230,7 +230,7 @@ code
 
 如果一个`static`域不是`final`的，那么在对它访问时，总是要求在它被读取之前，要先进行链接（为这个域分配存储空间）和初始化（初始化该存储空间），就像在对`Initable2.staticNonFinal`的访问中所看到的那样。
 
-### 2.2 泛化的Class引用
+### 14.2.2 泛化的Class引用
 
 `Class`引用总是指向某个`Class`对象，它可以制造类的实例，并包含可作用域这些实例的所有方法代码。它还包含该类的静态成员，因此，`Class`引用表示的就是它所指向的对象的确切类型，而该对象便是`Class`类的一个对象。
 
@@ -338,7 +338,7 @@ public class GenericToyTest {
 } ///:~
 ```
 
-### 2.3 新的转型语法
+### 14.2.3 新的转型语法
 
 `Java SE5`还添加了用于`Class`引用的转型语法，即`cast()`方法：
 
@@ -360,7 +360,7 @@ public class ClassCasts {
 
 `Class.asSubclass()`允许你将一个类对象转型为更加具体的类型。
 
-## 3.类型转换前先做检查
+## 14.3 类型转换前先做检查
 
 ```java
 public class Individual implements Comparable<Individual> {
@@ -596,7 +596,7 @@ Rat Manx Cymric Mutt Pug Cymric Pug Manx Cymric Rat EgyptianMau Hamster Egyptian
 
 对`instanceof`有比较严格的限制：只可将其与命名类型进行比较，而不能与`Class`对象作比较。
 
-### 3.1 使用类字面常量
+### 14.3.1 使用类字面常量
 
 ```java
 public class LiteralPetCreator extends PetCreator {
@@ -653,7 +653,7 @@ public class PetCount2 {
 } /* (Execute to see output) *///:~
 ```
 
-### 3.2 动态的instanceof
+### 14.3.2 动态的instanceof
 
 `Class.isInstance`方法提供了一种动态地测试对象的途径。于是所有那些单调的`instanceof`语句都可以从`PetCount`中移除。
 
@@ -707,7 +707,7 @@ Rat Manx Cymric Mutt Pug Cymric Pug Manx Cymric Rat EgyptianMau Hamster Egyptian
 *///:~
 ```
 
-### 3.3 递归计数
+### 14.3.3 递归计数
 
 在`PetCount3.PetCounter`中的`Map`预加载了所有不同的`Pet`类。与预加载映射表不同的是，我们可以使用`Class.isAssignableFrom()`，并创建一个不局限于`Pet`计数的通用工具。
 
@@ -779,7 +779,7 @@ Rat Manx Cymric Mutt Pug Cymric Pug Manx Cymric Rat EgyptianMau Hamster Egyptian
 *///:~
 ```
 
-## 4.注册工厂
+## 14.4 注册工厂
 
 ```java
 //: typeinfo/factory/Factory.java
@@ -896,7 +896,7 @@ FuelFilter
 *///:~
 ```
 
-## 5.instanceof与Class的等价性
+## 14.5 instanceof与Class的等价性
 
 在查询类型信息时，以`instanceof`的形式与直接比较`Class`对象有一个很重要的差别。
 
@@ -954,9 +954,9 @@ x.getClass().equals(Derived.class)) true
 
 `instanceof`和`isInstance()`生成的结果完全一样，`equals()`和`==`也一样。但是这两组测试得出的结论却不相同。`instanceof`保持了类型的概念,它指的是“你是这个类吗？，或者你是这个类的派生类吗？”而如果用`==`比较实际的`Class`对象，就没有考虑继承，它是这个确切的类型，或者不是。
 
-## 6.反射：运行时的类信息
+## 14.6 反射：运行时的类信息
 
-### 6.1 类方法提取器
+### 14.6.1 类方法提取器
 
 ```java
 //: typeinfo/ShowMethods.java
@@ -1023,108 +1023,115 @@ public ShowMethods()
 *///:~
 ```
 
-## 7.动态代理
+## 14.7 动态代理
 
-`代理`是基本的设计模式之一，它是你为了提供额外的或不同的操作，而插入的用来代替”实际“对象的对象。这些操作通常设计与“实际”对象的通信，因此代理通常充当着中间人的角色。
+`代理`是基本的设计模式之一，它是你为了提供额外的或不同的操作，而插入的用来代替”实际“对象的对象。这些操作通常设计与“实际”对象的通信，因此代理通常充当着中间人的角色。下面是一个用来展示代理结构的简单示例：
 
 ```java
-//: typeinfo/SimpleProxyDemo.java
-import static net.mindview.util.Print.*;
-
 interface Interface {
-  void doSomething();
-  void somethingElse(String arg);
+    void doSomething();
+
+    void somethingElse(String arg);
 }
-
-class RealObject implements Interface {
-  public void doSomething() { print("doSomething"); }
-  public void somethingElse(String arg) {
-    print("somethingElse " + arg);
-  }
-}    
-
-class SimpleProxy implements Interface {
-  private Interface proxied;
-  public SimpleProxy(Interface proxied) {
-    this.proxied = proxied;
-  }
-  public void doSomething() {
-    print("SimpleProxy doSomething");
-    proxied.doSomething();
-  }
-  public void somethingElse(String arg) {
-    print("SimpleProxy somethingElse " + arg);
-    proxied.somethingElse(arg);
-  }
-}    
-
-class SimpleProxyDemo {
-  public static void consumer(Interface iface) {
-    iface.doSomething();
-    iface.somethingElse("bonobo");
-  }
-  public static void main(String[] args) {
-    consumer(new RealObject());
-    consumer(new SimpleProxy(new RealObject()));
-  }
-} /* Output:
-doSomething
-somethingElse bonobo
-SimpleProxy doSomething
-doSomething
-SimpleProxy somethingElse bonobo
-somethingElse bonobo
-*///:~
 ```
-
-`Java`的动态代理比代理的思想更向前迈进了一步，因为它可以动态地创建代理并动态地处理对所代理方法的调用。在动态代理上所做的所有调用都会被重定向到单一的`调用处理器`上，它的工作是揭示调用的类型并确定相应的对策。
 
 ```java
-//: typeinfo/SimpleDynamicProxy.java
-import java.lang.reflect.*;
+//实现Interface
+class RealObject implements Interface {
 
-class DynamicProxyHandler implements InvocationHandler {
-  private Object proxied;
-  public DynamicProxyHandler(Object proxied) {
-    this.proxied = proxied;
-  }
-  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    System.out.println("**** proxy: " + proxy.getClass() +
-      ", method: " + method + ", args: " + args);
-    if(args != null)
-      for(Object arg : args)
-        System.out.println("  " + arg);
-    return method.invoke(proxied, args);
-  }
-}    
+    @Override
+    public void doSomething() {
+        System.out.println("doSomething");
+    }
 
-class SimpleDynamicProxy {
-  public static void consumer(Interface iface) {
-    iface.doSomething();
-    iface.somethingElse("bonobo");
-  }
-  public static void main(String[] args) {
-    RealObject real = new RealObject();
-    consumer(real);
-    // Insert a proxy and call again:
-    Interface proxy = (Interface)Proxy.newProxyInstance(
-      Interface.class.getClassLoader(),
-      new Class[]{ Interface.class },
-      new DynamicProxyHandler(real));
-    consumer(proxy);
-  }
-} /* Output: (95% match)    
-doSomething
-somethingElse bonobo
-**** proxy: class $Proxy0, method: public abstract void Interface.doSomething(), args: null
-doSomething
-**** proxy: class $Proxy0, method: public abstract void Interface.somethingElse(java.lang.String), args: [Ljava.lang.Object;@42e816
-  bonobo
-somethingElse bonobo
-*///:~
+    @Override
+    public void somethingElse(String arg) {
+        System.out.println("somethingElse " + arg);
+    }
+}
 ```
 
-通过调用静态方法`Proxy.newProxyInstance()`可以创建动态代理，这个方法需要得到一个类加载器（你通常可以从已经被加载的对象中获取其类加载器，然后传递给它），一个你希望**该代理实现的接口列表**，以及`InvocationHandler`接口的一个实现。
+```java
+class SimpleProxy implements Interface {
+    private Interface proxied;
+
+    public SimpleProxy(Interface proxied) {
+        this.proxied = proxied;
+    }
+
+    @Override
+    public void doSomething() {
+        System.out.println("SimpleProxy doSomething");
+        proxied.doSomething();
+    }
+
+    @Override
+    public void somethingElse(String arg) {
+        System.out.println("SimpleProxy somethingElse" + arg);
+        proxied.somethingElse(arg);
+    }
+}
+```
+
+```java
+public class SimpleProxyDemo {
+    public static void consumer(Interface iface) {
+        iface.doSomething();
+        iface.somethingElse("bonobo");
+    }
+
+    public static void main(String[] args) {
+        consumer(new RealObject());
+        consumer(new SimpleProxy(new RealObject()));
+    }
+}
+```
+
+在任何时刻，只要你想要将额外的操作从“实际”对象中分离到不同的地方，特别是当你希望能够很容易地做出修改，**从**没有使用额外操作**转为**使用这些操作，或者反过来时，代理就显得很有用。例如，如果你希望跟踪对`RealObject`中的方法的调用，或者希望度量这些调用的开销，这些代码肯定是你不希望将其合并到应用中的代码，因此代理使得你可以很容易地添加或者移除它们。（总结：额外的操作与实际的对象分离，可以很容易地添加或者移除这些额外的操作）。
+
+`Java`的动态代理比代理的思想更向前迈进了一步，因为它可以动态地创建代理并动态地处理对所代理方法的调用。在动态代理上所做的所有调用都会被重定向到单一的`调用处理器`上，它的工作是揭示调用的类型并确定相应的对策。下面是用动态代理重写的`SimpleDynamicProxy`：
+
+```java
+public class DynamicProxyHandler implements InvocationHandler {
+    private Object proxied;
+    public DynamicProxyHandler(Object proxied) {
+        this.proxied = proxied;
+    }
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println("**** proxy: " + proxy.getClass() +
+                ", method: " + method + ", args: " + args);
+        if(args != null)
+            for(Object arg : args)
+                System.out.println("  " + arg);
+        return method.invoke(proxied,args);
+    }
+}
+```
+
+```java
+public class SimpleDynamicProxy {
+    public static void consumer(Interface iface) {
+        iface.doSomething();
+        iface.somethingElse("bonobo");
+    }
+
+    public static void main(String[] args) {
+        RealObject real = new RealObject();
+        consumer(real);
+        Interface proxy = (Interface) Proxy.newProxyInstance(
+                Interface.class.getClassLoader(),
+                new Class[]{Interface.class},//实现多个接口
+                new DynamicProxyHandler(real)
+        );
+        consumer(proxy);
+    }
+}
+```
+
+通过调用静态方法`Proxy.newProxyInstance()`可以创建动态代理，这个方法需要得到一个类加载器（你通常可以从已经被加载的对象中获取其类加载器，然后传递给它），一个你希望**该代理实现的接口列表**（不是类或抽象类），以及`InvocationHandler`接口的一个实现。动态代理可以将所有调用重定向到调用处理器，因此通常会向调用处理器的构造器传递给一个“实际”对象的引用，从而使得调用处理器在执行其中介任务时，可以将请求转发。
+
+`invoke()`方法中传递进来的代理对象，以防你需要区分请求的来源，但是在许多情况下，你并不关心这一点。然后，在`invoke()`内部，在代理上调用方法时需要格外当心，因为对接口的调用将被重定向为对代理的调用。
 
 你可以通过传递某些参数，来过滤某些方法调用：
 
@@ -1139,9 +1146,7 @@ class MethodSelector implements InvocationHandler {
   public MethodSelector(Object proxied) {
     this.proxied = proxied;
   }
-  public Object
-  invoke(Object proxy, Method method, Object[] args)
-  throws Throwable {
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     if(method.getName().equals("interesting"))
       print("Proxy detected the interesting method");
     return method.invoke(proxied, args);
@@ -1184,7 +1189,7 @@ boring3
 *///:~
 ```
 
-## 8.空对象
+## 14.8 空对象
 
 ```java
 //: net/mindview/util/Null.java
@@ -1448,7 +1453,7 @@ Robot model: SnowRemovalRobot NullRobot
 
 无论何时，如果你需要一个空`Robot`对象，只需调用`newNullRobot()`，并传递需要代理的`Robot`类型。代理会满足`Robot`和`Null`接口的需求，并提供它所代理的类型的确切名字。
 
-## 9.接口与类型信息
+## 14.9 接口与类型信息
 
 ```java
 //: typeinfo/interfacea/A.java
