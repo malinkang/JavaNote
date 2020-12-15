@@ -49,6 +49,8 @@
   * [Lock](thinking-in-java/concurrency/lock.md)
   * [ThreadLocal](thinking-in-java/concurrency/threadlocal.md)
   * [线程池](thinking-in-java/concurrency/xian-cheng-chi.md)
+
+## 《Effective Java》读书笔记
 * [第2章 创建和销毁对象](thinking-in-java/effective-java-chapter2.md)
 * [第3章 对于所有对象都通用的方法](thinking-in-java/effective-java-chapter3.md)
 * [第4章 类和接口](thinking-in-java/effective-java-chapter4.md)
