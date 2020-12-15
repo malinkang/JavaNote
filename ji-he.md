@@ -6,11 +6,11 @@
 
 ![](.gitbook/assets/collection.jpg)
 
-## 2.List 
+## 2.List
 
 List是一个继承于Collection的接口，即List是集合中的一种。List是有序的队列，List中的每一个元素都有一个索引；第一个元素的索引值是0，往后的元素的索引值依次+1。和Set不同，List中允许有重复的元素。
 
-### 2.1ArrayList 
+### 2.1ArrayList
 
 ArrayList实现List接口，底层使用数组保存所有的元素。其操作基本上是对数组的操作。
 
@@ -252,7 +252,7 @@ public int lastIndexOf(Object o) {
     }
 ```
 
-* public  T\[\] toArray\(T\[\] a\)
+* public T\[\] toArray\(T\[\] a\)
 
   ```java
     public <T> T[] toArray(T[] a) {
