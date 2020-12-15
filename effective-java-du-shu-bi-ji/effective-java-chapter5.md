@@ -1,15 +1,19 @@
 ---
 title: 《Effective Java》读书笔记 第5章 泛型
-date: 2019-02-16 16:20:11
-tags: ["Java", "读书笔记"]
+date: '2019-02-16T16:20:11.000Z'
+tags:
+  - Java
+  - 读书笔记
 toc: true
 ---
+
+# 第5章 类和接口
 
 ## 第23条：请不要在新代码中使用原生态类型
 
 声明中具有一个或者多个`类型参数（type parameter）`的类或者接口就是泛型类或者接口。泛型类和接口统称为`泛型（generic type）`。
 
-每种泛型定义一组参`数化的类型（parameterized type）`，构成格式为：先是类或者接口的名称，接着用尖括号（<>）把对应于泛型形式类型参数的实际类型参数列表括起来。
+每种泛型定义一组参`数化的类型（parameterized type）`，构成格式为：先是类或者接口的名称，接着用尖括号（&lt;&gt;）把对应于泛型形式类型参数的实际类型参数列表括起来。
 
 每个泛型都定义一个`原生态类型（raw type）`，即不带任何实际类型参数的泛型名称。例如，与`List<E>`相对应的原生态类型是`List`。原生态类型就像从类型声明中删除了所有泛型信息一样。
 
@@ -29,7 +33,7 @@ toc: true
 
 ## 第25条：列表优先于数组
 
-数组与泛型相比，有两个重要的不同点。首先，数组是`协变的（covariant）`。表示如果`Sub`为`Super`的子类型，那么数组类型`Sub[]`就是`Super[]`的子类型。相反，泛型则是不可变的（invariant）：对于任意两个不同的类型`Type1`和`Type2`，List<Type1>既不是List<Type2>的子类型，也不是List<Type2>的超类型。
+数组与泛型相比，有两个重要的不同点。首先，数组是`协变的（covariant）`。表示如果`Sub`为`Super`的子类型，那么数组类型`Sub[]`就是`Super[]`的子类型。相反，泛型则是不可变的（invariant）：对于任意两个不同的类型`Type1`和`Type2`，List既不是List的子类型，也不是List的超类型。
 
 ```java
 //运行时报错: java.lang.ArrayStoreException: java.lang.String
@@ -39,6 +43,7 @@ objectArray[0] = "I don't fit in";
 List<Object> ol = new ArrayList<Long>(); //
 ol.add("I don't fit in");
 ```
+
 数组与泛型之间的第二大区别在于，数组是`具体化的（reified）`。因此数组会在运行时才会知道并检查它们的元素类型约束。相比之下，泛型则是通过`擦除（erasure）`来实现的。因此泛型只在编译时强化它们的类型信息，并在运行时丢弃它们的元素类型信息。
 
 由于上述这些根本的区别，因此数组和泛型不能很好地混合使用。例如，创建泛型、参数化类型或者类型参数的数组是非法的。这些数组创建表达式没有一个是合法的`new List<E>[]`、`new List<String>[]`和`new E[]`。这些在编译时都会导致一个`generic array creation`错误。
@@ -79,6 +84,7 @@ public class Stack<E> {
     }
 }
 ```
+
 不能创建不可具体化的类型的数组，解决这个问题有两种方法。第一种，直接绕过创建泛型数组的禁令：创建一个Object的数组，并将它转换成泛型数组类型。现在错误是消除了，但是编译器会产生一条警告。这种用法是合法的，但不是类型安全的。
 
 ```java
@@ -100,6 +106,7 @@ public E pop() {
     return result;
 }
 ```
+
 具体选择这两种方法中的哪一种来处理泛型数组创建错误，则主要看个人的偏好了。所有其他的东西都一样，但是禁止数组类型的未受检转换比禁止标量类型（scalar type）更加危险，所以建议采用第二种方案。但是在比`Stack`更实际的泛型类中，或许代码中会有多个地方需要从数组中读取元素，因此选择第二种方案需要多次转换成E，这也是第一种方案之所以更常用的原因。
 
 ## 第27条：优先考虑泛型方法
@@ -123,21 +130,23 @@ public static void main(String[] args) {
 }
 ```
 
-
 ## 第28条：利用有限制通配符来提升API的灵活性
 
 为`Stack`增加一个方法：
+
 ```java
 public void pushAll(Iterable<E> src) {
     for (E e : src)
         push(e);
 }
 ```
+
 ```java
 Stack<Number> numberStack = new Stack<>();
 Iterable<Integer> integers = new ArrayList<>();
 numberStack.pushAll(integers); //编译时错误
 ```
+
 幸运的是，有一种解决办法。`Java`提供了一种特殊的参数化类型，称作`有限制的通配符类型（bounded wildcard type）`。修改pushAll来使用这个类型：
 
 ```java
@@ -146,18 +155,22 @@ public void pushAll(Iterable<? extends E> src) {
         push(e);
 }
 ```
+
 编写一个与`pushAll`方法相呼应的方法`popAll`：
+
 ```java
 public void popAll(Collection<E> dst) {
     while (!isEmpty())
         dst.add(pop());
 }
 ```
+
 ```java
 Stack<Number> numberStack = new Stack<>();
 Collection<Object> integers = new ArrayList<>();
 numberStack.popAll(integers); //编译时错误
 ```
+
 如果试着用上述的`popAll`版本编译这段客户端代码，就会得到一个非常类似于第一次用`pushAll`时的错误。通配符类型同样提供了一种解决办法：
 
 ```java
@@ -171,11 +184,11 @@ public void popAll(Collection<? super E> dst) {
 
 下面的助记符便于让你记住要使用哪种通配符类型：
 
-```
+```text
 PECS 表示producer-extends，consumer-super
 ```
 
-换句话说，如果参数化类型表示一个T生产者，就使用<? extends T>；如果它表示一个T消费者，就使用<? super T>。在我们的`Stack`示例中，pushAll的src参数产生E实例供Stack使用，因此src相应的类型为`Iterable<? extends E>`；popAll的dst参数通过Stack消费E实例，因此dst相应的类型为`Collection<? super E>`。PECS这个助记符突出了使用通配符类型的基本原则。
+换句话说，如果参数化类型表示一个T生产者，就使用&lt;? extends T&gt;；如果它表示一个T消费者，就使用&lt;? super T&gt;。在我们的`Stack`示例中，pushAll的src参数产生E实例供Stack使用，因此src相应的类型为`Iterable<? extends E>`；popAll的dst参数通过Stack消费E实例，因此dst相应的类型为`Collection<? super E>`。PECS这个助记符突出了使用通配符类型的基本原则。
 
 ## 第29条：优先考虑类型安全的异构容器
 
@@ -214,3 +227,4 @@ public class Favorites {
 ```
 
 `Favorites`实例是类型安全的：当你向它请求String的时候，它从来不会返回一个Integer给你。同时它也是异构的（heterogeneous）：不像普通的map，它的所有键都是不同类型的。因此，我们将`Favorites`称作类型安全的异构容器。
+
