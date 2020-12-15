@@ -1,14 +1,20 @@
 ---
 title: 《Effective Java》读书笔记 第8章 通用程序设计
-date: 2019-02-28 14:19:41
-tags: ["Java", "读书笔记"]
+date: '2019-02-28T14:19:41.000Z'
+tags:
+  - Java
+  - 读书笔记
 toc: true
 ---
+
+# 第8章 通用程序设计
+
 ## 第45条：将局部变量的作用域最小化
 
 要使局部变量的作用域最小化，最有力的方法就是在第一次使用它的地方声明。
 
 循环中提供了特殊的机会来将变量的作用域最小化。for循环，都允许声明循环变量（loop variable），它们的作用域被限定在正好需要的范围之内。因此，如果在循环终止之后不再需要循环变量的内容，for循环就优于while循环。
+
 ```java
 Iterator<Element> i = c.iterator();
 while(i.hasNext()){
@@ -21,6 +27,7 @@ while(i.hasNext()){
     doSomething(i2.next());
 }
 ```
+
 ## 第46条：for-each循环优于传统的for循环
 
 在Java1.5发行版本之前，对集合进行遍历的首选做法如下：
@@ -30,6 +37,7 @@ for (Iterator i = c.iterator();i.hasNext()) {
     doSomething((Element)i.next());
 }
 ```
+
 遍历数组的首选做法如下：
 
 ```java
@@ -37,6 +45,7 @@ for (int i = 0; i < a.length; i++){
     doSomething(a[i]);
 }
 ```
+
 这些做法都比`while`循环更好，但是它们也并不完美，迭代器和索引变量都会造成一些混乱。
 
 `Java 1.5`发行版本中引入的`for-each`循环，通过完全隐藏迭代器或者索引变量，避免了混乱和出错的可能。
@@ -46,6 +55,7 @@ for (Element e:elements){
     doSomething(e);
 }
 ```
+
 在对多个集合进行嵌套式迭代时，`for-each`循环相对于传统for循环的这种优势还会更加明显。
 
 总之，for-each循环在简洁性和预防Bug方面有着传统的for循环无法比拟的优势，并且没有性能损失，应该尽可能地使用for-each循环。遗憾的是，有三种常见的情况无法使用for-each循环：
@@ -73,3 +83,4 @@ for (Element e:elements){
 ## 第55条：谨慎地进行优化
 
 ## 第56条：遵守普遍接受的命名管理
+

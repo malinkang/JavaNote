@@ -1,3 +1,4 @@
+# 第2章 Java内存区域与内存溢出
 
 ## 2.1 概述
 
@@ -5,7 +6,7 @@
 
 Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域。这些区域都有各自的用途，以及创建和销毁的时间，有的区域随着虚拟机进程的启动而存在，有些区域则依赖用户线程的启动和结束而建立和销毁。根据《Java虚拟机规范（Java SE 7版）》的规定，Java虚拟机所管理的内存将会包括以下几个运行时数据区域，如图所示。
 
-![图2-1 Java虚拟机运行时数据区](/images/understanding-the-jvm/2-1.png)
+![&#x56FE;2-1 Java&#x865A;&#x62DF;&#x673A;&#x8FD0;&#x884C;&#x65F6;&#x6570;&#x636E;&#x533A;](https://github.com/malinkang/JavaNote/tree/05f7c6abd740c7af6029fb75682bad60b7d55521/images/understanding-the-jvm/2-1.png)
 
 ### 2.2.1 程序计数器
 
@@ -61,9 +62,7 @@ Java堆是垃圾收集器管理的主要区域，因此很多时候也被称做�
 
 ### 1.4.1 Java堆溢出
 
-Java堆用于存储对象实例，只要不断地创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，那么在对象数量到达最大堆的容量限制后就会产生内存溢出异常。
-代码清单2-3中代码限制Java堆的大小为20MB，不可扩展（将堆的最小值-Xms参数与最大值-Xmx参数设置为一样即可避免堆自动扩展），通过参数-XX:+HeapDumpOnOutOfMemoryError可以让虚拟机在出现内存溢出异常时Dump出当前的内存堆转储快照以便事后进行分析￼。
-
+Java堆用于存储对象实例，只要不断地创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，那么在对象数量到达最大堆的容量限制后就会产生内存溢出异常。 代码清单2-3中代码限制Java堆的大小为20MB，不可扩展（将堆的最小值-Xms参数与最大值-Xmx参数设置为一样即可避免堆自动扩展），通过参数-XX:+HeapDumpOnOutOfMemoryError可以让虚拟机在出现内存溢出异常时Dump出当前的内存堆转储快照以便事后进行分析￼。
 
 ```java
 import java.util.ArrayList;
@@ -79,18 +78,17 @@ public class HeapOOM {
 }
 ```
 
-```
+```text
 java -Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError HeapOOM
 ```
 
-![](/images/understanding-the-jvm/2-2.png)
+![](https://github.com/malinkang/JavaNote/tree/05f7c6abd740c7af6029fb75682bad60b7d55521/images/understanding-the-jvm/2-2.png)
 
 要解决这个区域的异常，一般的手段是先通过内存映像分析工具（如[Eclipse Memory Analyzer](https://www.eclipse.org/mat/downloads.php)）对Dump出来的堆转储快照进行分析，重点是确认内存中的对象是否是必要的，也就是要先分清楚到底是出现了内存泄漏（Memory Leak）还是内存溢出（Memory Overflow）。图2-5显示了使用Eclipse Memory Analyzer打开的堆转储快照文件。
 
 如果是内存泄露，可进一步通过工具查看泄露对象到GC Roots的引用链。于是就能找到泄露对象是通过怎样的路径与GC Roots相关联并导致垃圾收集器无法自动回收它们的。掌握了泄露对象的类型信息及GC Roots引用链的信息，就可以比较准确地定位出泄露代码的位置。
 
 如果不存在泄露，换句话说，就是内存中的对象确实都还必须存活着，那就应当检查虚拟机的堆参数（-Xmx与-Xms），与机器物理内存对比看是否还可以调大，从代码上检查是否存在某些对象生命周期过长、持有状态时间过长的情况，尝试减少程序运行期的内存消耗。
-
 
 ### 1.4.2 虚拟机栈和本地方法栈溢出
 

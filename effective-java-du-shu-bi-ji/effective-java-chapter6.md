@@ -1,9 +1,13 @@
 ---
 title: 《Effective Java》读书笔记 第6章 枚举和注解
-date: 2019-02-18 09:58:30
-tags: ["Java", "读书笔记"]
+date: '2019-02-18T09:58:30.000Z'
+tags:
+  - Java
+  - 读书笔记
 toc: true
 ---
+
+# 第6章 枚举和注解
 
 ## 第30条：用enum代替int常量
 
@@ -18,6 +22,7 @@ public static final int ORANGE_NAVEL = 0;
 public static final int ORANGE_TEMPLE = 1;
 public static final int ORANGE_BLOOD = 2;
 ```
+
 这种方法称作`int枚举模式`。在这种模式中使用`String`常量，而不是`int`常量。这样的变体被称为`String枚举模式`。
 
 `Java 1.5`增加了枚举类型，可以避免`int`和`String`枚举模式的缺点。
@@ -63,6 +68,7 @@ public enum Planet {
     }
 }
 ```
+
 下面是一个简短的程序，根据某个物体在地球上的重量，打印出该物体在所有8颗行星上的重量：
 
 ```java
@@ -77,6 +83,7 @@ public class WeightTable {
    }
 }
 ```
+
 每个`Plant`常量都关联了不同的数据，但你有时需要将本质上不同的行为与每个常量关联起来。
 
 ## 第31条：用实例域代替序数
@@ -92,3 +99,4 @@ public class WeightTable {
 ## 第36条：坚持使用Override注解
 
 ## 第37条：用标记接口定义类型
+

@@ -1,23 +1,23 @@
 ---
 title: 《Effective Java》读书笔记 第3章 对于所有对象都通用的方法
-date: 2019-02-12 09:54:13
-tags: ["Java", "读书笔记"]
+date: '2019-02-12T09:54:13.000Z'
+tags:
+  - Java
+  - 读书笔记
 toc: true
 ---
+
+# 第3章 对于所有对象都通用的方法
+
 ## 第8条：覆盖equals时请遵守通用约定
 
 在覆盖`equals`方法的时候，你必须要遵守它的通用约定。
 
 * 自反性（reflexive）。对于任何非null的引用值x，`x.equals(x)`必须返回true。
-
-* 对称性（symmetric)。对于任何非null的引用值x和y，当且仅当`y.equals(x)`返回true时，`x.equals(y)`必须返回true。
-
+* 对称性（symmetric\)。对于任何非null的引用值x和y，当且仅当`y.equals(x)`返回true时，`x.equals(y)`必须返回true。
 * 传递性（transitive）。对于任何非null的引用值x、y和z，如果`x.equals(y)`返回true，并且`y.equals(z)`也返回true，那么`x.equals(z)`也必须返回true。
-
 * 一致性（consistent）。对于任何非null的引用值x和y，只要`equals`的比较操作再对象中所用的信息没有被修改，多次调用`x.equals(y)`就会一致地返回true，或者一致地返回false。
-
 * 对于任何非null的引用值x，`x.equals(null)`必须返回false。
-
 
 ```java
 public class CaseInsensitiveString {
@@ -111,6 +111,7 @@ ColorPoint cp = new ColorPoint(1, 2, Color.RED);
 System.out.println(p.equals(cp)); // true
 System.out.println(cp.equals(p)); // false
 ```
+
 可以做这样的尝试来修正这个问题，让`ColorPoint.equals`在进行“混合比较”时忽略颜色信息。
 
 ```java
@@ -200,9 +201,7 @@ public class ColorPoint {
 下面是约定的内容，摘自`Object`规范。
 
 * 在应用程序的执行期间，只要对象的`equals`方法的比较操作所用到的信息没有被修改，那么对这同一个对象调用多次，`hashCode`方法都必须始终如一地返回同一个整数。在同一个应用程序的多次执行过程中，每次执行所返回的整数可以不一致。
-
 * 如果两个对象根据`equals（Object）`方法比较是相等的，那么调用这两个对象中任意一个对象的`hashCode`方法都必须产生同样的整数结果。
-
 * 如果两个对象根据`equals`方法比较是不相等的，那么调用这两个对象任意一个对象的`hashCode`方法，则不一定要产生不同的整数结果。但程序员应该知道，给不相等的对象产生截然不同的整数结果，有可能提高散列表的性能。
 
 ```java
@@ -232,20 +231,22 @@ Map<PhoneNumber, String> m = new HashMap<>();
 m.put(new PhoneNumber(707, 867, 5309), "Jenny");
 System.out.println(m.get(new PhoneNumber(707, 867, 5309))); // null
 ```
+
 一个好的散列函数通常倾向于“为不相等的对象产生不相等的散列码”。这正是`hashCode`约定中第三条的含义。理想情况下，散列函数应该把集合中不相等的实例均匀地分布到所有可能的散列值上。要想完全达到这种理想的情形是非常困难的。幸运的是，相对接近这种理想情形则并不太困难。下面给出一种简单的解决方法：
 
 1. 把某个非零的常数值，比如说17，保存在一个名为`result`的`int`类型的变量中。
 2. 对于对象中每个关键域f，完成以下步骤：
-    1. 为该域计算int类型的散列码
-        1. 如果该域是boolean类型，则计算（f?1:0）。
-        2. 如果该域是byte、char、short或者int类型，则计算(int)f。
-        3. 如果该域是long类型，则计算(int)(f^(f>>>32))。
-        4. 如果该域是float类型，则计算`Float.floatToIntBits(f)`。
-        5. 如果该域是double类型，则计算`Double.doubleToLongBits(f)`，然后为得到的long类型计算散列值。
-        6. 如果该域是一个对象引用，并且该类的`equals`方法通过递归地调用`equals`的方法来比较这个域，则同样为这个域递归地调用`hashCode`。如果需要更复杂的比较，则为这个域计算一个`范式`，然后针对这个范式调用`hashCode`。如果这个域的值为null，则返回0。
-        7. 如果该域是一个数组，则要把每一个元素当做单独的域来处理。也就是说，递归地应用上述规则，对每个重要的元素计算一个散列码，然后根据步骤2.2中的做法把这些散列值组合起来。如果数组域中的每个元素都很重要，可以利用发型版本1.5中增加的其中一个`Arrays.hashCode`方法。
-    2. 按照下面的公式，把步骤2.1中计算得到的散列码c合并到result中：
-    `result = 31 * result + c`;
+   1. 为该域计算int类型的散列码
+      1. 如果该域是boolean类型，则计算（f?1:0）。
+      2. 如果该域是byte、char、short或者int类型，则计算\(int\)f。
+      3. 如果该域是long类型，则计算\(int\)\(f^\(f&gt;&gt;&gt;32\)\)。
+      4. 如果该域是float类型，则计算`Float.floatToIntBits(f)`。
+      5. 如果该域是double类型，则计算`Double.doubleToLongBits(f)`，然后为得到的long类型计算散列值。
+      6. 如果该域是一个对象引用，并且该类的`equals`方法通过递归地调用`equals`的方法来比较这个域，则同样为这个域递归地调用`hashCode`。如果需要更复杂的比较，则为这个域计算一个`范式`，然后针对这个范式调用`hashCode`。如果这个域的值为null，则返回0。
+      7. 如果该域是一个数组，则要把每一个元素当做单独的域来处理。也就是说，递归地应用上述规则，对每个重要的元素计算一个散列码，然后根据步骤2.2中的做法把这些散列值组合起来。如果数组域中的每个元素都很重要，可以利用发型版本1.5中增加的其中一个`Arrays.hashCode`方法。
+   2. 按照下面的公式，把步骤2.1中计算得到的散列码c合并到result中：
+
+      `result = 31 * result + c`;
 3. 返回result
 4. 写完hashCode方法之后，问问自己“相等的实例是否具有相等的散列码”。要编写单元测试来验证你的推断。如果相等的实例有着不相等的散列码，则要找出原因，并修正错误。
 
@@ -254,3 +255,4 @@ System.out.println(m.get(new PhoneNumber(707, 867, 5309))); // null
 ## 第11条：谨慎地覆盖clone
 
 ## 第12条：考虑实现Comparable接口
+
