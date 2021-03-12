@@ -13,7 +13,7 @@ try {
     reader = new FileReader(new File("a.txt"));
     writer = new FileWriter(new File("b.txt"));
     char[] buf = new char[1024];
-    int len;
+    int len = 0;
     while ((len=reader.read(buf))!=-1){
         writer.write(buf,0,len);
     }

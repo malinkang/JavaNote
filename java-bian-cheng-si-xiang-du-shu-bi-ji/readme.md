@@ -1,4 +1,0 @@
-# Introduction
-
-> An awesome project.
-
