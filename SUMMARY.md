@@ -50,27 +50,28 @@
   * [ThreadLocal](thinking-in-java/concurrency/threadlocal.md)
   * [线程池](thinking-in-java/concurrency/xian-cheng-chi.md)
 
-## 《Effective Java》读书笔记
-* [第2章 创建和销毁对象](thinking-in-java/effective-java-chapter2.md)
-* [第3章 对于所有对象都通用的方法](thinking-in-java/effective-java-chapter3.md)
-* [第4章 类和接口](thinking-in-java/effective-java-chapter4.md)
-* [第5章 类和接口](thinking-in-java/effective-java-chapter5.md)
-* [第6章 枚举和注解](thinking-in-java/effective-java-chapter6.md)
-* [第7章 方法](thinking-in-java/effective-java-chapter7.md)
-* [第8章 通用程序设计](thinking-in-java/effective-java-chapter8.md)
+## 《Effective Java》
 
-## 《深入理解Java虚拟机》读书笔记
+* [第2章 创建和销毁对象](effective-java/effective-java-chapter2.md)
+* [第3章 对于所有对象都通用的方法](effective-java/effective-java-chapter3.md)
+* [第4章 类和接口](effective-java/effective-java-chapter4.md)
+* [第5章 类和接口](effective-java/effective-java-chapter5.md)
+* [第6章 枚举和注解](effective-java/effective-java-chapter6.md)
+* [第7章 方法](effective-java/effective-java-chapter7.md)
+* [第8章 通用程序设计](effective-java/effective-java-chapter8.md)
 
-* [第2章 Java内存区域与内存溢出](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter2.md)
-* [第3章 垃圾收集器与内存分配策略](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter3.md)
-* [第4章 虚拟机性能监控与故障处理工具](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter4.md)
-* [第5章 调优案例分析与实战](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter5.md)
-* [第6章 类文件结构](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter6.md)
-* [第7章 虚拟机类加载机制](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter7.md)
-* [第8章 虚拟机字节码执行引擎](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter8.md)
-* [第9章 类加载及执行子系统的案例与实战](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter9.md)
-* [第10章 Java内存区域与内存溢出](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter10.md)
-* [第11章 晚期（运行期）优化](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter11.md)
-* [第12章 Java内存模型与线程](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter12.md)
-* [第13章 线程安全与锁优化](shen-ru-li-jie-java-xu-ni-ji-du-shu-bi-ji/understanding-the-jvm-chapter13.md)
+## 《深入理解Java虚拟机》 <a id="understanding-the-jvm"></a>
+
+* [第2章 Java内存区域与内存溢出](understanding-the-jvm/understanding-the-jvm-chapter2.md)
+* [第3章 垃圾收集器与内存分配策略](understanding-the-jvm/understanding-the-jvm-chapter3.md)
+* [第4章 虚拟机性能监控与故障处理工具](understanding-the-jvm/understanding-the-jvm-chapter4.md)
+* [第5章 调优案例分析与实战](understanding-the-jvm/understanding-the-jvm-chapter5.md)
+* [第6章 类文件结构](understanding-the-jvm/understanding-the-jvm-chapter6.md)
+* [第7章 虚拟机类加载机制](understanding-the-jvm/understanding-the-jvm-chapter7.md)
+* [第8章 虚拟机字节码执行引擎](understanding-the-jvm/understanding-the-jvm-chapter8.md)
+* [第9章 类加载及执行子系统的案例与实战](understanding-the-jvm/understanding-the-jvm-chapter9.md)
+* [第10章 Java内存区域与内存溢出](understanding-the-jvm/understanding-the-jvm-chapter10.md)
+* [第11章 晚期（运行期）优化](understanding-the-jvm/understanding-the-jvm-chapter11.md)
+* [第12章 Java内存模型与线程](understanding-the-jvm/understanding-the-jvm-chapter12.md)
+* [第13章 线程安全与锁优化](understanding-the-jvm/understanding-the-jvm-chapter13.md)
 
