@@ -1,13 +1,3 @@
----
-title: 《Effective Java》读书笔记 第6章 枚举和注解
-date: '2019-02-18T09:58:30.000Z'
-tags:
-  - Java
-  - 读书笔记
-toc: true
----
-
-# 第6章 枚举和注解
 
 ## 第30条：用enum代替int常量
 
@@ -88,6 +78,47 @@ public class WeightTable {
 
 ## 第31条：用实例域代替序数
 
+许多枚举天生就与一个单独的int值相关联。所有的枚举都有一个ordinal方法，它返回每个枚举常量在类型中的数字位置。你可以试着从序数中得到关联的int值。
+
+```java
+public enum Ensemble {
+    SOLO, DUET, TRIO, QUARTET, QUINTET,
+    SEXTET, SEPTET, OCTET, NONET, DECTET;
+
+    public int numberOfMusicians() {
+        return ordinal() + 1;
+    }
+}
+```
+
+虽然这个枚举不错，但是维护起来就像一场噩梦。如果常量进行重新排列，numberOfMusicians方法就会遭到破坏。如果要再添加一个与已经用过的int值关联的枚举常量，就没那么走运了。例如，给双四重奏（double quartet）添加一个常量，它就像个八重奏一样，是由8位演奏家组成，但是没有办法做到。
+
+永远不要根据枚举的序数导出与它关联的值，而是要将它保存在一个实例域中：
+
+```java
+public enum Ensemble {
+    SOLO(1), DUET(2), TRIO(3), QUARTET(4), QUINTET(5),
+    SEXTET(6), SEPTET(7), OCTET(8), DOUBLE_QUARTET(8),
+    NONET(9), DECTET(10),TRIPLE_QUARTET(12);
+
+    private final int numberOfMusicians;
+
+    Ensemble(int size) {
+        this.numberOfMusicians = size;
+    }
+
+    public int numberOfMusicians() {
+        return numberOfMusicians;
+    }
+}
+```
+
+
+
+Enum规范中谈到ordinal时这么写道：“大多数程序要都不需要这个方法。它是设计成用于像`EnumSet`和`EnumMap`这种基于枚举的通用数据结构的。”除非你再编写的是这种数据结构，否则最好完全避免使用ordinal方法。
+
+
+
 ## 第32条：用EnumSet替代位域
 
 ## 第33条：用EnumMap替代序数索引
@@ -99,4 +130,3 @@ public class WeightTable {
 ## 第36条：坚持使用Override注解
 
 ## 第37条：用标记接口定义类型
-

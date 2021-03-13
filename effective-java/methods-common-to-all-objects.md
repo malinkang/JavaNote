@@ -1,13 +1,3 @@
----
-title: 《Effective Java》读书笔记 第3章 对于所有对象都通用的方法
-date: '2019-02-12T09:54:13.000Z'
-tags:
-  - Java
-  - 读书笔记
-toc: true
----
-
-# 第3章 对于所有对象都通用的方法
 
 ## 第8条：覆盖equals时请遵守通用约定
 
@@ -252,7 +242,27 @@ System.out.println(m.get(new PhoneNumber(707, 867, 5309))); // null
 
 ## 第10条：始终要覆盖toString
 
+虽然java.lang.Object提供了`toString`方法的一个实现。但它返回的字符串通常并不是用户所期望看到的。它包含类的名称，以及一个“@”符号，接着是散列码的无符号十六进制表示法。toString的通用约定指出，被返回的字符串应该是一个“简洁的，但信息丰富，并且易于阅读的表达形式”。toString的约定进一步指出，“建议所有的子类都覆盖这个方法”。
+
+提供好的toString实现可以使类用起来更加舒适。当对象传递给println、printf、字符串联操作符（+）以及assert或者被调试器打印出来时，toString方法会被自动调用。
+
+在实际应用中，toString方法应该返回对象中包含的所有值得关注的信息。
+
 ## 第11条：谨慎地覆盖clone
 
+`Cloneable`接口的目的是作为对象的一个`mixin`接口，表明这样的对象允许克隆（clone）。遗憾的是，它并没有成功地达到这个目的。其主要的缺陷在于，它缺少一个clone方法，Object的clone方法是受保护的（protected）。如果不借助反射，就不能仅仅因为一个对象实现了Cloneable，就可以调用clone方法。
+
+既然Cloneable并没有包含任何方法，那么它到底有什么作用呢？它决定了Object中受保护的clone方法实现的行为：如果一个类实现了Cloneable，Object的clone方法就返回该对象的逐域拷贝，否则就会抛出CloneNotSupportedException异常。
+
+如果实现Cloneable接口是要对某个类起到作用，类和它的所有超类都必须遵守一个相当复杂的，不可实施的，并且基本上没有文档说明的协议。由此得到一种语言之外的机制：无需调用构造器就可以创建对象。
+
 ## 第12条：考虑实现Comparable接口
+
+compareTo方法并没有在Object中声明。相反，它是Comparable接口中唯一的方法。compareTo方法不但允许进行简单的等同性比较，而且允许执行顺序比较，除此之外，它与Object的equals方法具有相似的特征，它还是个泛型。类实现了`Comparable`接口的对象数组进行排序就这么简单：
+
+```java
+Arrays.sort(a);
+```
+
+
 

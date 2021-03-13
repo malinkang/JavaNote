@@ -44,13 +44,18 @@
 
 ## 《Effective Java》
 
-* [第2章 创建和销毁对象](effective-java/effective-java-chapter2.md)
-* [第3章 对于所有对象都通用的方法](effective-java/effective-java-chapter3.md)
-* [第4章 类和接口](effective-java/effective-java-chapter4.md)
-* [第5章 类和接口](effective-java/effective-java-chapter5.md)
-* [第6章 枚举和注解](effective-java/effective-java-chapter6.md)
-* [第7章 方法](effective-java/effective-java-chapter7.md)
-* [第8章 通用程序设计](effective-java/effective-java-chapter8.md)
+
+* [第2章创建和销毁对象](effective-java/creating-and-destroying-objects.md)
+* [第3章对于所有对象都通用的方法](effective-java/methods-common-to-all-objects.md)
+* [第4章类和接口](effective-java/classes-and-interfaces.md)
+* [第5章泛型](effective-java/generics.md)
+* [第6章枚举和注解](effective-java/enums-and-annotations.md)
+* [第7章lambda表达式和流](effective-java/lambdas-and-streams.md)
+* [第8章方法](effective-java/methods.md)
+* [第9章通用程序设计](effective-java/general-programming.md)
+* [第10章异常](effective-java/exceptions.md)
+* [第11章并发](effective-java/concurrency.md)
+* [第12章序列化](effective-java/serialization.md)
 
 ## 《深入理解Java虚拟机》 <a id="understanding-the-jvm"></a>
 
