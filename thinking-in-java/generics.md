@@ -1,3 +1,4 @@
+# 第15章泛型
 
 **一般的类和方法，只能使用具体的类型：要么是基本类型，要么是自定义的类。如果要编写可以应用于多种类型的代码，这种刻板的限制对代码的束缚就会很大。**
 
@@ -1117,8 +1118,6 @@ class ReturnGenericType<T extends HasF> {
 
 另外，擦除和迁移兼容性意味着，使用泛型并不是强制的。
 
-
-
 ### 15.7.4 边界处的动作
 
 正是因为有了擦除，我发现泛型最令人困惑的方面源自这样一个事实，即可以表示没有任何意义的事物。
@@ -1927,7 +1926,7 @@ public class SuperTypeWildcards {
 } ///:~
 ```
 
-List<? super Apple>是Apple的某种基类型的List，这样你就知道向其中添加Apple或Apple的子类型是安全的。
+List&lt;? super Apple&gt;是Apple的某种基类型的List，这样你就知道向其中添加Apple或Apple的子类型是安全的。
 
 ```java
 //: generics/GenericWriting.java
@@ -2194,9 +2193,9 @@ public class Wildcards {
 } ///:~
 ```
 
-在`rawArgs()`中，编译器知道Holder是一个泛型雷兴国，因此即使它在这里被表示成功一个原生类型，编译器仍旧知道向`set()`传递一个Object是不安全的。由于它是原生类型，你可以将任何类型的对象传递给`set()`，而这个对象将被向上转型为Object。因此，无论何时，只要使用了原生类型，都会放弃编译期检查。对get()的调用说明了相同的问题：没有任何T类型的对象，因此结果只能是一个Object。
+在`rawArgs()`中，编译器知道Holder是一个泛型雷兴国，因此即使它在这里被表示成功一个原生类型，编译器仍旧知道向`set()`传递一个Object是不安全的。由于它是原生类型，你可以将任何类型的对象传递给`set()`，而这个对象将被向上转型为Object。因此，无论何时，只要使用了原生类型，都会放弃编译期检查。对get\(\)的调用说明了相同的问题：没有任何T类型的对象，因此结果只能是一个Object。
 
-人们很自然地会开始考虑原生Holder与Holder<?>是大致相同的事物。但是unboundedArg()强调tamen
+人们很自然地会开始考虑原生Holder与Holder&lt;?&gt;是大致相同的事物。但是unboundedArg\(\)强调tamen
 
 ### 15.10.4 捕获转换
 

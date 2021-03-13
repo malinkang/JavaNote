@@ -1,3 +1,5 @@
+# 第8章方法
+
 ## 第38条：检查参数的有效性
 
 对于公有的方法，要用Javadoc的`@throws`标签在文档中说明违反参数值会抛出的异常。一旦在文档中记录了对于方法参数的限制，并且记录了一旦违反这些限制将要抛出的异常，强加这些限制就是非常简单的事情了。
@@ -59,7 +61,7 @@ public class CollectionClassifier {
 }
 ```
 
-你可能期望这个程序会打印“Set”，紧接着是“List”，以及“Unknown Collection”，但实际上不是这样。它是打印“Unknown Collection”三次。因为`classify`方法被`重载（overloaded）`了，而要调用哪个重载方法是在编译时做出决定的。对于for循环中的全部三次迭代，参数的编译时类型都是相同的：Collection<?>。
+你可能期望这个程序会打印“Set”，紧接着是“List”，以及“Unknown Collection”，但实际上不是这样。它是打印“Unknown Collection”三次。因为`classify`方法被`重载（overloaded）`了，而要调用哪个重载方法是在编译时做出决定的。对于for循环中的全部三次迭代，参数的编译时类型都是相同的：Collection&lt;?&gt;。
 
 对于重载方法（overloaded method）的选择是静态的，而对于被覆盖的方法（overridden method）的选择则是动态的。选择被覆盖的方法的正确版本是在运行时进行的，选择的依据是被调用方法所在对象的运行时类型。
 
@@ -138,3 +140,4 @@ System.out.println(set + " " + list); //[-3, -2, -1] [-3, -2, -1]
 ## 第43条：返回零长度的数组或者集合，而不是null
 
 ## 第44条：为所有到处的API元素编写文档注释
+

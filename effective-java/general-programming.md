@@ -1,3 +1,4 @@
+# 第9章通用程序设计
 
 ## 第45条：将局部变量的作用域最小化
 
@@ -81,7 +82,7 @@ public static void main(String[] args) {
 
 如果random方法工作正常的话，这个程序打印出来的数接近于一百万的一半，但是如果真正运行这个程序，就会发现它打印出来的数接近于666 666。由random方法产生的数字有2/3落在随机数取值范围的前半部分。
 
-random方法的第三个缺点是，在极少数情况下，它的失败是灾难性的，返回一个落在指定范围之外的数。之所以如此，是因为这个方法试图通过调用Math.abs将rnd.nextInt()返回的值映射为一个非负证书int。如果nextInt()返回Integer.MIN_VALUE，那么
+random方法的第三个缺点是，在极少数情况下，它的失败是灾难性的，返回一个落在指定范围之外的数。之所以如此，是因为这个方法试图通过调用Math.abs将rnd.nextInt\(\)返回的值映射为一个非负证书int。如果nextInt\(\)返回Integer.MIN\_VALUE，那么
 
 ## 第60条：如果需要精确的答案，请避免使用float和double
 
@@ -103,8 +104,6 @@ for (double price = 0.10; funds >= price; price += 0.10) {
 System.out.println(itemsBought + " items bought."); //3 items bought.
 System.out.println("Change:$" + funds); //Change:$0.3999999999999999
 ```
-
-
 
 解决这个问题的正确方法是**使用BigDecimal、int或者long进行货币计算**。
 
@@ -138,8 +137,6 @@ System.out.println("Cash left over:$" + funds + " cents"); //Cash left over:$0 c
 ```
 
 总而言之，对于任何需要精度答案的计算任务，请不要使用float或者double。如果你想让系统来处理十进制小数点，并且不介意因为不使用基本类型而带来的不便，就请使用`BigDecimal`。使用`BigDecimal`还有一些额外的好处，它允许你完全控制舍入，每当一个操作涉及舍入的时候，你都可以从8种舍入模式中选择其一。如果你正通过合法强制的舍入行为进行商务计算，使用BigDecimal是非常方便的。如果性能非常关键，并且你又不介意自己处理十进制小数点，而且所涉及的数值又不太大，就可以使用int或者long。如果数值范围没有超过9位十进制数字，就可以使用int；如果不超过18位数字，就可以使用long。如果数值可能超过18位数字，就必须使用`BigDecimal`。
-
-
 
 ## 第61条：基本类型优先于装箱基本类型
 

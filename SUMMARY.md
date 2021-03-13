@@ -17,8 +17,7 @@
 * [时间和日期](shi-jian-he-ri-qi.md)
 * [Java8介绍](java8.md)
 
-## 《Java编程思想》读书笔记 <a id="thinking-in-java"></a>
-
+## 《Java编程思想》 <a id="thinking-in-java"></a>
 
 * [第2章一切都是对象](thinking-in-java/everything-is-an-object.md)
 * [第3章操作符](thinking-in-java/operators.md)
@@ -41,9 +40,7 @@
 * [第20章注解](thinking-in-java/annotations.md)
 * [第21章并发](thinking-in-java/concurrency.md)
 
-
 ## 《Effective Java》
-
 
 * [第2章创建和销毁对象](effective-java/creating-and-destroying-objects.md)
 * [第3章对于所有对象都通用的方法](effective-java/methods-common-to-all-objects.md)

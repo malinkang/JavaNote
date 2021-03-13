@@ -1,4 +1,4 @@
-# 第13章 字符串
+# 第13章字符串
 
 ## 13.1 不可变String
 
@@ -1181,8 +1181,7 @@ But I'm not dead yet! I feel happy!
 
 ## String相关面试题
 
-* 
-* String、StringBuffer、StringBuilder区别
+* * String、StringBuffer、StringBuilder区别
 
 ## 参考
 

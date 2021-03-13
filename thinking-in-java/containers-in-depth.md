@@ -1,9 +1,6 @@
+# 第17章容器深入研究
 
 ## 1.完整的容器分类法
-
-
-
-
 
 ![Imgur](https://i.imgur.com/OqAEdC5.png)
 
@@ -1622,14 +1619,7 @@ Asmara
 
 Effective Java 为怎样写出一份像样`hashCode()`给出了基本的指导： 1.给int变量result赋予某个非零值常量，例如17 2.为对象内每个有意义的域f（即每个可以做equals\(\)操作的域）计算出一个int散列码c:
 
-| 域类型 | 计算 |
-| boolean | c=\(f?0:1\) |
-| byte、char、short或int | c=\(int\)f |
-| long | c=\(int\)\(f^f&gt;&gt;&gt;32\) |
-| float | c=Float.floatToIntBits\(f\) |
-| double | long l= Double.doubleToLongBits\(\);c=\(int\)\(l^\(l&gt;&gt;&gt;32\)\) |
-| Object,其equals\(\)调用这个域的equals\(\) | c=f.hashCode\(\) |
-| 数组 | 对每个元素应用上述规则 |
+\| 域类型 \| 计算 \| \| boolean \| c=\(f?0:1\) \| \| byte、char、short或int \| c=\(int\)f \| \| long \| c=\(int\)\(f^f&gt;&gt;&gt;32\) \| \| float \| c=Float.floatToIntBits\(f\) \| \| double \| long l= Double.doubleToLongBits\(\);c=\(int\)\(l^\(l&gt;&gt;&gt;32\)\) \| \| Object,其equals\(\)调用这个域的equals\(\) \| c=f.hashCode\(\) \| \| 数组 \| 对每个元素应用上述规则 \|
 
 3.合并计算得到的散列码
 
@@ -1735,3 +1725,4 @@ Looking up String: hi id: 5 hashCode(): 146451
 ### 13.3 Stack
 
 ### 13.4 BitSet
+
