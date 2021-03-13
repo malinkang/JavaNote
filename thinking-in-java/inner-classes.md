@@ -1,8 +1,3 @@
----
-title: 《Java编程思想》第10章内部类
-date: 2013-05-14 13:39:36
-tags: [Thinking in Java]
----
 
 ## 1.创建内部类
 

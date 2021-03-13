@@ -1,8 +1,3 @@
----
-title: 《Java编程思想》第19章枚举类型
-date: 2013-07-16 13:39:36
-tags: [Thinking in Java]
----
 
 ## 19.1 基本enum特性
 
@@ -26,7 +21,6 @@ public class EnumClass {
       print(s == Shrubbery.CRAWLING);
       print(s.getDeclaringClass());
       print(s.name());
-      print("----------------------");
     }
     // Produce an enum value from a string name:
     for(String s : "HANGING CRAWLING GROUND".split(" ")) {
@@ -39,17 +33,14 @@ GROUND ordinal: 0
 -1 false false
 class Shrubbery
 GROUND
-----------------------
 CRAWLING ordinal: 1
 0 true true
 class Shrubbery
 CRAWLING
-----------------------
 HANGING ordinal: 2
 1 false false
 class Shrubbery
 HANGING
-----------------------
 HANGING
 CRAWLING
 GROUND
@@ -213,7 +204,6 @@ enum Explore { HERE, THERE }
 
 public class Reflection {
   public static Set<String> analyze(Class<?> enumClass) {
-    print("----- Analyzing " + enumClass + " -----");
     print("Interfaces:");
     for(Type t : enumClass.getGenericInterfaces())
       print(t);
@@ -236,12 +226,10 @@ public class Reflection {
     OSExecute.command("javap Explore");
   }
 } /* Output:
------ Analyzing class Explore -----
 Interfaces:
 Base: class java.lang.Enum
 Methods:
 [compareTo, equals, getClass, getDeclaringClass, hashCode, name, notify, notifyAll, ordinal, toString, valueOf, values, wait]
------ Analyzing class java.lang.Enum -----
 Interfaces:
 java.lang.Comparable<E>
 interface java.io.Serializable
@@ -458,7 +446,6 @@ public class Meal {
         Food food = course.randomSelection();
         System.out.println(food);
       }
-      System.out.println("---");
     }
   }
 } /* Output:
@@ -466,27 +453,22 @@ SPRING_ROLLS
 VINDALOO
 FRUIT
 DECAF_COFFEE
----
 SOUP
 VINDALOO
 FRUIT
 TEA
----
 SALAD
 BURRITO
 FRUIT
 TEA
----
 SALAD
 BURRITO
 CREME_CARAMEL
 LATTE
----
 SOUP
 BURRITO
 TIRAMISU
 ESPRESSO
----
 *///:~
 ```
 
@@ -574,7 +556,6 @@ public enum Meal2 {
         Food food = meal.randomSelection();
         System.out.println(food);
       }
-      System.out.println("---");
     }
   }
 } /* Same output as Meal.java *///:~

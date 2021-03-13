@@ -1,8 +1,3 @@
----
-title: 《Java编程思想》第13章字符串
-date: 2013-06-04 13:39:36
-tags: [Thinking in Java]
----
 # 第13章 字符串
 
 ## 13.1 不可变String
@@ -324,7 +319,6 @@ public class Receipt {
 
     public void printTitle() {
         f.format("%-15s %5s %10s \n", "Item", "Qty", "Price");
-        f.format("%-15s %5s %10s \n", "----", "---", "-----");
     }
 
     public void print(String name, int qty, double price) {
@@ -334,7 +328,6 @@ public class Receipt {
 
     public void printTotal() {
         f.format("%-15s %5s %10.2f \n", "Tax", "", total * 0.06);
-        f.format("%-15s %5s %10s \n", "Tax", "", "-----");
         f.format("%-15s %5s %10.2f \n", "Total", "", total * 1.06);
     }
 
@@ -349,12 +342,10 @@ public class Receipt {
 }
 /*
 Item              Qty      Price
-----              ---      -----
 Jack's Magic Be     4       4.25
 Princess Peas       3       5.10
 Three Bears Por     1      14.29
 Tax                         1.42
-Tax                        -----
 Total                      25.06
 
  */

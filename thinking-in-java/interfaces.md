@@ -1,8 +1,3 @@
----
-title: 《Java编程思想》第9章接口
-date: 2013-05-07 13:39:36
-tags: [Thinking in Java]
----
 
 
 ## 1.抽象类和抽象方法

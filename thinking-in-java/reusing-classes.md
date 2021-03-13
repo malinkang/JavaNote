@@ -1,8 +1,3 @@
----
-title: 《Java编程思想》第7章复用类
-date: 2013-04-23 13:39:36
-tags: [Thinking in Java]
----
 
 ## 7.1 组合语法
 

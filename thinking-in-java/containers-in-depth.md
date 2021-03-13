@@ -1,8 +1,3 @@
----
-title: 《Java编程思想》第17章容器深入研究
-date: 2013-07-02 13:39:36
-tags: [Thinking in Java]
----
 
 ## 1.完整的容器分类法
 
@@ -373,7 +368,6 @@ public class Countries {
     {"SERBIA","Belgrade"}, {"SLOVAKIA","Bratislava"},
     {"SLOVENIA","Ljuijana"}, {"SPAIN","Madrid"},
     {"SWEDEN","Stockholm"}, {"SWITZERLAND","Berne"},
-    {"UNITED KINGDOM","London"}, {"VATICAN CITY","---"},
     // North and Central America
     {"ANTIGUA AND BARBUDA","Saint John's"},
     {"BAHAMAS","Nassau"},
@@ -660,7 +654,6 @@ import java.util.*;
 
 public class Unsupported {
   static void test(String msg, List<String> list) {
-    System.out.println("--- " + msg + " ---");
     Collection<String> c = list;
     Collection<String> subList = list.subList(1,8);
     // Copy of the sublist:
@@ -701,15 +694,12 @@ public class Unsupported {
         new ArrayList<String>(list)));
   }
 } /* Output:
---- Modifiable Copy ---
---- Arrays.asList() ---
 retainAll(): java.lang.UnsupportedOperationException
 removeAll(): java.lang.UnsupportedOperationException
 clear(): java.lang.UnsupportedOperationException
 add(): java.lang.UnsupportedOperationException
 addAll(): java.lang.UnsupportedOperationException
 remove(): java.lang.UnsupportedOperationException
---- unmodifiableList() ---
 retainAll(): java.lang.UnsupportedOperationException
 removeAll(): java.lang.UnsupportedOperationException
 clear(): java.lang.UnsupportedOperationException
@@ -1633,7 +1623,6 @@ Asmara
 Effective Java 为怎样写出一份像样`hashCode()`给出了基本的指导： 1.给int变量result赋予某个非零值常量，例如17 2.为对象内每个有意义的域f（即每个可以做equals\(\)操作的域）计算出一个int散列码c:
 
 | 域类型 | 计算 |
-| :--- | :--- |
 | boolean | c=\(f?0:1\) |
 | byte、char、short或int | c=\(int\)f |
 | long | c=\(int\)\(f^f&gt;&gt;&gt;32\) |

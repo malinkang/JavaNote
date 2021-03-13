@@ -1,8 +1,3 @@
----
-title: 《Java编程思想》第18章I/O系统
-date: 2013-07-09 13:39:36
-tags: [Thinking in Java]
----
 
 ## 1.File类
 
@@ -239,7 +234,6 @@ public class DirectoryDemo {
     // All files beginning with 'T'
     for(File file : Directory.local(".", "T.*"))
       print(file);
-    print("----------------------");
     // All Java files beginning with 'T':
     for(File file : Directory.walk(".", "T.*\\.java"))
       print(file);
@@ -254,7 +248,6 @@ public class DirectoryDemo {
 .\TestEOF.java
 .\TransferTo.class
 .\TransferTo.java
-----------------------
 .\TestEOF.java
 .\TransferTo.java
 .\xfiles\ThawAlien.java

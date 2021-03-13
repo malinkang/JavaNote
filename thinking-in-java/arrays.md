@@ -1,8 +1,3 @@
----
-title: 《Java编程思想》第16章数组
-date: 2013-06-25 13:39:36
-tags: [Thinking in Java]
----
 
 ## 1.数组为什么特殊
 

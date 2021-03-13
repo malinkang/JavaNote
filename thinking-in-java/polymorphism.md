@@ -1,8 +1,3 @@
----
-title: 《Java编程思想》第8章多态
-date: 2013-04-30 13:39:36
-tags: [Thinking in Java]
----
 
 ## 8.1 再论向上转型
 

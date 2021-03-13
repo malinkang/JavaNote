@@ -19,26 +19,28 @@
 
 ## 《Java编程思想》读书笔记 <a id="thinking-in-java"></a>
 
-* [《Java编程思想》第6章访问权限控制](thinking-in-java/thinking-in-java-access-control.md)
-* [《Java编程思想》第20章注解](thinking-in-java/thinking-in-java-annotations.md)
-* [《Java编程思想》第16章数组](thinking-in-java/thinking-in-java-arrays.md)
-* [《Java编程思想》第21章并发](thinking-in-java/thinking-in-java-concurrency.md)
-* [《Java编程思想》第17章容器深入研究](thinking-in-java/thinking-in-java-containers-in-depth.md)
-* [《Java编程思想》第4章控制流程](thinking-in-java/thinking-in-java-controlling-execution.md)
-* [《Java编程思想》第19章枚举类型](thinking-in-java/thinking-in-java-enumerated-types.md)
-* [《Java编程思想》第12章通过异常处理错误](thinking-in-java/thinking-in-java-error-handling-with-exceptions.md)
-* [《Java编程思想》第2章一切都是对象](thinking-in-java/thinking-in-java-everything-is-an-object.md)
-* [《Java编程思想》第15章泛型](thinking-in-java/thinking-in-java-generics.md)
-* [《Java编程思想》第11章持有对象](thinking-in-java/thinking-in-java-holding-your-objects.md)
-* [《Java编程思想》第18章I/O系统](thinking-in-java/thinking-in-java-i-o.md)
-* [《Java编程思想》第5章初始化与清理](thinking-in-java/thinking-in-java-initialization-and-cleanup.md)
-* [《Java编程思想》第10章内部类](thinking-in-java/thinking-in-java-inner-classes.md)
-* [《Java编程思想》第9章接口](thinking-in-java/thinking-in-java-interfaces.md)
-* [《Java编程思想》第3章操作符](thinking-in-java/thinking-in-java-operators.md)
-* [《Java编程思想》第8章多态](thinking-in-java/thinking-in-java-polymorphism.md)
-* [《Java编程思想》第7章复用类](thinking-in-java/thinking-in-java-reusing-classes.md)
-* [《Java编程思想》第13章字符串](thinking-in-java/thinking-in-java-strings.md)
-* [《Java编程思想》第14章类型信息](thinking-in-java/thinking-in-java-type-information.md)
+
+* [第2章一切都是对象](thinking-in-java/everything-is-an-object.md)
+* [第3章操作符](thinking-in-java/operators.md)
+* [第4章控制流程](thinking-in-java/controlling-execution.md)
+* [第5章初始化与清理](thinking-in-java/initialization-and-cleanup.md)
+* [第6章访问权限控制](thinking-in-java/access-control.md)
+* [第7章复用类](thinking-in-java/reusing-classes.md)
+* [第8章多态](thinking-in-java/polymorphism.md)
+* [第9章接口](thinking-in-java/interfaces.md)
+* [第10章内部类](thinking-in-java/inner-classes.md)
+* [第11章持有对象](thinking-in-java/holding-your-objects.md)
+* [第12章通过异常处理错误](thinking-in-java/error-handling-with-exceptions.md)
+* [第13章字符串](thinking-in-java/strings.md)
+* [第14章类型信息](thinking-in-java/type-information.md)
+* [第15章泛型](thinking-in-java/generics.md)
+* [第16章数组](thinking-in-java/arrays.md)
+* [第17章容器深入研究](thinking-in-java/containers-in-depth.md)
+* [第18章I/O系统](thinking-in-java/i-o.md)
+* [第19章枚举类型](thinking-in-java/enumerated-types.md)
+* [第20章注解](thinking-in-java/annotations.md)
+* [第21章并发](thinking-in-java/concurrency.md)
+
 
 ## 《Effective Java》
 
