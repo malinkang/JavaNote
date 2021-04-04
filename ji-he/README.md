@@ -4,7 +4,7 @@
 
 集合的整体框架
 
-![](.gitbook/assets/collection.jpg)
+![](../.gitbook/assets/collection.jpg)
 
 ## 2.List
 
