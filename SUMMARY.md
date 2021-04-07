@@ -19,7 +19,7 @@
 * [时间和日期](shi-jian-he-ri-qi.md)
 * [Java8介绍](java8.md)
 
-## 《Java编程思想》 <a id="thinking-in-java"></a>
+## 📚《Java编程思想》 <a id="thinking-in-java"></a>
 
 * [第2章一切都是对象](thinking-in-java/everything-is-an-object.md)
 * [第3章操作符](thinking-in-java/operators.md)
