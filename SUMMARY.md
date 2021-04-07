@@ -56,7 +56,7 @@
 * [第11章并发](effective-java/concurrency.md)
 * [第12章序列化](effective-java/serialization.md)
 
-## 《深入理解Java虚拟机》 <a id="understanding-the-jvm"></a>
+## 📚《深入理解Java虚拟机》 <a id="understanding-the-jvm"></a>
 
 * [第2章 Java内存区域与内存溢出](understanding-the-jvm/understanding-the-jvm-chapter2.md)
 * [第3章 垃圾收集器与内存分配策略](understanding-the-jvm/understanding-the-jvm-chapter3.md)
