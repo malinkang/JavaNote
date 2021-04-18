@@ -15,6 +15,7 @@
 * [IO编程](io-bian-cheng.md)
 * [网络编程](wang-luo-bian-cheng.md)
 * [集合](collection/README.md)
+  * [ArrayMap](collection/arraymap.md)
   * [HashMap源码分析](collection/hashmap-yuan-ma-fen-xi.md)
   * [LinkedHashMap源码分析](collection/linkedhashmap-yuan-ma-fen-xi.md)
 * [泛型](fan-xing.md)
