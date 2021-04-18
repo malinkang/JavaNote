@@ -1,11 +1,14 @@
 # Table of contents
 
 * [Introduction](README.md)
+* [面向对象](mian-xiang-dui-xiang.md)
+* [Java核心类](java-he-xin-lei/README.md)
+  * [Object](java-he-xin-lei/object.md)
 * [面试题整理](interview.md)
 * [基础](ji-chu.md)
 * [控制流程](kong-zhi-liu-cheng.md)
 * [数组](shu-zu.md)
-* [面向对象](mian-xiang-dui-xiang.md)
+* [面向对象](mian-xiang-dui-xiang-1.md)
 * [枚举](mei-ju.md)
 * [字符串](zi-fu-chuan.md)
 * [多线程](duo-xian-cheng.md)
