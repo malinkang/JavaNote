@@ -16,6 +16,7 @@
 * [网络编程](wang-luo-bian-cheng.md)
 * [集合](collection/README.md)
   * [HashMap源码分析](collection/hashmap-yuan-ma-fen-xi.md)
+  * [LinkedHashMap源码分析](collection/linkedhashmap-yuan-ma-fen-xi.md)
 * [泛型](fan-xing.md)
 * [反射](fan-she.md)
 * [注解](zhu-jie.md)
