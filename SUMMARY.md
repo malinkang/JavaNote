@@ -3,7 +3,7 @@
 * [Introduction](README.md)
 * [面试题整理](interview.md)
 
-## 📚《Java编程思想》 <a id="thinking-in-java"></a>
+## 《Java编程思想》
 
 * [第2章一切都是对象](thinking-in-java/everything-is-an-object.md)
 * [第3章操作符](thinking-in-java/operators.md)
@@ -40,14 +40,14 @@
 * [第11章并发](effective-java/concurrency.md)
 * [第12章序列化](effective-java/serialization.md)
 
-## 📚《深入理解Java虚拟机》 <a id="understanding-the-jvm"></a>
+## jvm 
 
-* [Java内存区域与内存溢出](understanding-the-jvm/runtime-data-areas.md)
-* [垃圾收集器与内存分配策略](understanding-the-jvm/garbage-collection.md)
-* [类文件结构](understanding-the-jvm/class-file-structure.md)
-* [虚拟机类加载机制](understanding-the-jvm/classloader.md)
-* [虚拟机字节码执行引擎](understanding-the-jvm/execution-engin.md)
-* [编译期优化](understanding-the-jvm/compilation-optimization.md)
-* [Java内存模型与线程](understanding-the-jvm/java-memory-model-and-thread.md)
-* [线程安全与锁优化](understanding-the-jvm/thread-safe-and-lock-optimization.md)
+* [Java内存区域与内存溢出](jvm/runtime-data-areas.md)
+* [垃圾收集器与内存分配策略](jvm/garbage-collection.md)
+* [类文件结构](jvm/class-file-structure.md)
+* [虚拟机类加载机制](jvm/classloader.md)
+* [虚拟机字节码执行引擎](jvm/execution-engin.md)
+* [编译期优化](jvm/compilation-optimization.md)
+* [Java内存模型与线程](jvm/java-memory-model-and-thread.md)
+* [线程安全与锁优化](jvm/thread-safe-and-lock-optimization.md)
 
