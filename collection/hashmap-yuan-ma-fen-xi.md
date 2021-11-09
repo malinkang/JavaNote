@@ -1,13 +1,11 @@
 # HashMap源码分析
 
-
-
 ## 查找
 
 ```java
 public V get(Object key) {
-	Node<K,V> e;
-	return (e = getNode(hash(key), key)) == null ? null : e.value;
+    Node<K,V> e;
+    return (e = getNode(hash(key), key)) == null ? null : e.value;
 }
 ```
 
@@ -40,13 +38,11 @@ final Node<K,V> getNode(int hash, Object key) {
 ```java
 (n - 1) & hash 是对%运算的优化 等价于 hash % n
 hash = 185 n = 16 185%16 = 9
-	1011 1001
+    1011 1001
 & 0000 1111
 ------------
-  0000 1001 
+  0000 1001
 ```
-
-
 
 ```java
 //只有低四位参与位运算冲突几率比较大
@@ -166,10 +162,6 @@ final class EntryIterator extends HashIterator
 }
 ```
 
-
-
-
-
 ## 插入分析
 
 ```java
@@ -178,8 +170,6 @@ public V put(K key, V value) {
     return putVal(hash(key), key, value, false, true);
 }
 ```
-
-
 
 ```java
 final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
@@ -233,8 +223,6 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
     return null;
 }
 ```
-
-
 
 ```java
 final Node<K,V>[] resize() {
@@ -314,10 +302,9 @@ final Node<K,V>[] resize() {
 }
 ```
 
+## 参考
 
-
-* [HashMap 源码详细分析(JDK1.8)](http://www.tianxiaobo.com/2018/01/18/HashMap-%E6%BA%90%E7%A0%81%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90-JDK1-8/)
-
+* [HashMap 源码详细分析\(JDK1.8\)](http://www.tianxiaobo.com/2018/01/18/HashMap-%E6%BA%90%E7%A0%81%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90-JDK1-8/)
 * [Java 8系列之重新认识HashMap](https://tech.meituan.com/2016/06/24/java-hashmap.html)
 * [《吊打面试官》系列-HashMap](https://mp.weixin.qq.com/s/0Gf2DzuzgEx0i3mHVvhKNQ)
 
