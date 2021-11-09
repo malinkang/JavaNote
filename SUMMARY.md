@@ -1,28 +1,7 @@
 # Table of contents
 
 * [Introduction](README.md)
-* [面向对象](mian-xiang-dui-xiang.md)
-* [Java核心类](java-he-xin-lei/README.md)
-  * [Object](java-he-xin-lei/object.md)
 * [面试题整理](interview.md)
-* [基础](ji-chu.md)
-* [控制流程](kong-zhi-liu-cheng.md)
-* [数组](shu-zu.md)
-* [面向对象](mian-xiang-dui-xiang-1.md)
-* [枚举](mei-ju.md)
-* [字符串](zi-fu-chuan.md)
-* [多线程](duo-xian-cheng.md)
-* [IO编程](io-bian-cheng.md)
-* [网络编程](wang-luo-bian-cheng.md)
-* [集合](collection/README.md)
-  * [ArrayMap](collection/arraymap.md)
-  * [HashMap源码分析](collection/hashmap-yuan-ma-fen-xi.md)
-  * [LinkedHashMap源码分析](collection/linkedhashmap-yuan-ma-fen-xi.md)
-* [泛型](fan-xing.md)
-* [反射](fan-she.md)
-* [注解](zhu-jie.md)
-* [时间和日期](shi-jian-he-ri-qi.md)
-* [Java8介绍](java8.md)
 
 ## 📚《Java编程思想》 <a id="thinking-in-java"></a>
 
