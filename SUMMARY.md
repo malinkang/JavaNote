@@ -51,3 +51,15 @@
 * [Java内存模型与线程](jvm/java-memory-model-and-thread.md)
 * [线程安全与锁优化](jvm/thread-safe-and-lock-optimization.md)
 
+## 并发
+
+* [原子变量与非阻塞同步机制](currency/atomic-variables-and-nonblocking-synchronization.md)
+* [基础构建模块](currency/building-blocks.md)
+* [构建自定义的同步工具](currency/building-custom-synchronizers.md)
+* [取消与关闭](currency/cancellation-and-shutdown.md)
+* [显式锁](currency/explicit-locks.md)
+* [显式锁](currency/sharing-objects.md)
+* [任务执行](currency/task-execution.md)
+* [Java内存模型](currency/the-java-momory-model.md)
+* [线程池](currency/thread-pools.md)
+* [线程安全](currency/thread-safety.md)
