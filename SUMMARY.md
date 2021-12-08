@@ -58,7 +58,7 @@
 * [构建自定义的同步工具](currency/building-custom-synchronizers.md)
 * [取消与关闭](currency/cancellation-and-shutdown.md)
 * [显式锁](currency/explicit-locks.md)
-* [显式锁](currency/sharing-objects.md)
+* [对象的共享](currency/sharing-objects.md)
 * [任务执行](currency/task-execution.md)
 * [Java内存模型](currency/the-java-momory-model.md)
 * [线程池](currency/thread-pools.md)
