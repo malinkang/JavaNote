@@ -62,4 +62,6 @@
 * [任务执行](currency/task-execution.md)
 * [Java内存模型](currency/the-java-momory-model.md)
 * [线程池](currency/thread-pools.md)
-* [线程安全](currency/thread-safety.md)
+* [线程安全](currency/synchronized.md)
+* [CAS](currency/compare-and-swap.md)
+* [原子变量](currency/atomic-variables.md)
