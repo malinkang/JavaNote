@@ -1726,3 +1726,6 @@ Looking up String: hi id: 5 hashCode(): 146451
 
 ### 13.4 BitSet
 
+## 参考
+
+* [Java 8系列之重新认识HashMap](https://zhuanlan.zhihu.com/p/21673805)

@@ -164,3 +164,7 @@ public interface RanVals {
 
 ## 9.接口与工厂
 
+## 参考
+
+* [java为什么匿名内部类的参数引用时final？](https://www.zhihu.com/question/21395848)
+* [Java 到底是值传递还是引用传递？](https://www.zhihu.com/question/31203609)
