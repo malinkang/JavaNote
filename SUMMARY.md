@@ -65,3 +65,5 @@
 * [线程安全](currency/synchronized.md)
 * [CAS](currency/compare-and-swap.md)
 * [原子变量](currency/atomic-variables.md)
+* [final](currency/final.md)
+* [threadlocal](currency/threadlocal.md)

@@ -1179,11 +1179,87 @@ But I'm not dead yet! I feel happy!
  */
 ```
 
+
+
+```java
+final String s1 = new String("abc");
+final String s2 = "abc";
+System.out.println(s1 == s2);//false
+```
+
+```java
+final String s1 = "abc";
+final String s2 = "abc";
+System.out.println(s1 == s2);//true
+```
+```java
+String s1 = "abc";
+String s2 = "ab" + "c";
+String s3 = "a" + "b" + "c";
+System.out.println(s1 == s2);//true
+System.out.println(s1 == s3);//true
+```
+
+```java
+String s0 = "ab";
+String s1 = s0+"c";
+String s2 = "ab" + "c";
+String s3 = "a" + "b" + "c";
+System.out.println(s1 == s2);//false
+System.out.println(s1 == s3);//false
+System.out.println(s2 == s3);//true
+```
+
+```java
+final String s0 = "ab";
+String s1 = s0+"c";
+String s2 = "ab" + "c";
+String s3 = "a" + "b" + "c";
+System.out.println(s1 == s2);//true
+System.out.println(s1 == s3);//true
+System.out.println(s2 == s3);//true
+```
+
+
 ## String相关面试题
 
-* * String、StringBuffer、StringBuilder区别
+*  String、StringBuffer、StringBuilder区别
+
+
+* 为什么说String是不可变的
+
+```java
+//final修饰只在构造函数中赋值 无法改变，并且String类使用final修饰
+private final byte[] value;
+```
+
+* String为什么设计成不可变
+
+1. 因为对象内容可能会不停变化，没办法再实现复用了。假设对象已经被许多变量引用了，如果使用其中任何一个引用更改了对象值，那么其他的引用指向的内容是不应该受到影响的。
+
+2. String 不可变的第二个好处就是它可以很方便地用作 HashMap (或者 HashSet) 的 key。通常建议把不可变对象作为 HashMap的 key，比如 String 就很
+合适作为 HashMap 的 key。
+
+对于 key 来说，最重要的要求就是它是不可变的，这样我们才能利用它去检索存储在 HashMap 里面的 value。由于 HashMap 的工作原理是 Hash，也就是 散列，所以需要对象始终拥有相同的 Hash 值才能正常运行。如果 String 是可变的，这会带来很大的风险，因为一旦 String 对象里面的内容变了，那么 Hash 码自然就应该跟着变了，若再用这个 key 去查找的话，就找不回之前那个 value 了。
+
+3. String 不可变的第三个好处就是缓存 HashCode。
+
+在 Java 中经常会用到字符串的 HashCode，在 String 类中有一个 hash 属性，代码如下:
+
+```java
+private int hash; // Default to 0
+```
+这是一个成员变量，保存的是 String 对象的 HashCode。因为 String 是不可变的，所以对象一旦被创建之后，HashCode 的值也就不可能变化了，我们就 可以把 HashCode 缓存起来。这样的话，以后每次想要用到 HashCode 的时候，不需要重新计算，直接返回缓存过的 hash 的值就可以了，因为它不会 变，这样可以提高效率，所以这就使得字符串非常适合用作 HashMap 的 key。
+而对于其他的不具备不变性的普通类的对象而言，如果想要去获取它的 HashCode ，就必须每次都重新算一遍，相比之下，效率就低了。
+
+4. 线程安全
+
+String 不可变的第四个好处就是线程安全，因为具备不变性的对象一定是线程安全的，我们不需要对其采取任何额外的措施，就可以天然保证线程安 全。
+由于 String 是不可变的，所以它就可以非常安全地被多个线程所共享，这对于多线程编程而言非常重要，避免了很多不必要的同步操作。
 
 ## 参考
 
 * [正则表达式30分钟入门教程](https://deerchao.net/tutorials/regex/regex.htm)
+* [Java中的String到底占用多大的内存空间？你所了解的可能都是错误的！！](https://www.cnblogs.com/binghe001/p/13860617.html)
+* [别再问我 new 字符串创建了几个对象了！我来证明给你看！](https://juejin.cn/post/6844904129752465416)
 
