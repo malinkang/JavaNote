@@ -85,39 +85,39 @@ AtomicInteger 类有以下几个常用的方法：
 下面我们看一段代码：
 
 ```
-public&nbsp;class&nbsp;AtomicIntegerFieldUpdaterDemo&nbsp;implements&nbsp;Runnable{
-&nbsp;
-&nbsp;&nbsp;&nbsp;static&nbsp;Score&nbsp;math;
-&nbsp;&nbsp;&nbsp;static&nbsp;Score&nbsp;computer;
-&nbsp;
-&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;AtomicIntegerFieldUpdater&lt;Score&gt;&nbsp;scoreUpdater&nbsp;=&nbsp;AtomicIntegerFieldUpdater
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.newUpdater(Score.class,&nbsp;"score");
-&nbsp;
-&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;computer.score++;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scoreUpdater.getAndIncrement(math);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;class&nbsp;Score&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;volatile&nbsp;int&nbsp;score;
-&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;math&nbsp;=new&nbsp;Score();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;computer&nbsp;=new&nbsp;Score();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AtomicIntegerFieldUpdaterDemo2&nbsp;r&nbsp;=&nbsp;new&nbsp;AtomicIntegerFieldUpdaterDemo2();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;t1&nbsp;=&nbsp;new&nbsp;Thread(r);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;t2&nbsp;=&nbsp;new&nbsp;Thread(r);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t1.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t2.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t1.join();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t2.join();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("普通变量的结果："+&nbsp;computer.score);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("升级后的结果："+&nbsp;math.score);
-&nbsp;&nbsp;&nbsp;}
+public  class  AtomicIntegerFieldUpdaterDemo  implements  Runnable{
+  
+      static  Score  math  
+      static  Score  computer  
+  
+      public  static  AtomicIntegerFieldUpdater&lt  Score&gt    scoreUpdater  =  AtomicIntegerFieldUpdater
+                      .newUpdater(Score.class,  "score")  
+  
+      @Override
+      public  void  run()  {
+              for  (int  i  =  0    i  &lt    1000    i++)  {
+                      computer.score++  
+                      scoreUpdater.getAndIncrement(math)  
+              }
+      }
+  
+      public  static  class  Score  {
+              volatile  int  score  
+      }
+  
+      public  static  void  main(String[]  args)  throws  InterruptedException  {
+              math  =new  Score()  
+              computer  =new  Score()  
+              AtomicIntegerFieldUpdaterDemo2  r  =  new  AtomicIntegerFieldUpdaterDemo2()  
+              Thread  t1  =  new  Thread(r)  
+              Thread  t2  =  new  Thread(r)  
+              t1.start()  
+              t2.start()  
+              t1.join()  
+              t2.join()  
+              System.out.println("普通变量的结果："+  computer.score)  
+              System.out.println("升级后的结果："+  math.score)  
+      }
 }
 ```
 
@@ -157,9 +157,9 @@ public&nbsp;class&nbsp;AtomicIntegerFieldUpdaterDemo&nbsp;implements&nbsp;Runnab
 这个方法的代码在 Java 1.8 中的实现如下：
 
 ```
-//JDK&nbsp;1.8实现
-public&nbsp;final&nbsp;int&nbsp;getAndAdd(int&nbsp;delta)&nbsp;{
-&nbsp;&nbsp;&nbsp;return&nbsp;unsafe.getAndAddInt(this,&nbsp;valueOffset,&nbsp;delta);
+//JDK  1.8实现
+public  final  int  getAndAdd(int  delta)  {
+      return  unsafe.getAndAddInt(this,  valueOffset,  delta)  
 }
 ```
 
@@ -172,21 +172,21 @@ Unsafe 类主要是用于和操作系统打交道的，因为大部分的 Java �
 那么我们就来看一下 AtomicInteger 的一些重要代码，如下所示：
 
 ```
-public&nbsp;class&nbsp;AtomicInteger&nbsp;extends&nbsp;Number&nbsp;implements&nbsp;java.io.Serializable&nbsp;{
-&nbsp;&nbsp;&nbsp;//&nbsp;setup&nbsp;to&nbsp;use&nbsp;Unsafe.compareAndSwapInt&nbsp;for&nbsp;updates
-&nbsp;&nbsp;&nbsp;private&nbsp;static&nbsp;final&nbsp;Unsafe&nbsp;unsafe&nbsp;=&nbsp;Unsafe.getUnsafe();
-&nbsp;&nbsp;&nbsp;private&nbsp;static&nbsp;final&nbsp;long&nbsp;valueOffset;
-&nbsp;
-&nbsp;&nbsp;&nbsp;static&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;valueOffset&nbsp;=&nbsp;unsafe.objectFieldOffset
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(AtomicInteger.class.getDeclaredField("value"));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(Exception&nbsp;ex)&nbsp;{&nbsp;throw&nbsp;new&nbsp;Error(ex);&nbsp;}
-&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;private&nbsp;volatile&nbsp;int&nbsp;value;
-&nbsp;&nbsp;&nbsp;public&nbsp;final&nbsp;int&nbsp;get()&nbsp;{return&nbsp;value;}
-&nbsp;&nbsp;&nbsp;...
+public  class  AtomicInteger  extends  Number  implements  java.io.Serializable  {
+      //  setup  to  use  Unsafe.compareAndSwapInt  for  updates
+      private  static  final  Unsafe  unsafe  =  Unsafe.getUnsafe()  
+      private  static  final  long  valueOffset  
+  
+      static  {
+              try  {
+                      valueOffset  =  unsafe.objectFieldOffset
+                              (AtomicInteger.class.getDeclaredField("value"))  
+              }  catch  (Exception  ex)  {  throw  new  Error(ex)    }
+      }
+  
+      private  volatile  int  value  
+      public  final  int  get()  {return  value  }
+      ...
 }
 ```
 
@@ -197,12 +197,12 @@ value 是用 volatile 修饰的，它就是我们原子类存储的值的变量�
 接下来继续看 Unsafe 的 getAndAddInt 方法的实现，代码如下：
 
 ```
-public&nbsp;final&nbsp;int&nbsp;getAndAddInt(Object&nbsp;var1,&nbsp;long&nbsp;var2,&nbsp;int&nbsp;var4)&nbsp;{
-&nbsp;&nbsp;&nbsp;int&nbsp;var5;
-&nbsp;&nbsp;&nbsp;do&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var5&nbsp;=&nbsp;this.getIntVolatile(var1,&nbsp;var2);
-&nbsp;&nbsp;&nbsp;}&nbsp;while(!this.compareAndSwapInt(var1,&nbsp;var2,&nbsp;var5,&nbsp;var5&nbsp;+&nbsp;var4));
-&nbsp;&nbsp;&nbsp;return&nbsp;var5;
+public  final  int  getAndAddInt(Object  var1,  long  var2,  int  var4)  {
+      int  var5  
+      do  {
+              var5  =  this.getIntVolatile(var1,  var2)  
+      }  while(!this.compareAndSwapInt(var1,  var2,  var5,  var5  +  var4))  
+      return  var5  
 }
 ```
 

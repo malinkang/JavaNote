@@ -6,27 +6,49 @@
 
 第一步，我们来看一下 HashMap 中 put 方法的源码：
 
-```
-public&nbsp;V&nbsp;put(K&nbsp;key,&nbsp;V&nbsp;value)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(key&nbsp;==&nbsp;null)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;putForNullKey(value);
-&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;hash&nbsp;=&nbsp;hash(key.hashCode());
-&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;i&nbsp;=&nbsp;indexFor(hash,&nbsp;table.length);
-&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(Entry&lt;K,V&gt;&nbsp;e&nbsp;=&nbsp;table[i];&nbsp;e&nbsp;!=&nbsp;null;&nbsp;e&nbsp;=&nbsp;e.next)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;k;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(e.hash&nbsp;==&nbsp;hash&nbsp;&amp;&amp;&nbsp;((k&nbsp;=&nbsp;e.key)&nbsp;==&nbsp;key&nbsp;||&nbsp;key.equals(k)))&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;V&nbsp;oldValue&nbsp;=&nbsp;e.value;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.value&nbsp;=&nbsp;value;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.recordAccess(this);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;oldValue;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;//modCount++&nbsp;是一个复合操作
-&nbsp;&nbsp;&nbsp;&nbsp;modCount++;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;addEntry(hash,&nbsp;key,&nbsp;value,&nbsp;i);
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;null;
+```java
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                boolean evict) {
+    Node<K,V>[] tab   Node<K,V> p   int n, i  
+    if ((tab = table) == null || (n = tab.length) == 0)
+        n = (tab = resize()).length  
+    if ((p = tab[i = (n - 1) & hash]) == null)
+        tab[i] = newNode(hash, key, value, null)  
+    else {
+        Node<K,V> e   K k  
+        if (p.hash == hash &&
+            ((k = p.key) == key || (key != null && key.equals(k))))
+            e = p  
+        else if (p instanceof TreeNode)
+            e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value)  
+        else {
+            for (int binCount = 0      ++binCount) {
+                if ((e = p.next) == null) {
+                    p.next = newNode(hash, key, value, null)  
+                    if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                        treeifyBin(tab, hash)  
+                    break  
+                }
+                if (e.hash == hash &&
+                    ((k = e.key) == key || (key != null && key.equals(k))))
+                    break  
+                p = e  
+            }
+        }
+        if (e != null) { // existing mapping for key
+            V oldValue = e.value  
+            if (!onlyIfAbsent || oldValue == null)
+                e.value = value  
+            afterNodeAccess(e)  
+            return oldValue  
+        }
+    }
+    //复合操作
+    ++modCount  
+    if (++size > threshold)
+        resize()  
+    afterNodeInsertion(evict)  
+    return null  
 }
 ```
 
@@ -38,7 +60,7 @@ public&nbsp;V&nbsp;put(K&nbsp;key,&nbsp;V&nbsp;value)&nbsp;{
 
 那么我们接下来具体看一下如何发生的线程不安全问题。
 
-![](https://s0.lgstatic.com/i/image3/M01/60/C7/Cgq2xl4YRJeAC6fuAAA8JO4TxM0077.png)
+![](https://cdn.malinkang.com/images/currency/202112141954886.png)
 
 我们根据箭头指向依次看，假设线程 1 首先拿到 i=1 的结果，然后进行 i+1 操作，但此时 i+1 的结果并没有保存下来，线程 1 就被切换走了，于是 CPU 开始执行线程 2，它所做的事情和线程 1 是一样的 i++ 操作，但此时我们想一下，它拿到的 i 是多少？实际上和线程 1 拿到的 i 的结果一样都是 1，为什么呢？因为线程 1 虽然对 i 进行了 +1 操作，但结果没有保存，所以线程 2 看不到修改后的结果。
 
@@ -52,26 +74,20 @@ public&nbsp;V&nbsp;put(K&nbsp;key,&nbsp;V&nbsp;value)&nbsp;{
 
 为什么说 HashMap 不是线程安全的呢？我们先来讲解下原理。HashMap 本身默认的容量不是很大，如果不停地往 map 中添加新的数据，它便会在合适的时机进行扩容。而在扩容期间，它会新建一个新的空数组，并且用旧的项填充到这个新的数组中去。那么，在这个填充的过程中，如果有线程获取值，很可能会取到 null 值，而不是我们所希望的、原来添加的值。所以我们程序就想演示这种情景，我们来看一下这段代码：
 
-```
-public&nbsp;class&nbsp;HashMapNotSafe&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final&nbsp;Map&lt;Integer,&nbsp;String&gt;&nbsp;map&nbsp;=&nbsp;new&nbsp;HashMap&lt;&gt;();
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final&nbsp;Integer&nbsp;targetKey&nbsp;=&nbsp;0b1111_1111_1111_1111;&nbsp;//&nbsp;65&nbsp;535
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final&nbsp;String&nbsp;targetValue&nbsp;=&nbsp;"v";
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(targetKey,&nbsp;targetValue);
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Thread(()&nbsp;-&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IntStream.range(0,&nbsp;targetKey).forEach(key&nbsp;-&gt;&nbsp;map.put(key,&nbsp;"someValue"));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).start();
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(true)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(null&nbsp;==&nbsp;map.get(targetKey))&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;RuntimeException("HashMap&nbsp;is&nbsp;not&nbsp;thread&nbsp;safe.");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+```java
+public class HashMapNotSafe {
+    public static void main(String[] args) {
+        final Map<Integer,String> map = new HashMap<>()  
+        final Integer targetKey = 0b1111_1111_1111_1111  //65535
+        final String targetValue = "v"  
+        map.put(targetKey,targetValue)  
+        new Thread(()-> IntStream.range(0,targetKey).forEach(key->map.put(key,"someValue"))).start()  
+        while (true){
+            if(null==map.get(targetKey)){
+                throw new RuntimeException("HashMap is not thread safe.")  
+            }
+        }
+    }
 }
 ```
 
@@ -84,8 +100,8 @@ public&nbsp;class&nbsp;HashMapNotSafe&nbsp;{
 下面就让我们运行这个程序来看一看是否会抛出这个异常。一旦抛出就代表它是线程不安全的，这段代码的运行结果：
 
 ```
-Exception&nbsp;in&nbsp;thread&nbsp;"main"&nbsp;java.lang.RuntimeException:&nbsp;HashMap&nbsp;is&nbsp;not&nbsp;thread&nbsp;safe.
-at&nbsp;lesson29.HashMapNotSafe.main(HashMapNotSafe.java:25)
+Exception in thread "main" java.lang.RuntimeException: HashMap is not thread safe.
+	at currency.HashMapNotSafe.main(HashMapNotSafe.java:16)
 ```
 
 很明显，很快这个程序就抛出了我们所希望看到的 RuntimeException，并且我们把它描述为：HashMap is not thread safe，一旦它能进入到这个 if 语句，就已经证明它所取出来的值是 null，而不是我们期望的字符串 "v"。

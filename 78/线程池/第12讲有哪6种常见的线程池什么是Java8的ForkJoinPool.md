@@ -35,11 +35,11 @@ ForkJoinPool
 当我们提交一个任务后，线程池会判断已创建的线程中是否有空闲线程，如果有空闲线程则将任务直接指派给空闲线程，如果没有空闲线程，则新建线程去执行任务，这样就做到了动态地新增线程。让我们举个例子，如下方代码所示。
 
 ```
-ExecutorService&nbsp;service&nbsp;=&nbsp;Executors.newCachedThreadPool();
-&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service.execute(new&nbsp;Task()&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;});
-&nbsp;}
+ExecutorService  service  =  Executors.newCachedThreadPool()  
+        for  (int  i  =  0    i  &lt    1000    i++)  {  
+                service.execute(new  Task()  {  
+        })  
+  }
 
 ```
 
@@ -50,13 +50,13 @@ ExecutorService&nbsp;service&nbsp;=&nbsp;Executors.newCachedThreadPool();
 第三个线程池是 ScheduledThreadPool，它支持定时或周期性执行任务。比如每隔 10 秒钟执行一次任务，而实现这种功能的方法主要有 3 种，如代码所示：
 
 ```
-ScheduledExecutorService&nbsp;service&nbsp;=&nbsp;Executors.newScheduledThreadPool(10);
-&nbsp;
-service.schedule(new&nbsp;Task(),&nbsp;10,&nbsp;TimeUnit.SECONDS);
-&nbsp;
-service.scheduleAtFixedRate(new&nbsp;Task(),&nbsp;10,&nbsp;10,&nbsp;TimeUnit.SECONDS);
-&nbsp;
-service.scheduleWithFixedDelay(new&nbsp;Task(),&nbsp;10,&nbsp;10,&nbsp;TimeUnit.SECONDS);
+ScheduledExecutorService  service  =  Executors.newScheduledThreadPool(10)  
+  
+service.schedule(new  Task(),  10,  TimeUnit.SECONDS)  
+  
+service.scheduleAtFixedRate(new  Task(),  10,  10,  TimeUnit.SECONDS)  
+  
+service.scheduleWithFixedDelay(new  Task(),  10,  10,  TimeUnit.SECONDS)  
 
 ```
 
@@ -69,10 +69,10 @@ service.scheduleWithFixedDelay(new&nbsp;Task(),&nbsp;10,&nbsp;10,&nbsp;TimeUnit.
 第二种方法 scheduleAtFixedRate 表示以固定的频率执行任务，它的第二个参数 initialDelay 表示第一次延时时间，第三个参数 period 表示周期，也就是第一次延时后每次延时多长时间执行一次任务。
 </li>
 <li data-nodeid="1127">
-第三种方法&nbsp;scheduleWithFixedDelay 与第二种方法类似，也是周期执行任务，区别在于对周期的定义，之前的 scheduleAtFixedRate 是以任务开始的时间为时间起点开始计时，时间到就开始执行第二次任务，而不管任务需要花多久执行；而 scheduleWithFixedDelay 方法以任务结束的时间为下一次循环的时间起点开始计时。
+第三种方法  scheduleWithFixedDelay 与第二种方法类似，也是周期执行任务，区别在于对周期的定义，之前的 scheduleAtFixedRate 是以任务开始的时间为时间起点开始计时，时间到就开始执行第二次任务，而不管任务需要花多久执行；而 scheduleWithFixedDelay 方法以任务结束的时间为下一次循环的时间起点开始计时。
 </li>
 
-举个例子，假设某个同学正在熬夜写代码，需要喝咖啡来提神，假设每次喝咖啡都需要花10分钟的时间，如果此时采用第2种方法&nbsp;scheduleAtFixedRate，时间间隔设置为 1 小时，那么他将会在每个整点喝一杯咖啡，以下是时间表：
+举个例子，假设某个同学正在熬夜写代码，需要喝咖啡来提神，假设每次喝咖啡都需要花10分钟的时间，如果此时采用第2种方法  scheduleAtFixedRate，时间间隔设置为 1 小时，那么他将会在每个整点喝一杯咖啡，以下是时间表：
 
 <li data-nodeid="1131">
 00:00: 开始喝咖啡
@@ -93,13 +93,13 @@ service.scheduleWithFixedDelay(new&nbsp;Task(),&nbsp;10,&nbsp;10,&nbsp;TimeUnit.
 02:10: 喝完了
 </li>
 
-但是假设他采用第3种方法&nbsp;scheduleWithFixedDelay，时间间隔同样设置为 1 小时，那么由于每次喝咖啡需要10分钟，而&nbsp;scheduleWithFixedDelay 是以任务完成的时间为时间起点开始计时的，所以第2次喝咖啡的时间将会在1:10，而不是1:00整，以下是时间表：
+但是假设他采用第3种方法  scheduleWithFixedDelay，时间间隔同样设置为 1 小时，那么由于每次喝咖啡需要10分钟，而  scheduleWithFixedDelay 是以任务完成的时间为时间起点开始计时的，所以第2次喝咖啡的时间将会在1:10，而不是1:00整，以下是时间表：
 
 <li data-nodeid="1145">
 00:00: 开始喝咖啡
 </li>
 <li data-nodeid="1147">
-00:10:&nbsp;喝完了
+00:10:  喝完了
 </li>
 <li data-nodeid="1149">
 01:10: 开始喝咖啡
@@ -150,20 +150,20 @@ new ScheduledThreadPoolExecutor(1)
 举个例子，比如面试中经常考到的菲波那切数列，你一定非常熟悉，这个数列的特点就是后一项的结果等于前两项的和，第 0 项是 0，第 1 项是 1，那么第 2 项就是 0+1=1，以此类推。我们在写代码时应该首选效率更高的迭代形式或者更高级的乘方或者矩阵公式法等写法，不过假设我们写成了最初版本的递归形式，伪代码如下所示：
 
 ```
-if&nbsp;(n&nbsp;&lt;=&nbsp;1)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;n;
-&nbsp;}&nbsp;else&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;Fib&nbsp;f1&nbsp;=&nbsp;new&nbsp;Fib(n&nbsp;-&nbsp;1);
-&nbsp;&nbsp;&nbsp;&nbsp;Fib&nbsp;f2&nbsp;=&nbsp;new&nbsp;Fib(n&nbsp;-&nbsp;2);
-&nbsp;&nbsp;&nbsp;&nbsp;f1.solve();
-&nbsp;&nbsp;&nbsp;&nbsp;f2.solve();
-&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;=&nbsp;f1.number&nbsp;+&nbsp;f2.number;
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;number;
-&nbsp;}
+if  (n  &lt  =  1)  {
+        return  n  
+  }  else  {
+        Fib  f1  =  new  Fib(n  -  1)  
+        Fib  f2  =  new  Fib(n  -  2)  
+        f1.solve()  
+        f2.solve()  
+        number  =  f1.number  +  f2.number  
+        return  number  
+  }
 
 ```
 
-你可以看到如果 n&lt;=1 则直接返回 n，如果 n&gt;1 ，先将前一项 f1 的值计算出来，然后往前推两项求出 f2 的值，然后将两值相加得到结果，所以我们看到在求和运算中产生了两个子任务。计算 f(4) 的流程如下图所示。
+你可以看到如果 n&lt  =1 则直接返回 n，如果 n&gt  1 ，先将前一项 f1 的值计算出来，然后往前推两项求出 f2 的值，然后将两值相加得到结果，所以我们看到在求和运算中产生了两个子任务。计算 f(4) 的流程如下图所示。
 
 <img src="https://s0.lgstatic.com/i/image2/M01/AF/80/CgoB5l3kzoqAZgXiAACbX2rJCR4889.png" alt="" data-nodeid="1254">
 
@@ -175,39 +175,39 @@ if&nbsp;(n&nbsp;&lt;=&nbsp;1)&nbsp;{
 ForkJoinPool 线程池有多种方法可以实现任务的分裂和汇总，其中一种用法如下方代码所示。
 
 ```
-class&nbsp;Fibonacci&nbsp;extends&nbsp;RecursiveTask&lt;Integer&gt;&nbsp;{&nbsp;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;n;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Fibonacci(int&nbsp;n)&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.n&nbsp;=&nbsp;n;
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Integer&nbsp;compute()&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(n&nbsp;&lt;=&nbsp;1)&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;n;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;Fibonacci&nbsp;f1&nbsp;=&nbsp;new&nbsp;Fibonacci(n&nbsp;-&nbsp;1);
-&nbsp;&nbsp;&nbsp;&nbsp;f1.fork();
-&nbsp;&nbsp;&nbsp;&nbsp;Fibonacci&nbsp;f2&nbsp;=&nbsp;new&nbsp;Fibonacci(n&nbsp;-&nbsp;2);
-&nbsp;&nbsp;&nbsp;&nbsp;f2.fork();
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;f1.join()&nbsp;+&nbsp;f2.join();
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;
-&nbsp;}
+class  Fibonacci  extends  RecursiveTask&lt  Integer&gt    {  
+  
+        int  n  
+  
+        public  Fibonacci(int  n)  {  
+                this.n  =  n  
+        }  
+  
+        @Override
+        public  Integer  compute()  {  
+                if  (n  &lt  =  1)  {  
+                        return  n  
+                }  
+        Fibonacci  f1  =  new  Fibonacci(n  -  1)  
+        f1.fork()  
+        Fibonacci  f2  =  new  Fibonacci(n  -  2)  
+        f2.fork()  
+        return  f1.join()  +  f2.join()  
+        }  
+  }
 
 ```
 
-我们看到它首先继承了 RecursiveTask，RecursiveTask 类是对ForkJoinTask 的一个简单的包装，这时我们重写 compute() 方法，当 n&lt;=1 时直接返回，当 n&gt;1 就创建递归任务，也就是 f1 和 f2，然后我们用 fork() 方法分裂任务并分别执行，最后在 return 的时候，使用 join() 方法把结果汇总，这样就实现了任务的分裂和汇总。
+我们看到它首先继承了 RecursiveTask，RecursiveTask 类是对ForkJoinTask 的一个简单的包装，这时我们重写 compute() 方法，当 n&lt  =1 时直接返回，当 n&gt  1 就创建递归任务，也就是 f1 和 f2，然后我们用 fork() 方法分裂任务并分别执行，最后在 return 的时候，使用 join() 方法把结果汇总，这样就实现了任务的分裂和汇总。
 
 ```
-public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;ExecutionException,&nbsp;InterruptedException&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;ForkJoinPool&nbsp;forkJoinPool&nbsp;=&nbsp;new&nbsp;ForkJoinPool();
-&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;10;&nbsp;i++)&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ForkJoinTask&nbsp;task&nbsp;=&nbsp;forkJoinPool.submit(new&nbsp;Fibonacci(i));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(task.get());
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;
-&nbsp;}
+public  static  void  main(String[]  args)  throws  ExecutionException,  InterruptedException  {  
+        ForkJoinPool  forkJoinPool  =  new  ForkJoinPool()  
+        for  (int  i  =  0    i  &lt    10    i++)  {  
+                ForkJoinTask  task  =  forkJoinPool.submit(new  Fibonacci(i))  
+                System.out.println(task.get())  
+        }  
+  }
 
 ```
 
@@ -227,7 +227,7 @@ public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;Exec
 
 ```
 
-这就是&nbsp;ForkJoinPool 线程池和其他线程池的第一点不同。
+这就是  ForkJoinPool 线程池和其他线程池的第一点不同。
 
 我们来看第二点不同，第二点不同之处在于内部结构，之前的线程池所有的线程共用一个队列，但 ForkJoinPool 线程池中每个线程都有自己独立的任务队列，如图所示。
 

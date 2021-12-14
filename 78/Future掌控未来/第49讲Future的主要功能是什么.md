@@ -17,18 +17,18 @@ Future 最主要的作用是，比如当做一定运算的时候，运算过程�
 首先看一下 Future 接口的代码，一共有 5 个方法，代码如下所示：
 
 ```
-public&nbsp;interface&nbsp;Future&lt;V&gt;&nbsp;{
+public  interface  Future&lt  V&gt    {
 
-&nbsp;&nbsp;&nbsp;&nbsp;boolean&nbsp;cancel(boolean&nbsp;mayInterruptIfRunning);
+        boolean  cancel(boolean  mayInterruptIfRunning)  
 
-&nbsp;&nbsp;&nbsp;&nbsp;boolean&nbsp;isCancelled();
+        boolean  isCancelled()  
 
-&nbsp;&nbsp;&nbsp;&nbsp;boolean&nbsp;isDone();
+        boolean  isDone()  
 
-&nbsp;&nbsp;&nbsp;&nbsp;V&nbsp;get()&nbsp;throws&nbsp;InterruptedException,&nbsp;ExecutionException;
+        V  get()  throws  InterruptedException,  ExecutionException  
 
-&nbsp;&nbsp;&nbsp;&nbsp;V&nbsp;get(long&nbsp;timeout,&nbsp;TimeUnit&nbsp;unit)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throws&nbsp;InterruptedException,&nbsp;ExecutionException,&nbsp;TimeoutExceptio
+        V  get(long  timeout,  TimeUnit  unit)
+                throws  InterruptedException,  ExecutionException,  TimeoutExceptio
 }
 ```
 
@@ -60,31 +60,31 @@ get 方法最主要的作用就是获取任务执行的结果，该方法在执�
 
 ```
 /**
-&nbsp;*&nbsp;描述：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;演示一个&nbsp;Future&nbsp;的使用方法
-&nbsp;*/
-public&nbsp;class&nbsp;OneFuture&nbsp;{
+  *  描述：          演示一个  Future  的使用方法
+  */
+public  class  OneFuture  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ExecutorService&nbsp;service&nbsp;=&nbsp;Executors.newFixedThreadPool(10);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Future&lt;Integer&gt;&nbsp;future&nbsp;=&nbsp;service.submit(new&nbsp;CallableTask());
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(future.get());
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(ExecutionException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service.shutdown();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  {
+                ExecutorService  service  =  Executors.newFixedThreadPool(10)  
+                Future&lt  Integer&gt    future  =  service.submit(new  CallableTask())  
+                try  {
+                        System.out.println(future.get())  
+                }  catch  (InterruptedException  e)  {
+                        e.printStackTrace()  
+                }  catch  (ExecutionException  e)  {
+                        e.printStackTrace()  
+                }
+                service.shutdown()  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;class&nbsp;CallableTask&nbsp;implements&nbsp;Callable&lt;Integer&gt;&nbsp;{
+        static  class  CallableTask  implements  Callable&lt  Integer&gt    {
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Integer&nbsp;call()&nbsp;throws&nbsp;Exception&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(3000);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;new&nbsp;Random().nextInt();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+                @Override
+                public  Integer  call()  throws  Exception  {
+                        Thread.sleep(3000)  
+                        return  new  Random().nextInt()  
+                }
+        }
 }
 ```
 
@@ -99,35 +99,35 @@ public&nbsp;class&nbsp;OneFuture&nbsp;{
 我们用一个代码示例来看一看，代码如下所示：
 
 ```
-public&nbsp;class&nbsp;GetException&nbsp;{
+public  class  GetException  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ExecutorService&nbsp;service&nbsp;=&nbsp;Executors.newFixedThreadPool(20);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Future&lt;Integer&gt;&nbsp;future&nbsp;=&nbsp;service.submit(new&nbsp;CallableTask());
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;5;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(i);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(500);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(future.isDone());
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;future.get();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(ExecutionException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  {
+                ExecutorService  service  =  Executors.newFixedThreadPool(20)  
+                Future&lt  Integer&gt    future  =  service.submit(new  CallableTask())  
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;class&nbsp;CallableTask&nbsp;implements&nbsp;Callable&lt;Integer&gt;&nbsp;{
+                try  {
+                        for  (int  i  =  0    i  &lt    5    i++)  {
+                                System.out.println(i)  
+                                Thread.sleep(500)  
+                        }
+                        System.out.println(future.isDone())  
+                        future.get()  
+                }  catch  (InterruptedException  e)  {
+                        e.printStackTrace()  
+                }  catch  (ExecutionException  e)  {
+                        e.printStackTrace()  
+                }
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Integer&nbsp;call()&nbsp;throws&nbsp;Exception&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;IllegalArgumentException("Callable抛出异常");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+
+        static  class  CallableTask  implements  Callable&lt  Integer&gt    {
+
+                @Override
+                public  Integer  call()  throws  Exception  {
+                        throw  new  IllegalArgumentException("Callable抛出异常")  
+                }
+        }
 }
 ```
 
@@ -142,7 +142,7 @@ public&nbsp;class&nbsp;GetException&nbsp;{
 3
 4
 true
-java.util.concurrent.ExecutionException:&nbsp;java.lang.IllegalArgumentException:&nbsp;Callable抛出异常
+java.util.concurrent.ExecutionException:  java.lang.IllegalArgumentException:  Callable抛出异常
 ...
 ```
 
@@ -187,16 +187,16 @@ FutureTask 首先是一个任务（Task），然后具有 Future 接口的语义
 我们来看一下 FutureTask 的代码实现：
 
 ```
-public&nbsp;class&nbsp;FutureTask&lt;V&gt;&nbsp;implements&nbsp;RunnableFuture&lt;V&gt;{
-&nbsp;...
+public  class  FutureTask&lt  V&gt    implements  RunnableFuture&lt  V&gt  {
+  ...
 }
 ```
 
 可以看到，它实现了一个接口，这个接口叫作 **RunnableFuture**。我们再来看一下 RunnableFuture 接口的代码实现：
 
 ```
-public&nbsp;interface&nbsp;RunnableFuture&lt;V&gt;&nbsp;extends&nbsp;Runnable,&nbsp;Future&lt;V&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;run();
+public  interface  RunnableFuture&lt  V&gt    extends  Runnable,  Future&lt  V&gt    {
+        void  run()  
 }
 ```
 
@@ -212,36 +212,36 @@ public&nbsp;interface&nbsp;RunnableFuture&lt;V&gt;&nbsp;extends&nbsp;Runnable,&n
 
 ```
 /**
-&nbsp;*&nbsp;描述：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;演示&nbsp;FutureTask&nbsp;的用法
-&nbsp;*/
-public&nbsp;class&nbsp;FutureTaskDemo&nbsp;{
+  *  描述：          演示  FutureTask  的用法
+  */
+public  class  FutureTaskDemo  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Task&nbsp;task&nbsp;=&nbsp;new&nbsp;Task();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FutureTask&lt;Integer&gt;&nbsp;integerFutureTask&nbsp;=&nbsp;new&nbsp;FutureTask&lt;&gt;(task);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Thread(integerFutureTask).start();
+        public  static  void  main(String[]  args)  {
+                Task  task  =  new  Task()  
+                FutureTask&lt  Integer&gt    integerFutureTask  =  new  FutureTask&lt  &gt  (task)  
+                new  Thread(integerFutureTask).start()  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("task运行结果："+integerFutureTask.get());
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(ExecutionException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+                try  {
+                        System.out.println("task运行结果："+integerFutureTask.get())  
+                }  catch  (InterruptedException  e)  {
+                        e.printStackTrace()  
+                }  catch  (ExecutionException  e)  {
+                        e.printStackTrace()  
+                }
+        }
 }
 
-class&nbsp;Task&nbsp;implements&nbsp;Callable&lt;Integer&gt;&nbsp;{
+class  Task  implements  Callable&lt  Integer&gt    {
 
-&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Integer&nbsp;call()&nbsp;throws&nbsp;Exception&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("子线程正在计算");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;sum&nbsp;=&nbsp;0;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;100;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum&nbsp;+=&nbsp;i;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;sum;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        @Override
+        public  Integer  call()  throws  Exception  {
+                System.out.println("子线程正在计算")  
+                int  sum  =  0  
+                for  (int  i  =  0    i  &lt    100    i++)  {
+                        sum  +=  i  
+                }
+                return  sum  
+        }
 }
 ```
 

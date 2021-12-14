@@ -8,28 +8,28 @@
 我们首先来看一个 synchronized 修饰方法的代码的例子：
 
 ```
-public&nbsp;synchronized&nbsp;void&nbsp;method()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;method&nbsp;body
+public;synchronized;void;method();{
+;;;;method;body
 }
 
 ```
 
-我们看到&nbsp;method() 方法是被 synchronized 修饰的，为了方便理解其背后的原理，我们把上面这段代码改写为下面这种等价形式的伪代码。
+我们看到;method() 方法是被 synchronized 修饰的，为了方便理解其背后的原理，我们把上面这段代码改写为下面这种等价形式的伪代码。
 
 ```
-public&nbsp;void&nbsp;method()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;this.intrinsicLock.lock();
-&nbsp;&nbsp;&nbsp;&nbsp;try{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method&nbsp;body
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;finally&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.intrinsicLock.unlock();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+public;void;method();{
+;;;;this.intrinsicLock.lock();
+;;;;try{
+;;;;;;;;method;body
+;;;;}
+;;;;finally;{
+;;;;;;;;this.intrinsicLock.unlock();
+;;;;}
 }
 
 ```
 
-在这种写法中，进入&nbsp;method 方法后，立刻添加内置锁，并且用 try 代码块把方法保护起来，最后用 finally 释放这把锁，这里的 intrinsicLock 就是&nbsp;monitor 锁。经过这样的伪代码展开之后，相信你对 synchronized 的理解就更加清晰了。
+在这种写法中，进入;method 方法后，立刻添加内置锁，并且用 try 代码块把方法保护起来，最后用 finally 释放这把锁，这里的 intrinsicLock 就是;monitor 锁。经过这样的伪代码展开之后，相信你对 synchronized 的理解就更加清晰了。
 
 ### 用 javap 命令查看反汇编的结果
 
@@ -40,42 +40,42 @@ JVM 实现 synchronized 方法和 synchronized 代码块的细节是不一样的
 首先我们来看下同步代码块的实现，如代码所示。
 
 ```
-public&nbsp;class&nbsp;SynTest&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;synBlock()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;synchronized&nbsp;(this)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("lagou");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+public;class;SynTest;{
+;;;;public;void;synBlock();{
+;;;;;;;;synchronized;(this);{
+;;;;;;;;;;;;System.out.println("lagou");
+;;;;;;;;}
+;;;;}
 }
 
 ```
 
-在&nbsp;SynTest 类中的 synBlock 方法，包含一个同步代码块，synchronized 代码块中有一行代码打印了 lagou 字符串，下面我们来通过命令看下 synchronized 关键字到底做了什么事情：首先用 cd 命令切换到 SynTest.java 类所在的路径，然后执行 javac SynTest.java，于是就会产生一个名为 SynTest.class 的字节码文件，然后我们执行 javap -verbose SynTest.class，就可以看到对应的反汇编内容。
+在;SynTest 类中的 synBlock 方法，包含一个同步代码块，synchronized 代码块中有一行代码打印了 lagou 字符串，下面我们来通过命令看下 synchronized 关键字到底做了什么事情：首先用 cd 命令切换到 SynTest.java 类所在的路径，然后执行 javac SynTest.java，于是就会产生一个名为 SynTest.class 的字节码文件，然后我们执行 javap -verbose SynTest.class，就可以看到对应的反汇编内容。
 
 关键信息如下：
 
 ```
-&nbsp;&nbsp;public&nbsp;void&nbsp;synBlock();
-&nbsp;&nbsp;&nbsp;&nbsp;descriptor:&nbsp;()V
-&nbsp;&nbsp;&nbsp;&nbsp;flags:&nbsp;ACC_PUBLIC
-&nbsp;&nbsp;&nbsp;&nbsp;Code:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stack=2,&nbsp;locals=3,&nbsp;args_size=1
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;aload_0
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;dup
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2:&nbsp;astore_1
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3:&nbsp;monitorenter
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4:&nbsp;getstatic&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Field&nbsp;java/lang/System.out:Ljava/io/PrintStream;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7:&nbsp;ldc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;String&nbsp;lagou
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9:&nbsp;invokevirtual&nbsp;#4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Method&nbsp;java/io/PrintStream.println:(Ljava/lang/String;)V
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12:&nbsp;aload_1
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13:&nbsp;monitorexit
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;14:&nbsp;goto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;22
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;17:&nbsp;astore_2
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;18:&nbsp;aload_1
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;19:&nbsp;monitorexit
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20:&nbsp;aload_2
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;21:&nbsp;athrow
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;22:&nbsp;return
+;;public;void;synBlock();
+;;;;descriptor:;()V
+;;;;flags:;ACC_PUBLIC
+;;;;Code:
+;;;;;;stack=2,;locals=3,;args_size=1
+;;;;;;;;;0:;aload_0
+;;;;;;;;;1:;dup
+;;;;;;;;;2:;astore_1
+;;;;;;;;;3:;monitorenter
+;;;;;;;;;4:;getstatic;;;;;#2;;;;;;;;;;;;;;;;;;//;Field;java/lang/System.out:Ljava/io/PrintStream;
+;;;;;;;;;7:;ldc;;;;;;;;;;;#3;;;;;;;;;;;;;;;;;;;;;;//;String;lagou
+;;;;;;;;;9:;invokevirtual;#4;;;;;;;;;;;;;;;//;Method;java/io/PrintStream.println:(Ljava/lang/String;)V
+;;;;;;;;12:;aload_1
+;;;;;;;;13:;monitorexit
+;;;;;;;;14:;goto;;;;;;;;;;22
+;;;;;;;;17:;astore_2
+;;;;;;;;18:;aload_1
+;;;;;;;;19:;monitorexit
+;;;;;;;;20:;aload_2
+;;;;;;;;21:;athrow
+;;;;;;;;22:;return
 
 ```
 
@@ -103,8 +103,8 @@ monitorexit 的作用是将 monitor 的计数器减 1，直到减为 0 为止。
 同步方法的代码如下所示。
 
 ```
-public&nbsp;synchronized&nbsp;void&nbsp;synMethod()&nbsp;{
-&nbsp;
+public;synchronized;void;synMethod();{
+;
 }
 
 ```
@@ -112,17 +112,17 @@ public&nbsp;synchronized&nbsp;void&nbsp;synMethod()&nbsp;{
 对应的反汇编指令如下所示。
 
 ```
-&nbsp;&nbsp;public&nbsp;synchronized&nbsp;void&nbsp;synMethod();
-&nbsp;&nbsp;&nbsp;&nbsp;descriptor:&nbsp;()V
-&nbsp;&nbsp;&nbsp;&nbsp;flags:&nbsp;ACC_PUBLIC,&nbsp;ACC_SYNCHRONIZED
-&nbsp;&nbsp;&nbsp;&nbsp;Code:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stack=0,&nbsp;locals=1,&nbsp;args_size=1
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;return
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LineNumberTable:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line&nbsp;16:&nbsp;0
+;;public;synchronized;void;synMethod();
+;;;;descriptor:;()V
+;;;;flags:;ACC_PUBLIC,;ACC_SYNCHRONIZED
+;;;;Code:
+;;;;;;stack=0,;locals=1,;args_size=1
+;;;;;;;;;0:;return
+;;;;;;LineNumberTable:
+;;;;;;;;line;16:;0
 
 ```
 
 可以看出，被 synchronized 修饰的方法会有一个 ACC_SYNCHRONIZED 标志。当某个线程要访问某个方法的时候，会首先检查方法是否有 ACC_SYNCHRONIZED 标志，如果有则需要先获得 monitor 锁，然后才能开始执行方法，方法执行之后再释放 monitor 锁。其他方面， synchronized 方法和刚才的 synchronized 代码块是很类似的，例如这时如果其他线程来请求执行方法，也会因为无法获得 monitor 锁而被阻塞。
 
-好了，本课时的内容就全部讲完了，本课时我们讲解了获取和释放&nbsp;monitor 的时机，以及被 synchronized 修饰的等价代码，然后我们还利用 javac 和 javap 命令查看了 synchronized 代码块以及 synchronized 方法所对应的的反汇编指令，其中同步代码块是利用 monitorenter 和 monitorexit 指令实现的，而同步方法则是利用 flags 实现的。
+好了，本课时的内容就全部讲完了，本课时我们讲解了获取和释放;monitor 的时机，以及被 synchronized 修饰的等价代码，然后我们还利用 javac 和 javap 命令查看了 synchronized 代码块以及 synchronized 方法所对应的的反汇编指令，其中同步代码块是利用 monitorenter 和 monitorexit 指令实现的，而同步方法则是利用 flags 实现的。

@@ -68,7 +68,7 @@ Writes to and reads of references are always atomic, regardless of whether they 
 \
 
 
-Some implementations may find it convenient to divide a single write action on a 64-bit long or double value into two write actions on adjacent 32-bit values. For efficiency's sake, this behavior is implementation-specific; an implementation of the Java Virtual Machine is free to perform writes to long and double values atomically or in two parts.
+Some implementations may find it convenient to divide a single write action on a 64-bit long or double value into two write actions on adjacent 32-bit values. For efficiency's sake, this behavior is implementation-specific   an implementation of the Java Virtual Machine is free to perform writes to long and double values atomically or in two parts.
 
 \
 

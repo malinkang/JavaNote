@@ -7,63 +7,63 @@
 
 ### FileReader和FileWriter
 ```java
-FileReader reader = null;
-FileWriter writer = null;
+FileReader reader = null  
+FileWriter writer = null  
 try {
-    reader = new FileReader(new File("a.txt"));
-    writer = new FileWriter(new File("b.txt"));
-    char[] buf = new char[1024];
-    int len = 0;
+    reader = new FileReader(new File("a.txt"))  
+    writer = new FileWriter(new File("b.txt"))  
+    char[] buf = new char[1024]  
+    int len = 0  
     while ((len=reader.read(buf))!=-1){
-        writer.write(buf,0,len);
+        writer.write(buf,0,len)  
     }
 } catch (IOException e) {
-    e.printStackTrace();
-    System.out.println("写入失败");
+    e.printStackTrace()  
+    System.out.println("写入失败")  
 }finally {
     if(reader!=null){
         try {
-            reader.close();
+            reader.close()  
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace()  
         }
     }
     if(writer!=null){
         try {
-            writer.close();
+            writer.close()  
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace()  
         }
     }
 }
 ```
 ### BufferedReader和BufferedWriter
 ```java
-BufferedReader reader = null;
-BufferedWriter writer = null;
+BufferedReader reader = null  
+BufferedWriter writer = null  
 try {
-    reader = new BufferedReader(new FileReader("a.txt"));
-    writer = new BufferedWriter(new FileWriter("b.txt"));
-    String line;
+    reader = new BufferedReader(new FileReader("a.txt"))  
+    writer = new BufferedWriter(new FileWriter("b.txt"))  
+    String line  
     while((line=reader.readLine())!=null) {
-        writer.write(line);
-        writer.newLine();
+        writer.write(line)  
+        writer.newLine()  
     }
 } catch (IOException e) {
-    e.printStackTrace();
+    e.printStackTrace()  
 }finally {
     if(reader!=null){
         try {
-            reader.close();
+            reader.close()  
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace()  
         }
     }
     if(writer!=null){
         try {
-            writer.close();
+            writer.close()  
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace()  
         }
     }
 }
@@ -72,35 +72,35 @@ try {
 ### InputStreamReader和OutputStreamWriter
 
 ```java
-FileInputStream in = null;
-FileOutputStream out = null;
-InputStreamReader reader = null;
-OutputStreamWriter writer = null;
+FileInputStream in = null  
+FileOutputStream out = null  
+InputStreamReader reader = null  
+OutputStreamWriter writer = null  
 try {
-    in = new FileInputStream("a.txt");
-    out = new FileOutputStream("b.txt");
-    reader=new InputStreamReader(in);
-    writer = new OutputStreamWriter(out);
-    char[] buf = new char[1024];
-    int len;
+    in = new FileInputStream("a.txt")  
+    out = new FileOutputStream("b.txt")  
+    reader=new InputStreamReader(in)  
+    writer = new OutputStreamWriter(out)  
+    char[] buf = new char[1024]  
+    int len  
     while ((len = reader.read(buf)) != -1) {
-        writer.write(buf,0,len);
+        writer.write(buf,0,len)  
     }
 } catch (IOException e) {
-    e.printStackTrace();
+    e.printStackTrace()  
 }finally {
     if(reader!=null){
         try {
-            reader.close();
+            reader.close()  
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace()  
         }
     }
     if(writer!=null){
         try {
-            writer.close();
+            writer.close()  
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace()  
         }
     }
 }
@@ -115,31 +115,31 @@ try {
 
 ```java
 
-FileInputStream in = null;
-FileOutputStream out = null;
+FileInputStream in = null  
+FileOutputStream out = null  
 try {
-    in = new FileInputStream(new File("test.txt"));
-    out = new FileOutputStream(new File("test.txt"));
-    byte[] buf = new byte[1024];
-    int len;
+    in = new FileInputStream(new File("test.txt"))  
+    out = new FileOutputStream(new File("test.txt"))  
+    byte[] buf = new byte[1024]  
+    int len  
     while ((len=in.read(buf) )!= -1) {
-        out.write(buf,0,len);
+        out.write(buf,0,len)  
     }
 } catch (IOException e) {
-    e.printStackTrace();
+    e.printStackTrace()  
 }finally {
     if(in!=null){
         try {
-            in.close();
+            in.close()  
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace()  
         }
     }
     if(out!=null){
         try {
-            out.close();
+            out.close()  
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace()  
         }
     }
 }
@@ -150,10 +150,10 @@ try {
 按照标准I/O模型，Java提供了`System.in`、`System.out`和`System.err`。`System.out`已经事先被包装成了`PrintStream`对象。`System.err`同样也是`PrintStream`，但`System.in`却是一个没有被包装过的未经加工的`InputStream`。
 
 ```java
-BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-String line;
+BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in))  
+String line  
 while ((line=stdin.readLine())!=null){
-    System.out.println(line);
+    System.out.println(line)  
 }
 ```
 
@@ -165,23 +165,23 @@ JDK1.4的`java.nio.*`包中引入了新的JavaI/O类库，其目的在于提高�
 public class GetChannel {
     public static void main(String[] args) throws IOException {
         //getChannel()方法将会产生一个FileChannel
-        FileChannel fc = new FileOutputStream("data.txt").getChannel();
+        FileChannel fc = new FileOutputStream("data.txt").getChannel()  
         //使用wrap()方法将已存在的字节数组包装到ByteBuffer中
-        fc.write(ByteBuffer.wrap("Some text".getBytes()));
-        fc.close();
-        fc = new RandomAccessFile("data.txt","rw").getChannel();
+        fc.write(ByteBuffer.wrap("Some text".getBytes()))  
+        fc.close()  
+        fc = new RandomAccessFile("data.txt","rw").getChannel()  
 
-        fc.write(ByteBuffer.wrap("Some more".getBytes()));
-        fc.close();
-        fc = new FileInputStream("data.txt").getChannel();
+        fc.write(ByteBuffer.wrap("Some more".getBytes()))  
+        fc.close()  
+        fc = new FileInputStream("data.txt").getChannel()  
         //对于只读访问，我们必须显式地使用静态的allocate()方法来分配ByteBuffer。
-        ByteBuffer buff = ByteBuffer.allocate(1024);
+        ByteBuffer buff = ByteBuffer.allocate(1024)  
         //一旦调用read()来告知FileChannel向ByteBuffer存储字节，就必须调用缓冲器上的flip()
         //让它做好让别人读取字节的准备。
-        fc.read(buff);
-        buff.flip();
+        fc.read(buff)  
+        buff.flip()  
         while (buff.hasRemaining()){
-            System.out.println((char) buff.get());
+            System.out.println((char) buff.get())  
         }
     }
 }
@@ -189,22 +189,22 @@ public class GetChannel {
 
 ```java
 public class ChannelCopy {
-    public static final int BSIZE = 1024;
+    public static final int BSIZE = 1024  
 
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
-            System.out.println("arguments:sourcefile destfile");
-            System.exit(1);
+            System.out.println("arguments:sourcefile destfile")  
+            System.exit(1)  
         }
-        FileChannel in = new FileInputStream(args[0]).getChannel();
-        FileChannel out = new FileOutputStream(args[1]).getChannel();
-        ByteBuffer buffer = ByteBuffer.allocate(BSIZE);
+        FileChannel in = new FileInputStream(args[0]).getChannel()  
+        FileChannel out = new FileOutputStream(args[1]).getChannel()  
+        ByteBuffer buffer = ByteBuffer.allocate(BSIZE)  
         while (in.read(buffer)!=1){
-            buffer.flip();
-            out.write(buffer);
+            buffer.flip()  
+            out.write(buffer)  
             //如果打算使用缓冲器执行进一步的read()操作，
             //必须得调用clear()来为每个read()做好准备。
-            buffer.clear();
+            buffer.clear()  
         }
 
     }
@@ -214,15 +214,15 @@ public class ChannelCopy {
 ```java
 //特殊方法transferTo()和transferFrom()允许我们将一个通道和另一个通道直接相连
 public class TransferTo {
-    public static final int BSIZE = 1024;
+    public static final int BSIZE = 1024  
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
-            System.out.println("arguments:sourcefile destfile");
-            System.exit(1);
+            System.out.println("arguments:sourcefile destfile")  
+            System.exit(1)  
         }
-        FileChannel in = new FileInputStream(args[0]).getChannel();
-        FileChannel out = new FileOutputStream(args[1]).getChannel();
-        in.transferTo(0,in.size(),out);
+        FileChannel in = new FileInputStream(args[0]).getChannel()  
+        FileChannel out = new FileOutputStream(args[1]).getChannel()  
+        in.transferTo(0,in.size(),out)  
 
     }
 }
@@ -235,17 +235,17 @@ public class TransferTo {
 ```java
 public class Endians {
     public static void main(String[] args) {
-        ByteBuffer bb = ByteBuffer.wrap(new byte[12]);
-        bb.asCharBuffer().put("abcdef");
-        System.out.println(Arrays.toString(bb.array()));
-        bb.rewind();
-        bb.order(ByteOrder.BIG_ENDIAN);
-        bb.asCharBuffer().put("abcdef");
-        System.out.println(Arrays.toString(bb.array()));
-        bb.rewind();
-        bb.order(ByteOrder.LITTLE_ENDIAN);
-        bb.asCharBuffer().put("abcdef");
-        System.out.println(Arrays.toString(bb.array()));
+        ByteBuffer bb = ByteBuffer.wrap(new byte[12])  
+        bb.asCharBuffer().put("abcdef")  
+        System.out.println(Arrays.toString(bb.array()))  
+        bb.rewind()  
+        bb.order(ByteOrder.BIG_ENDIAN)  
+        bb.asCharBuffer().put("abcdef")  
+        System.out.println(Arrays.toString(bb.array()))  
+        bb.rewind()  
+        bb.order(ByteOrder.LITTLE_ENDIAN)  
+        bb.asCharBuffer().put("abcdef")  
+        System.out.println(Arrays.toString(bb.array()))  
     }
 }
 /*

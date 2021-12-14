@@ -16,36 +16,36 @@
 首先我们就来看一下不适合使用 volatile 的场景，volatile 不适合运用于需要保证原子性的场景，比如更新的时候需要依赖原来的值，而最典型的就是 a++ 的场景，我们仅靠 volatile 是不能保证 a++ 的线程安全的。代码如下所示：
 
 ```
-public&nbsp;class&nbsp;DontVolatile&nbsp;implements&nbsp;Runnable&nbsp;{
+public  class  DontVolatile  implements  Runnable  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;volatile&nbsp;int&nbsp;a;
-&nbsp;&nbsp;&nbsp;&nbsp;AtomicInteger&nbsp;realA&nbsp;=&nbsp;new&nbsp;AtomicInteger();
+        volatile  int  a  
+        AtomicInteger  realA  =  new  AtomicInteger()  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Runnable&nbsp;r&nbsp;=&nbsp;&nbsp;new&nbsp;DontVolatile();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;thread1&nbsp;=&nbsp;new&nbsp;Thread(r);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;thread2&nbsp;=&nbsp;new&nbsp;Thread(r);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread1.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread2.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread1.join();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread2.join();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(((DontVolatile)&nbsp;r).a);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(((DontVolatile)&nbsp;r).realA.get());
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a++;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;realA.incrementAndGet();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                Runnable  r  =    new  DontVolatile()  
+                Thread  thread1  =  new  Thread(r)  
+                Thread  thread2  =  new  Thread(r)  
+                thread1.start()  
+                thread2.start()  
+                thread1.join()  
+                thread2.join()  
+                System.out.println(((DontVolatile)  r).a)  
+                System.out.println(((DontVolatile)  r).realA.get())  
+        }
+        @Override
+        public  void  run()  {
+                for  (int  i  =  0    i  &lt    1000    i++)  {
+                        a++  
+                        realA.incrementAndGet()  
+                }
+        }
 }
 
 ```
 
 在这段代码中，我们有一个 volatile 修饰的 int 类型的 a 变量，并且下面还有一个原子类的 realA，原子类是可以保证线程安全的，所以我们就用它来和 volatile int a 做对比，看一看它们实际效果上的差别。
 
-在 main 函数中，我们新建了两个线程，并且让它们运行。这两个线程运行的内容就是去执行 1000 次的累加操作，每次累加操作会对 volatile 修饰的变量 a 进行自加操作，同时还会对原子类&nbsp;realA 进行自加操作。当这两个线程都运行完毕之后，我们把结果给打印出来，其中一种运行结果如下：
+在 main 函数中，我们新建了两个线程，并且让它们运行。这两个线程运行的内容就是去执行 1000 次的累加操作，每次累加操作会对 volatile 修饰的变量 a 进行自加操作，同时还会对原子类  realA 进行自加操作。当这两个线程都运行完毕之后，我们把结果给打印出来，其中一种运行结果如下：
 
 ```
 1988
@@ -53,7 +53,7 @@ public&nbsp;class&nbsp;DontVolatile&nbsp;implements&nbsp;Runnable&nbsp;{
 
 ```
 
-会发现最终的 a 值和&nbsp;realA 值分别为 1988 和 2000。可以看出，即便变量 a 被 volatile 修饰了，即便它最终一共执行了 2000 次的自加操作（这一点可以由原子类的最终值来印证），但是依然有一些自加操作失效了，所以最终它的结果是不到 2000 的，这就证明了 volatile 不能保证原子性，那么它究竟适合运用于什么场景呢？
+会发现最终的 a 值和  realA 值分别为 1988 和 2000。可以看出，即便变量 a 被 volatile 修饰了，即便它最终一共执行了 2000 次的自加操作（这一点可以由原子类的最终值来印证），但是依然有一些自加操作失效了，所以最终它的结果是不到 2000 的，这就证明了 volatile 不能保证原子性，那么它究竟适合运用于什么场景呢？
 
 ## 适用场合1：布尔标记位
 
@@ -64,33 +64,33 @@ public&nbsp;class&nbsp;DontVolatile&nbsp;implements&nbsp;Runnable&nbsp;{
 我们来看一下代码示例：
 
 ```
-public&nbsp;class&nbsp;YesVolatile1&nbsp;implements&nbsp;Runnable&nbsp;{
+public  class  YesVolatile1  implements  Runnable  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;volatile&nbsp;boolean&nbsp;done&nbsp;=&nbsp;false;
-&nbsp;&nbsp;&nbsp;&nbsp;AtomicInteger&nbsp;realA&nbsp;=&nbsp;new&nbsp;AtomicInteger();
+        volatile  boolean  done  =  false  
+        AtomicInteger  realA  =  new  AtomicInteger()  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Runnable&nbsp;r&nbsp;=&nbsp;&nbsp;new&nbsp;YesVolatile1();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;thread1&nbsp;=&nbsp;new&nbsp;Thread(r);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;thread2&nbsp;=&nbsp;new&nbsp;Thread(r);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread1.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread2.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread1.join();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread2.join();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(((YesVolatile1)&nbsp;r).done);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(((YesVolatile1)&nbsp;r).realA.get());
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setDone();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;realA.incrementAndGet();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                Runnable  r  =    new  YesVolatile1()  
+                Thread  thread1  =  new  Thread(r)  
+                Thread  thread2  =  new  Thread(r)  
+                thread1.start()  
+                thread2.start()  
+                thread1.join()  
+                thread2.join()  
+                System.out.println(((YesVolatile1)  r).done)  
+                System.out.println(((YesVolatile1)  r).realA.get())  
+        }
+        @Override
+        public  void  run()  {
+                for  (int  i  =  0    i  &lt    1000    i++)  {
+                        setDone()  
+                        realA.incrementAndGet()  
+                }
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;void&nbsp;setDone()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done&nbsp;=&nbsp;true;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        private  void  setDone()  {
+                done  =  true  
+        }
 }
 
 ```
@@ -114,26 +114,26 @@ true
 下面是 Brian Goetz 提供的一个经典例子：
 
 ```
-Map&nbsp;configOptions;
-char[]&nbsp;configText;
-volatile&nbsp;boolean&nbsp;initialized&nbsp;=&nbsp;false;
-&nbsp;
-.&nbsp;.&nbsp;.
-&nbsp;
-//&nbsp;In&nbsp;thread&nbsp;A
-&nbsp;
-configOptions&nbsp;=&nbsp;new&nbsp;HashMap();
-configText&nbsp;=&nbsp;readConfigFile(fileName);
-processConfigOptions(configText,&nbsp;configOptions);
-initialized&nbsp;=&nbsp;true;
-&nbsp;
-.&nbsp;.&nbsp;.
-&nbsp;
-//&nbsp;In&nbsp;thread&nbsp;B
-&nbsp;
-while&nbsp;(!initialized)&nbsp;
-&nbsp;&nbsp;sleep();
-//&nbsp;use&nbsp;configOptions
+Map  configOptions  
+char[]  configText  
+volatile  boolean  initialized  =  false  
+  
+.  .  .
+  
+//  In  thread  A
+  
+configOptions  =  new  HashMap()  
+configText  =  readConfigFile(fileName)  
+processConfigOptions(configText,  configOptions)  
+initialized  =  true  
+  
+.  .  .
+  
+//  In  thread  B
+  
+while  (!initialized)  
+    sleep()  
+//  use  configOptions
 
 ```
 
@@ -143,9 +143,9 @@ while&nbsp;(!initialized)&nbsp;
 
 你可能会担心，因为这个 configOptions 是在线程 A 中修改的，那么在线程 B 中读取的时候，会不会发生可见性问题，会不会读取的不是初始化完毕后的值？如果我们不使用 volatile，那么确实是存在这个问题的。
 
-但是现在我们用了被 volatile 修饰的 initialized 作为触发器，所以这个问题被解决了。根据happens-before 关系的单线程规则，线程 A 中 configOptions 的初始化 happens-before 对 initialized 变量的写入，而线程 B 中对 initialzed 的读取 happens-before 对 configOptions&nbsp;变量的使用，同时根据 happens-before 关系的 volatile 规则，线程 A 中对 initialized 的写入为 true 的操作 happens-before 线程 B 中随后对 initialized 变量的读取。
+但是现在我们用了被 volatile 修饰的 initialized 作为触发器，所以这个问题被解决了。根据happens-before 关系的单线程规则，线程 A 中 configOptions 的初始化 happens-before 对 initialized 变量的写入，而线程 B 中对 initialzed 的读取 happens-before 对 configOptions  变量的使用，同时根据 happens-before 关系的 volatile 规则，线程 A 中对 initialized 的写入为 true 的操作 happens-before 线程 B 中随后对 initialized 变量的读取。
 
-如果我们分别有操作 A 和操作 B，我们用 hb(A, B) 来表示 A happens-before B。而 Happens-before 是有可传递性质的，如果hb(A, B)，且hb(B, C)，那么可以推出hb(A, C)。所以根据上面的条件，我们可以得出结论：线程 A&nbsp;中对于 configOptions 的初始化&nbsp;happens-before 线程 B 中 对于 configOptions 的使用。所以对于线程 B 而言，既然它已经看到了 initialized 最新的值，那么它同样就能看到包括 configOptions 在内的这些变量初始化后的状态，所以此时线程 B 使用 configOptions 是线程安全的。这种用法就是把被 volatile 修饰的变量作为触发器来使用，保证其他变量的可见性，这种用法也是非常值得掌握的，可以作为面试时的亮点。
+如果我们分别有操作 A 和操作 B，我们用 hb(A, B) 来表示 A happens-before B。而 Happens-before 是有可传递性质的，如果hb(A, B)，且hb(B, C)，那么可以推出hb(A, C)。所以根据上面的条件，我们可以得出结论：线程 A  中对于 configOptions 的初始化  happens-before 线程 B 中 对于 configOptions 的使用。所以对于线程 B 而言，既然它已经看到了 initialized 最新的值，那么它同样就能看到包括 configOptions 在内的这些变量初始化后的状态，所以此时线程 B 使用 configOptions 是线程安全的。这种用法就是把被 volatile 修饰的变量作为触发器来使用，保证其他变量的可见性，这种用法也是非常值得掌握的，可以作为面试时的亮点。
 
 ### volatile 的作用
 

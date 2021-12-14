@@ -10,8 +10,8 @@
 ```
 public class Person {
 
-    final int id = 1;
-    final int age = 18;
+    final int id = 1  
+    final int age = 18  
 }
 
 ```
@@ -21,12 +21,12 @@ public class Person {
 ```
 public class Person {
 
-    final int id = 1;
-    final int age = 18;
+    final int id = 1  
+    final int age = 18  
 
     public static void main(String[] args) {
-        Person person = new Person();
-//        person.age=5;//编译错误，无法修改 final 变量的值
+        Person person = new Person()  
+//        person.age=5  //编译错误，无法修改 final 变量的值
     }
 }
 
@@ -46,15 +46,15 @@ public class Person {
  */
 public class FinalVarCantChange {
 
-    private final int finalVar = 0;
-    private final Random random = new Random();
-    private final int array[] = {1,2,3};
+    private final int finalVar = 0  
+    private final Random random = new Random()  
+    private final int array[] = {1,2,3}  
 
     public static void main(String[] args) {
-        FinalVarCantChange finalVarCantChange = new FinalVarCantChange();
-//        finalVarCantChange.finalVar=9;     //编译错误，不允许修改final的变量(基本类型)
-//        finalVarCantChange.random=null;    //编译错误，不允许修改final的变量(对象)
-//        finalVarCantChange.array = new int[5];//编译错误，不允许修改final的变量（数组）
+        FinalVarCantChange finalVarCantChange = new FinalVarCantChange()  
+//        finalVarCantChange.finalVar=9       //编译错误，不允许修改final的变量(基本类型)
+//        finalVarCantChange.random=null      //编译错误，不允许修改final的变量(对象)
+//        finalVarCantChange.array = new int[5]  //编译错误，不允许修改final的变量（数组）
     }
 }
 
@@ -67,10 +67,10 @@ public class FinalVarCantChange {
 ```
 class Test {
     public static void main(String args[]) {
-       final int arr[] = {1, 2, 3, 4, 5};  //  注意，数组 arr 是 final 的
-       for (int i = 0; i &lt; arr.length; i++) {
-           arr[i] = arr[i]*10;
-           System.out.println(arr[i]);
+       final int arr[] = {1, 2, 3, 4, 5}    //  注意，数组 arr 是 final 的
+       for (int i = 0   i &lt   arr.length   i++) {
+           arr[i] = arr[i]*10  
+           System.out.println(arr[i])  
        }
     }
 }
@@ -94,11 +94,11 @@ class Test {
 
 ```
 class Test { 
-    int p = 20; 
+    int p = 20   
     public static void main(String args[]){ 
-       final Test t = new Test();
-       t.p = 30; 
-       System.out.println(t.p);
+       final Test t = new Test()  
+       t.p = 30   
+       System.out.println(t.p)  
     }
 }
 
@@ -121,8 +121,8 @@ class Test {
 ```
 public class Person {
 
-    final int id = 1;
-    final int age = 18;
+    final int id = 1  
+    final int age = 18  
 }
 
 ```
@@ -142,16 +142,16 @@ Person 类里面有 final int id 和 final int age 两个属性，都是基本�
 ```
 public class ImmutableDemo {
 
-    private final Set&lt;String&gt; lessons = new HashSet&lt;&gt;();
+    private final Set&lt  String&gt   lessons = new HashSet&lt  &gt  ()  
 
     public ImmutableDemo() {
-        lessons.add("第01讲：为何说只有 1 种实现线程的方法？");
-        lessons.add("第02讲：如何正确停止线程？为什么 volatile 标记位的停止方法是错误的？");
-        lessons.add("第03讲：线程是如何在 6 种状态之间转换的？");
+        lessons.add("第01讲：为何说只有 1 种实现线程的方法？")  
+        lessons.add("第02讲：如何正确停止线程？为什么 volatile 标记位的停止方法是错误的？")  
+        lessons.add("第03讲：线程是如何在 6 种状态之间转换的？")  
     }
 
     public boolean isLesson(String name) {
-        return lessons.contains(name);
+        return lessons.contains(name)  
     }
 }
 

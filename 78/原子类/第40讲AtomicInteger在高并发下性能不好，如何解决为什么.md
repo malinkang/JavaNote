@@ -14,34 +14,34 @@
 
 ```
 /**
-*&nbsp;描述：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在16个线程下使用AtomicLong
+*  描述：          在16个线程下使用AtomicLong
 */
-public&nbsp;class&nbsp;AtomicLongDemo&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AtomicLong&nbsp;counter&nbsp;=&nbsp;new&nbsp;AtomicLong(0);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ExecutorService&nbsp;service&nbsp;=&nbsp;Executors.newFixedThreadPool(16);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;100;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service.submit(new&nbsp;Task(counter));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(2000);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(counter.get());
-&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;static&nbsp;class&nbsp;Task&nbsp;implements&nbsp;Runnable&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;final&nbsp;AtomicLong&nbsp;counter;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Task(AtomicLong&nbsp;counter)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.counter&nbsp;=&nbsp;counter;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter.incrementAndGet();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;}
+public  class  AtomicLongDemo  {
+  
+      public  static  void  main(String[]  args)  throws  InterruptedException  {
+              AtomicLong  counter  =  new  AtomicLong(0)  
+              ExecutorService  service  =  Executors.newFixedThreadPool(16)  
+              for  (int  i  =  0    i  &lt    100    i++)  {
+                      service.submit(new  Task(counter))  
+              }
+  
+              Thread.sleep(2000)  
+              System.out.println(counter.get())  
+      }
+  
+      static  class  Task  implements  Runnable  {
+  
+              private  final  AtomicLong  counter  
+  
+              public  Task(AtomicLong  counter)  {
+                      this.counter  =  counter  
+              }
+  
+              @Override
+              public  void  run()  {
+                      counter.incrementAndGet()  
+              }
+      }
 }
 ```
 
@@ -73,33 +73,33 @@ public&nbsp;class&nbsp;AtomicLongDemo&nbsp;{
 
 ```
 /**
-*&nbsp;描述：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在16个线程下使用LongAdder
+*  描述：          在16个线程下使用LongAdder
 */
-public&nbsp;class&nbsp;LongAdderDemo&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LongAdder&nbsp;counter&nbsp;=&nbsp;new&nbsp;LongAdder();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ExecutorService&nbsp;service&nbsp;=&nbsp;Executors.newFixedThreadPool(16);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;100;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service.submit(new&nbsp;Task(counter));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(2000);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(counter.sum());
-&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;static&nbsp;class&nbsp;Task&nbsp;implements&nbsp;Runnable&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;final&nbsp;LongAdder&nbsp;counter;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Task(LongAdder&nbsp;counter)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.counter&nbsp;=&nbsp;counter;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter.increment();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;}
+public  class  LongAdderDemo  {
+  
+      public  static  void  main(String[]  args)  throws  InterruptedException  {
+              LongAdder  counter  =  new  LongAdder()  
+              ExecutorService  service  =  Executors.newFixedThreadPool(16)  
+              for  (int  i  =  0    i  &lt    100    i++)  {
+                      service.submit(new  Task(counter))  
+              }
+  
+              Thread.sleep(2000)  
+              System.out.println(counter.sum())  
+      }
+      static  class  Task  implements  Runnable  {
+  
+              private  final  LongAdder  counter  
+  
+              public  Task(LongAdder  counter)  {
+                      this.counter  =  counter  
+              }
+  
+              @Override
+              public  void  run()  {
+                      counter.increment()  
+              }
+      }
 }
 ```
 
@@ -118,16 +118,16 @@ public&nbsp;class&nbsp;LongAdderDemo&nbsp;{
 那么 LongAdder 最终是如何实现多线程计数的呢？答案就在最后一步的求和 sum 方法，执行 LongAdder.sum() 的时候，会把各个线程里的 Cell 累计求和，并加上 base，形成最终的总和。代码如下：
 
 ```
-public&nbsp;long&nbsp;sum()&nbsp;{
-&nbsp;&nbsp;&nbsp;Cell[]&nbsp;as&nbsp;=&nbsp;cells;&nbsp;Cell&nbsp;a;
-&nbsp;&nbsp;&nbsp;long&nbsp;sum&nbsp;=&nbsp;base;
-&nbsp;&nbsp;&nbsp;if&nbsp;(as&nbsp;!=&nbsp;null)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;as.length;&nbsp;++i)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;((a&nbsp;=&nbsp;as[i])&nbsp;!=&nbsp;null)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum&nbsp;+=&nbsp;a.value;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;return&nbsp;sum;
+public  long  sum()  {
+      Cell[]  as  =  cells    Cell  a  
+      long  sum  =  base  
+      if  (as  !=  null)  {
+              for  (int  i  =  0    i  &lt    as.length    ++i)  {
+                      if  ((a  =  as[i])  !=  null)
+                              sum  +=  a.value  
+              }
+      }
+      return  sum  
 }
 ```
 

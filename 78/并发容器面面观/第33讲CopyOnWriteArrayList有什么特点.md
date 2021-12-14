@@ -4,15 +4,14 @@
 
 故事要从诞生 CopyOnWriteArrayList 之前说起。其实在 CopyOnWriteArrayList 出现之前，我们已经有了 ArrayList 和 LinkedList 作为 List 的数组和链表的实现，而且也有了线程安全的 Vector 和 Collections.synchronizedList() 可以使用。所以首先就让我们来看下线程安全的 Vector 的 size 和 get 方法的代码：
 
-```
-public&nbsp;synchronized&nbsp;int&nbsp;size()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;elementCount;
+```java
+public synchronized int size() {
+    return elementCount;
 }
-public&nbsp;synchronized&nbsp;E&nbsp;get(int&nbsp;index)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(index&nbsp;&gt;=&nbsp;elementCount)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;ArrayIndexOutOfBoundsException(index);
-
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;elementData(index);
+public synchronized E get(int index) {
+    if (index >= elementCount)
+        throw new ArrayIndexOutOfBoundsException(index);
+    return elementData(index);
 }
 ```
 
@@ -58,10 +57,11 @@ CopyOnWriteArrayList 的所有修改操作（add，set等）都是通过创建�
 
 在 ArrayList 源码里的 ListItr 的 next 方法中有一个 checkForComodification 方法，代码如下：
 
-```
-final&nbsp;void&nbsp;checkForComodification()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(modCount&nbsp;!=&nbsp;expectedModCount)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;ConcurrentModificationException();
+```java
+private void checkForComodification(final int expectedModCount) {
+    if (modCount != expectedModCount) {
+        throw new ConcurrentModificationException();
+    }
 }
 ```
 
@@ -69,52 +69,52 @@ final&nbsp;void&nbsp;checkForComodification()&nbsp;{
 
 和 ArrayList 不同的是，CopyOnWriteArrayList 的迭代器在迭代的时候，如果数组内容被修改了，CopyOnWriteArrayList 不会报 ConcurrentModificationException 的异常，因为迭代器使用的依然是旧数组，只不过迭代的内容可能已经过时了。演示代码如下：
 
-```
+```java
 /**
-*&nbsp;描述：&nbsp;演示CopyOnWriteArrayList迭代期间可以修改集合的内容
+*  描述：  演示CopyOnWriteArrayList迭代期间可以修改集合的内容
 */
-public&nbsp;class&nbsp;CopyOnWriteArrayListDemo&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CopyOnWriteArrayList&lt;Integer&gt;&nbsp;list&nbsp;=&nbsp;new&nbsp;CopyOnWriteArrayList&lt;&gt;(new&nbsp;Integer[]{1,&nbsp;2,&nbsp;3});
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(list);&nbsp;//[1,&nbsp;2,&nbsp;3]
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Get&nbsp;iterator&nbsp;1
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iterator&lt;Integer&gt;&nbsp;itr1&nbsp;=&nbsp;list.iterator();
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Add&nbsp;one&nbsp;element&nbsp;and&nbsp;verify&nbsp;list&nbsp;is&nbsp;updated
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list.add(4);
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(list);&nbsp;//[1,&nbsp;2,&nbsp;3,&nbsp;4]
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//Get&nbsp;iterator&nbsp;2
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iterator&lt;Integer&gt;&nbsp;itr2&nbsp;=&nbsp;list.iterator();
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("====Verify&nbsp;Iterator&nbsp;1&nbsp;content====");
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;itr1.forEachRemaining(System.out::println);&nbsp;//1,2,3
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("====Verify&nbsp;Iterator&nbsp;2&nbsp;content====");
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;itr2.forEachRemaining(System.out::println);&nbsp;//1,2,3,4
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;
+public  class  CopyOnWriteArrayListDemo  {
+  
+        public  static  void  main(String[]  args)  {
+  
+                CopyOnWriteArrayList&lt  Integer&gt    list  =  new  CopyOnWriteArrayList&lt  &gt  (new  Integer[]{1,  2,  3})  
+  
+                System.out.println(list)    //[1,  2,  3]
+  
+                //Get  iterator  1
+                Iterator&lt  Integer&gt    itr1  =  list.iterator()  
+  
+                //Add  one  element  and  verify  list  is  updated
+                list.add(4)  
+  
+                System.out.println(list)    //[1,  2,  3,  4]
+  
+                //Get  iterator  2
+                Iterator&lt  Integer&gt    itr2  =  list.iterator()  
+  
+                System.out.println("====Verify  Iterator  1  content====")  
+  
+                itr1.forEachRemaining(System.out::println)    //1,2,3
+  
+                System.out.println("====Verify  Iterator  2  content====")  
+  
+                itr2.forEachRemaining(System.out::println)    //1,2,3,4
+  
+        }
+  
 }
 ```
 
 这段代码会首先创建一个 CopyOnWriteArrayList，并且初始值被赋为 \[1, 2, 3]，此时打印出来的结果很明显就是 \[1, 2, 3]。然后我们创建一个叫作 itr1 的迭代器，创建之后再添加一个新的元素，利用 list.add() 方法把元素 4 添加进去，此时我们打印出 List 自然是 \[1, 2, 3, 4]。我们再创建一个叫作 itr2 的迭代器，在下方把两个迭代器迭代产生的内容打印出来，这段代码的运行结果是：
 
 ```
-[1,&nbsp;2,&nbsp;3]
-[1,&nbsp;2,&nbsp;3,&nbsp;4]
-====Verify&nbsp;Iterator&nbsp;1&nbsp;content====
+[1,  2,  3]
+[1,  2,  3,  4]
+====Verify  Iterator  1  content====
 1
 2
 3
-====Verify&nbsp;Iterator&nbsp;2&nbsp;content====
+====Verify  Iterator  2  content====
 1
 2
 3
@@ -146,31 +146,31 @@ public&nbsp;class&nbsp;CopyOnWriteArrayListDemo&nbsp;{
 * **数据结构**
 
 ```
-/**&nbsp;可重入锁对象&nbsp;*/
-final&nbsp;transient&nbsp;ReentrantLock&nbsp;lock&nbsp;=&nbsp;new&nbsp;ReentrantLock();
-&nbsp;
-/**&nbsp;CopyOnWriteArrayList底层由数组实现，volatile修饰，保证数组的可见性&nbsp;*/
-private&nbsp;transient&nbsp;volatile&nbsp;Object[]&nbsp;array;
-&nbsp;
+/**  可重入锁对象  */
+final  transient  ReentrantLock  lock  =  new  ReentrantLock();
+  
+/**  CopyOnWriteArrayList底层由数组实现，volatile修饰，保证数组的可见性  */
+private  transient  volatile  Object[]  array;
+  
 /**
-*&nbsp;得到数组
+*  得到数组
 */
-final&nbsp;Object[]&nbsp;getArray()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;array;
+final  Object[]  getArray()  {
+        return  array;
 }
-&nbsp;
+  
 /**
-*&nbsp;设置数组
+*  设置数组
 */
-final&nbsp;void&nbsp;setArray(Object[]&nbsp;a)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;array&nbsp;=&nbsp;a;
+final  void  setArray(Object[]  a)  {
+        array  =  a; 
 }
-&nbsp;
+  
 /**
-*&nbsp;初始化CopyOnWriteArrayList相当于初始化数组
+*  初始化CopyOnWriteArrayList相当于初始化数组
 */
-public&nbsp;CopyOnWriteArrayList()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;setArray(new&nbsp;Object[0]);
+public  CopyOnWriteArrayList()  {
+        setArray(new  Object[0]);  
 }
 ```
 
@@ -178,30 +178,25 @@ public&nbsp;CopyOnWriteArrayList()&nbsp;{
 
 * **add 方法**
 
-```
-public&nbsp;boolean&nbsp;add(E&nbsp;e)&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;加锁
-&nbsp;&nbsp;&nbsp;&nbsp;final&nbsp;ReentrantLock&nbsp;lock&nbsp;=&nbsp;this.lock;
-&nbsp;&nbsp;&nbsp;&nbsp;lock.lock();
-&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;得到原数组的长度和元素
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object[]&nbsp;elements&nbsp;=&nbsp;getArray();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;len&nbsp;=&nbsp;elements.length;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;复制出一个新数组
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object[]&nbsp;newElements&nbsp;=&nbsp;Arrays.copyOf(elements,&nbsp;len&nbsp;+&nbsp;1);
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;添加时，将新元素添加到新数组中
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newElements[len]&nbsp;=&nbsp;e;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;将volatile&nbsp;Object[]&nbsp;array&nbsp;的指向替换成新数组
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setArray(newElements);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;true;
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;finally&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lock.unlock();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+```java
+public boolean add(E e) {
+  //  加锁
+  final ReentrantLock lock = this.lock;
+  lock.lock();
+  try {
+    //  得到原数组的长度和元素
+    Object[] elements = getArray();
+    int len = elements.length;
+    //  复制出一个新数组
+    Object[] newElements = Arrays.copyOf(elements, len + 1);
+    //  添加时，将新元素添加到新数组中
+    newElements[len] = e;
+    //  将volatile  Object[]  array  的指向替换成新数组
+    setArray(newElements);
+    return true;
+  } finally {
+    lock.unlock();
+  }
 }
 ```
 
@@ -213,16 +208,16 @@ add 方法的作用是往 CopyOnWriteArrayList 中添加元素，是一种修改
 
 下面我们来分析一下读操作的代码，也就是和 get 相关的三个方法，分别是 get 方法的两个重载和 getArray 方法，代码如下：
 
-```
-public&nbsp;E&nbsp;get(int&nbsp;index)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;get(getArray(),&nbsp;index);
-}
-final&nbsp;Object[]&nbsp;getArray()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;array;
-}
-private&nbsp;E&nbsp;get(Object[]&nbsp;a,&nbsp;int&nbsp;index)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(E)&nbsp;a[index];
-}
+```java
+ public E get(int index) {
+     return get(getArray(), index);
+ }
+ final Object[] getArray() {
+     return array;
+ }
+ private E get(Object[] a, int index) {
+     return (E) a[index];
+ }
 ```
 
 可以看出，get 相关的操作没有加锁，保证了读取操作的高速。
@@ -232,19 +227,19 @@ private&nbsp;E&nbsp;get(Object[]&nbsp;a,&nbsp;int&nbsp;index)&nbsp;{
 这个迭代器有两个重要的属性，分别是 Object\[] snapshot 和 int cursor。其中 snapshot 代表数组的快照，也就是创建迭代器那个时刻的数组情况，而 cursor 则是迭代器的游标。迭代器的构造方法如下：
 
 ```
-private&nbsp;COWIterator(Object[]&nbsp;elements,&nbsp;int&nbsp;initialCursor)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;cursor&nbsp;=&nbsp;initialCursor;
-&nbsp;&nbsp;&nbsp;&nbsp;snapshot&nbsp;=&nbsp;elements;
+private  COWIterator(Object[]  elements,  int  initialCursor)  {
+        cursor  =  initialCursor;
+        snapshot  =  elements;
 }
 ```
 
 可以看出，迭代器在被构建的时候，会把当时的 elements 赋值给 snapshot，而之后的迭代器所有的操作都基于 snapshot 数组进行的，比如：
 
 ```
-public&nbsp;E&nbsp;next()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!&nbsp;hasNext())
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;NoSuchElementException();
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(E)&nbsp;snapshot[cursor++];
+public  E  next()  {
+        if  (!  hasNext())
+                throw  new  NoSuchElementException();
+        return  (E)  snapshot[cursor++];
 }
 ```
 

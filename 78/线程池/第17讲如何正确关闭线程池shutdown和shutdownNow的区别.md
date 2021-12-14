@@ -2,20 +2,20 @@
 在本课时我们主要学习如何正确关闭线程池？以及 shutdown() 与 shutdownNow() 方法的区别？首先，我们创建一个线程数固定为 10 的线程池，并且往线程池中提交 100 个任务，如代码所示。
 
 ```
-ExecutorService&nbsp;service&nbsp;=&nbsp;Executors.newFixedThreadPool(10);
-&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;100;&nbsp;i++)&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;service.execute(new&nbsp;Task());
-&nbsp;}
+ExecutorService  service  =  Executors.newFixedThreadPool(10)  
+  for  (int  i  =  0    i  &lt    100    i++)  {  
+        service.execute(new  Task())  
+  }
 
 ```
 
 那么如果现在我们想关闭该线程池该如何做呢？本课时主要介绍 5 种在 ThreadPoolExecutor 中涉及关闭线程池的方法，如下所示。
 
-- void shutdown;
-- boolean isShutdown;
-- boolean isTerminated;
-- boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException;
-- List&lt;Runnable&gt; shutdownNow;
+- void shutdown  
+- boolean isShutdown  
+- boolean isTerminated  
+- boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException  
+- List&lt  Runnable&gt   shutdownNow  
 
 下面我们就对这些方法逐一展开。
 
@@ -48,26 +48,26 @@ ExecutorService&nbsp;service&nbsp;=&nbsp;Executors.newFixedThreadPool(10);
 最后一个方法是 shutdownNow()，也是 5 种方法里功能最强大的，它与第一种 shutdown 方法不同之处在于名字中多了一个单词 Now，也就是表示立刻关闭的意思。在执行 shutdownNow 方法之后，首先会给所有线程池中的线程发送 interrupt 中断信号，尝试中断这些任务的执行，然后会将任务队列中正在等待的所有任务转移到一个 List 中并返回，我们可以根据返回的任务 List 来进行一些补救的操作，例如记录在案并在后期重试。shutdownNow() 的源码如下所示。
 
 ```
-public&nbsp;List&lt;Runnable&gt;&nbsp;shutdownNow()&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Runnable&gt;&nbsp;tasks;
-&nbsp;&nbsp;&nbsp;&nbsp;final&nbsp;ReentrantLock&nbsp;mainLock&nbsp;=&nbsp;this.mainLock;
-&nbsp;&nbsp;&nbsp;&nbsp;mainLock.lock();
+public  List&lt  Runnable&gt    shutdownNow()  {  
+        List&lt  Runnable&gt    tasks  
+        final  ReentrantLock  mainLock  =  this.mainLock  
+        mainLock.lock()  
 
-&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkShutdownAccess();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;advanceRunState(STOP);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interruptWorkers();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tasks&nbsp;=&nbsp;drainQueue();
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;finally&nbsp;{&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mainLock.unlock();
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;tryTerminate();
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;tasks;
-&nbsp;}
+        try  {  
+                checkShutdownAccess()  
+                advanceRunState(STOP)  
+                interruptWorkers()  
+                tasks  =  drainQueue()  
+        }  finally  {  
+                mainLock.unlock()  
+        }  
+  
+        tryTerminate()  
+        return  tasks  
+  }
 
 ```
 
-你可以看到源码中有一行&nbsp;interruptWorkers() 代码，这行代码会让每一个已经启动的线程都中断，这样线程就可以在执行任务期间检测到中断信号并进行相应的处理，提前结束任务。这里需要注意的是，由于 Java 中不推荐强行停止线程的机制的限制，即便我们调用了 shutdownNow 方法，如果被中断的线程对于中断信号不理不睬，那么依然有可能导致任务不会停止。可见我们在开发中落地最佳实践是很重要的，我们自己编写的线程应当具有响应中断信号的能力，正确停止线程的方法在第 2 讲有讲过，应当利用中断信号来协同工作。
+你可以看到源码中有一行  interruptWorkers() 代码，这行代码会让每一个已经启动的线程都中断，这样线程就可以在执行任务期间检测到中断信号并进行相应的处理，提前结束任务。这里需要注意的是，由于 Java 中不推荐强行停止线程的机制的限制，即便我们调用了 shutdownNow 方法，如果被中断的线程对于中断信号不理不睬，那么依然有可能导致任务不会停止。可见我们在开发中落地最佳实践是很重要的，我们自己编写的线程应当具有响应中断信号的能力，正确停止线程的方法在第 2 讲有讲过，应当利用中断信号来协同工作。
 
 在掌握了这 5 种关闭线程池相关的方法之后，我们就可以根据自己的业务需要，选择合适的方法来停止线程池，比如通常我们可以用 shutdown() 方法来关闭，这样可以让已提交的任务都执行完毕，但是如果情况紧急，那我们就可以用 shutdownNow 方法来加快线程池“终结”的速度。

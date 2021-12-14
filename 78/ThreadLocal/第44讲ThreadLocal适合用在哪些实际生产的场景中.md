@@ -28,25 +28,25 @@
 下面我们用一个案例来说明这种典型的第一个场景。假设有个需求，即 **2 个线程**都要用到 SimpleDateFormat。代码如下所示：
 
 ```
-public&nbsp;class&nbsp;ThreadLocalDemo01&nbsp;{
+public  class  ThreadLocalDemo01  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Thread(()&nbsp;-&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;date&nbsp;=&nbsp;new&nbsp;ThreadLocalDemo01().date(1);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(date);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(100);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Thread(()&nbsp;-&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;date&nbsp;=&nbsp;new&nbsp;ThreadLocalDemo01().date(2);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(date);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).start();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                new  Thread(()  -&gt    {
+                        String  date  =  new  ThreadLocalDemo01().date(1)  
+                        System.out.println(date)  
+                }).start()  
+                Thread.sleep(100)  
+                new  Thread(()  -&gt    {
+                        String  date  =  new  ThreadLocalDemo01().date(2)  
+                        System.out.println(date)  
+                }).start()  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;date(int&nbsp;seconds)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;date&nbsp;=&nbsp;new&nbsp;Date(1000&nbsp;*&nbsp;seconds);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SimpleDateFormat&nbsp;simpleDateFormat&nbsp;=&nbsp;new&nbsp;SimpleDateFormat("mm:ss");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;simpleDateFormat.format(date);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  String  date(int  seconds)  {
+                Date  date  =  new  Date(1000  *  seconds)  
+                SimpleDateFormat  simpleDateFormat  =  new  SimpleDateFormat("mm:ss")  
+                return  simpleDateFormat.format(date)  
+        }
 }
 
 ```
@@ -58,8 +58,8 @@ public&nbsp;class&nbsp;ThreadLocalDemo01&nbsp;{
 这样一来，有两个线程，那么就有两个 SimpleDateFormat 对象，它们之间互不干扰，这段代码是可以正常运转的，运行结果是：
 
 ```
-&nbsp;&nbsp;00:01
-&nbsp;&nbsp;00:02
+    00:01
+    00:02
 
 ```
 
@@ -68,24 +68,24 @@ public&nbsp;class&nbsp;ThreadLocalDemo01&nbsp;{
 假设我们的需求有了升级，不仅仅需要 2 个线程，而是需要 **10 个**，也就是说，有 10 个线程同时对应 10 个 SimpleDateFormat 对象。我们就来看下面这种写法：
 
 ```
-public&nbsp;class&nbsp;ThreadLocalDemo02&nbsp;{
+public  class  ThreadLocalDemo02  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;10;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;finalI&nbsp;=&nbsp;i;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Thread(()&nbsp;-&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;date&nbsp;=&nbsp;new&nbsp;ThreadLocalDemo02().date(finalI);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(date);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(100);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                for  (int  i  =  0    i  &lt    10    i++)  {
+                        int  finalI  =  i  
+                        new  Thread(()  -&gt    {
+                                String  date  =  new  ThreadLocalDemo02().date(finalI)  
+                                System.out.println(date)  
+                        }).start()  
+                        Thread.sleep(100)  
+                }
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;date(int&nbsp;seconds)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;date&nbsp;=&nbsp;new&nbsp;Date(1000&nbsp;*&nbsp;seconds);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SimpleDateFormat&nbsp;simpleDateFormat&nbsp;=&nbsp;new&nbsp;SimpleDateFormat("mm:ss");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;simpleDateFormat.format(date);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  String  date(int  seconds)  {
+                Date  date  =  new  Date(1000  *  seconds)  
+                SimpleDateFormat  simpleDateFormat  =  new  SimpleDateFormat("mm:ss")  
+                return  simpleDateFormat.format(date)  
+        }
 }
 
 ```
@@ -119,29 +119,29 @@ public&nbsp;class&nbsp;ThreadLocalDemo02&nbsp;{
 在这种情况下，我们给出下面这个代码实现的方案：
 
 ```
-public&nbsp;class&nbsp;ThreadLocalDemo03&nbsp;{
+public  class  ThreadLocalDemo03  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;ExecutorService&nbsp;threadPool&nbsp;=&nbsp;Executors.newFixedThreadPool(16);
+        public  static  ExecutorService  threadPool  =  Executors.newFixedThreadPool(16)  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;finalI&nbsp;=&nbsp;i;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Runnable()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;date&nbsp;=&nbsp;new&nbsp;ThreadLocalDemo03().date(finalI);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(date);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.shutdown();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                for  (int  i  =  0    i  &lt    1000    i++)  {
+                        int  finalI  =  i  
+                        threadPool.submit(new  Runnable()  {
+                                @Override
+                                public  void  run()  {
+                                        String  date  =  new  ThreadLocalDemo03().date(finalI)  
+                                        System.out.println(date)  
+                                }
+                        })  
+                }
+                threadPool.shutdown()  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;date(int&nbsp;seconds)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;date&nbsp;=&nbsp;new&nbsp;Date(1000&nbsp;*&nbsp;seconds);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SimpleDateFormat&nbsp;dateFormat&nbsp;=&nbsp;new&nbsp;SimpleDateFormat("mm:ss");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;dateFormat.format(date);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  String  date(int  seconds)  {
+                Date  date  =  new  Date(1000  *  seconds)  
+                SimpleDateFormat  dateFormat  =  new  SimpleDateFormat("mm:ss")  
+                return  dateFormat.format(date)  
+        }
 }
 
 ```
@@ -177,29 +177,29 @@ public&nbsp;class&nbsp;ThreadLocalDemo03&nbsp;{
 我们用下面的代码来演示**只用一个 simpleDateFormat 对象**的情况：
 
 ```
-public&nbsp;class&nbsp;ThreadLocalDemo04&nbsp;{
+public  class  ThreadLocalDemo04  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;ExecutorService&nbsp;threadPool&nbsp;=&nbsp;Executors.newFixedThreadPool(16);
-&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;SimpleDateFormat&nbsp;dateFormat&nbsp;=&nbsp;new&nbsp;SimpleDateFormat("mm:ss");
+        public  static  ExecutorService  threadPool  =  Executors.newFixedThreadPool(16)  
+        static  SimpleDateFormat  dateFormat  =  new  SimpleDateFormat("mm:ss")  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;finalI&nbsp;=&nbsp;i;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Runnable()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;date&nbsp;=&nbsp;new&nbsp;ThreadLocalDemo04().date(finalI);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(date);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.shutdown();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                for  (int  i  =  0    i  &lt    1000    i++)  {
+                        int  finalI  =  i  
+                        threadPool.submit(new  Runnable()  {
+                                @Override
+                                public  void  run()  {
+                                        String  date  =  new  ThreadLocalDemo04().date(finalI)  
+                                        System.out.println(date)  
+                                }
+                        })  
+                }
+                threadPool.shutdown()  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;date(int&nbsp;seconds)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;date&nbsp;=&nbsp;new&nbsp;Date(1000&nbsp;*&nbsp;seconds);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;dateFormat.format(date);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  String  date(int  seconds)  {
+                Date  date  =  new  Date(1000  *  seconds)  
+                return  dateFormat.format(date)  
+        }
 }
 
 ```
@@ -230,41 +230,41 @@ public&nbsp;class&nbsp;ThreadLocalDemo04&nbsp;{
 
 **6. 加锁**
 
-出错的原因就在于，**simpleDateFormat 这个对象本身不是一个线程安全的对象**，不应该被多个线程同时访问。所以我们就想到了一个解决方案，用&nbsp;synchronized 来加锁。于是代码就修改成下面的样子：
+出错的原因就在于，**simpleDateFormat 这个对象本身不是一个线程安全的对象**，不应该被多个线程同时访问。所以我们就想到了一个解决方案，用  synchronized 来加锁。于是代码就修改成下面的样子：
 
 ```
-public&nbsp;class&nbsp;ThreadLocalDemo05&nbsp;{
+public  class  ThreadLocalDemo05  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;ExecutorService&nbsp;threadPool&nbsp;=&nbsp;Executors.newFixedThreadPool(16);
-&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;SimpleDateFormat&nbsp;dateFormat&nbsp;=&nbsp;new&nbsp;SimpleDateFormat("mm:ss");
+        public  static  ExecutorService  threadPool  =  Executors.newFixedThreadPool(16)  
+        static  SimpleDateFormat  dateFormat  =  new  SimpleDateFormat("mm:ss")  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;finalI&nbsp;=&nbsp;i;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Runnable()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;date&nbsp;=&nbsp;new&nbsp;ThreadLocalDemo05().date(finalI);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(date);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.shutdown();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                for  (int  i  =  0    i  &lt    1000    i++)  {
+                        int  finalI  =  i  
+                        threadPool.submit(new  Runnable()  {
+                                @Override
+                                public  void  run()  {
+                                        String  date  =  new  ThreadLocalDemo05().date(finalI)  
+                                        System.out.println(date)  
+                                }
+                        })  
+                }
+                threadPool.shutdown()  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;date(int&nbsp;seconds)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;date&nbsp;=&nbsp;new&nbsp;Date(1000&nbsp;*&nbsp;seconds);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;s&nbsp;=&nbsp;null;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;synchronized&nbsp;(ThreadLocalDemo05.class)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&nbsp;=&nbsp;dateFormat.format(date);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;s;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  String  date(int  seconds)  {
+                Date  date  =  new  Date(1000  *  seconds)  
+                String  s  =  null  
+                synchronized  (ThreadLocalDemo05.class)  {
+                        s  =  dateFormat.format(date)  
+                }
+                return  s  
+        }
 }
 
 ```
 
-可以看出在 date 方法中加入了&nbsp;synchronized 关键字，把 **simpleDateFormat 的调用给**上了锁。
+可以看出在 date 方法中加入了  synchronized 关键字，把 **simpleDateFormat 的调用给**上了锁。
 
 运行这段代码的结果（多线程下，运行结果不唯一）：
 
@@ -279,7 +279,7 @@ public&nbsp;class&nbsp;ThreadLocalDemo05&nbsp;{
 
 ```
 
-这样的结果是正常的，没有出现重复的时间。但是由于我们使用了&nbsp;synchronized 关键字，就会陷入一种排队的状态，多个线程不能同时工作，这样一来，整体的效率就被大大降低了。有没有更好的解决方案呢？
+这样的结果是正常的，没有出现重复的时间。但是由于我们使用了  synchronized 关键字，就会陷入一种排队的状态，多个线程不能同时工作，这样一来，整体的效率就被大大降低了。有没有更好的解决方案呢？
 
 我们希望达到的效果是，**既不浪费过多的内存，同时又想保证线程安全**。经过思考得出，可以**让每个线程都拥有一个自己的 simpleDateFormat 对象来达到这个目的**，这样就能两全其美了。
 
@@ -288,38 +288,38 @@ public&nbsp;class&nbsp;ThreadLocalDemo05&nbsp;{
 那么，要想达到这个目的，我们就可以使用 ThreadLocal。示例代码如下所示：
 
 ```
-public&nbsp;class&nbsp;ThreadLocalDemo06&nbsp;{
+public  class  ThreadLocalDemo06  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;ExecutorService&nbsp;threadPool&nbsp;=&nbsp;Executors.newFixedThreadPool(16);
+        public  static  ExecutorService  threadPool  =  Executors.newFixedThreadPool(16)  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;finalI&nbsp;=&nbsp;i;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Runnable()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;date&nbsp;=&nbsp;new&nbsp;ThreadLocalDemo06().date(finalI);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(date);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.shutdown();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                for  (int  i  =  0    i  &lt    1000    i++)  {
+                        int  finalI  =  i  
+                        threadPool.submit(new  Runnable()  {
+                                @Override
+                                public  void  run()  {
+                                        String  date  =  new  ThreadLocalDemo06().date(finalI)  
+                                        System.out.println(date)  
+                                }
+                        })  
+                }
+                threadPool.shutdown()  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;date(int&nbsp;seconds)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;date&nbsp;=&nbsp;new&nbsp;Date(1000&nbsp;*&nbsp;seconds);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SimpleDateFormat&nbsp;dateFormat&nbsp;=&nbsp;ThreadSafeFormatter.dateFormatThreadLocal.get();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;dateFormat.format(date);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  String  date(int  seconds)  {
+                Date  date  =  new  Date(1000  *  seconds)  
+                SimpleDateFormat  dateFormat  =  ThreadSafeFormatter.dateFormatThreadLocal.get()  
+                return  dateFormat.format(date)  
+        }
 }
 
-class&nbsp;ThreadSafeFormatter&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;ThreadLocal&lt;SimpleDateFormat&gt;&nbsp;dateFormatThreadLocal&nbsp;=&nbsp;new&nbsp;ThreadLocal&lt;SimpleDateFormat&gt;()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;SimpleDateFormat&nbsp;initialValue()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;new&nbsp;SimpleDateFormat("mm:ss");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;};
+class  ThreadSafeFormatter  {
+        public  static  ThreadLocal&lt  SimpleDateFormat&gt    dateFormatThreadLocal  =  new  ThreadLocal&lt  SimpleDateFormat&gt  ()  {
+                @Override
+                protected  SimpleDateFormat  initialValue()  {
+                        return  new  SimpleDateFormat("mm:ss")  
+                }
+        }  
 }
 
 ```
@@ -384,58 +384,58 @@ class&nbsp;ThreadSafeFormatter&nbsp;{
 在这个图中可以看出，同样是多个线程同时去执行，但是这些线程同时去访问这个 ThreadLocal 并且能利用 ThreadLocal 拿到只属于自己的独享对象。这样的话，就无需任何额外的措施，保证了线程安全，因为每个线程是独享 user 对象的。代码如下所示：
 
 ```
-public&nbsp;class&nbsp;ThreadLocalDemo07&nbsp;{
+public  class  ThreadLocalDemo07  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Service1().service1();
+        public  static  void  main(String[]  args)  {
+                new  Service1().service1()  
 
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        }
 }
 
-class&nbsp;Service1&nbsp;{
+class  Service1  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;service1()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User&nbsp;user&nbsp;=&nbsp;new&nbsp;User("拉勾教育");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UserContextHolder.holder.set(user);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Service2().service2();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  void  service1()  {
+                User  user  =  new  User("拉勾教育")  
+                UserContextHolder.holder.set(user)  
+                new  Service2().service2()  
+        }
 }
 
-class&nbsp;Service2&nbsp;{
+class  Service2  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;service2()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User&nbsp;user&nbsp;=&nbsp;UserContextHolder.holder.get();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("Service2拿到用户名："&nbsp;+&nbsp;user.name);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Service3().service3();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  void  service2()  {
+                User  user  =  UserContextHolder.holder.get()  
+                System.out.println("Service2拿到用户名："  +  user.name)  
+                new  Service3().service3()  
+        }
 }
 
-class&nbsp;Service3&nbsp;{
+class  Service3  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;service3()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User&nbsp;user&nbsp;=&nbsp;UserContextHolder.holder.get();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("Service3拿到用户名："&nbsp;+&nbsp;user.name);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UserContextHolder.holder.remove();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  void  service3()  {
+                User  user  =  UserContextHolder.holder.get()  
+                System.out.println("Service3拿到用户名："  +  user.name)  
+                UserContextHolder.holder.remove()  
+        }
 }
 
-class&nbsp;UserContextHolder&nbsp;{
+class  UserContextHolder  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;ThreadLocal&lt;User&gt;&nbsp;holder&nbsp;=&nbsp;new&nbsp;ThreadLocal&lt;&gt;();
+        public  static  ThreadLocal&lt  User&gt    holder  =  new  ThreadLocal&lt  &gt  ()  
 }
 
-class&nbsp;User&nbsp;{
+class  User  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;name;
+        String  name  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;User(String&nbsp;name)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.name&nbsp;=&nbsp;n
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  User(String  name)  {
+                this.name  =  n
+        }
 }
 
 ```
 
-在这个代码中我们可以看出，我们有一个 UserContextHolder，里面保存了一个 ThreadLocal，在调用&nbsp;Service1 的方法的时候，就往里面存入了 user 对象，而在后面去调用的时候，直接从里面用 get 方法取出来就可以了。没有参数层层传递的过程，非常的优雅、方便。
+在这个代码中我们可以看出，我们有一个 UserContextHolder，里面保存了一个 ThreadLocal，在调用  Service1 的方法的时候，就往里面存入了 user 对象，而在后面去调用的时候，直接从里面用 get 方法取出来就可以了。没有参数层层传递的过程，非常的优雅、方便。
 
 代码运行结果：
 

@@ -16,28 +16,28 @@
 第二个缺陷就是不能抛出 checked Exception，如下面这段代码所示：
 
 ```
-public&nbsp;class&nbsp;RunThrowException&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;/**
-&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;普通方法内可以&nbsp;throw&nbsp;异常，并在方法签名上声明&nbsp;throws
-&nbsp;&nbsp;&nbsp;&nbsp;*/
-&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;normalMethod()&nbsp;throws&nbsp;Exception&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;IOException();
-&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;Runnable&nbsp;runnable&nbsp;=&nbsp;new&nbsp;Runnable()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;run方法上无法声明&nbsp;throws&nbsp;异常，且run方法内无法&nbsp;throw&nbsp;出&nbsp;checked&nbsp;Exception，除非使用try&nbsp;catch进行处理
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;IOException();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(IOException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;}
+public  class  RunThrowException  {
+  
+      /**
+        *  普通方法内可以  throw  异常，并在方法签名上声明  throws
+        */
+      public  void  normalMethod()  throws  Exception  {
+              throw  new  IOException()  
+      }
+  
+      Runnable  runnable  =  new  Runnable()  {
+              /**
+                *    run方法上无法声明  throws  异常，且run方法内无法  throw  出  checked  Exception，除非使用try  catch进行处理
+                */
+              @Override
+              public  void  run()  {
+                      try  {
+                              throw  new  IOException()  
+                      }  catch  (IOException  e)  {
+                              e.printStackTrace()  
+                      }
+              }
+      }
 }
 
 ```
@@ -53,13 +53,13 @@ public&nbsp;class&nbsp;RunThrowException&nbsp;{
 为什么有这样的缺陷呢？我们来看一下 Runnable 接口的定义：
 
 ```
-public&nbsp;interface&nbsp;Runnable&nbsp;{
-&nbsp;&nbsp;&nbsp;public&nbsp;abstract&nbsp;void&nbsp;run();
+public  interface  Runnable  {
+      public  abstract  void  run()  
 }
 
 ```
 
-代码比较短小，Runnable 是一个&nbsp;interface，并且里面只有一个方法，叫作 public abstract void run()。这个方法已经规定了 run() 方法的返回类型是 void，而且这个方法没有声明抛出任何异常。所以，当实现并重写这个方法时，我们既不能改返回值类型，也不能更改对于异常抛出的描述，因为在实现方法的时候，语法规定是不允许对这些内容进行修改的。
+代码比较短小，Runnable 是一个  interface，并且里面只有一个方法，叫作 public abstract void run()。这个方法已经规定了 run() 方法的返回类型是 void，而且这个方法没有声明抛出任何异常。所以，当实现并重写这个方法时，我们既不能改返回值类型，也不能更改对于异常抛出的描述，因为在实现方法的时候，语法规定是不允许对这些内容进行修改的。
 
 回顾课程之前小节的众多代码，从来没有出现过可以在 run 方法中返回一个返回值这样的情况。
 
@@ -76,8 +76,8 @@ public&nbsp;interface&nbsp;Runnable&nbsp;{
 Callable 是一个类似于 Runnable 的接口，实现 Callable 接口的类和实现 Runnable 接口的类都是可以被其他线程执行的任务。 我们看一下 Callable 的源码：
 
 ```
-public&nbsp;interface&nbsp;Callable&lt;V&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;V&nbsp;call()&nbsp;throws&nbsp;Exception;
+public  interface  Callable&lt  V&gt    {
+          V  call()  throws  Exception  
 }
 
 ```

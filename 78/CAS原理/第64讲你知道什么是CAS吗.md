@@ -1,5 +1,5 @@
 
-本课时，我将讲解&nbsp;CAS。
+本课时，我将讲解  CAS。
 
 ### CAS 简介
 
@@ -42,33 +42,33 @@ JDK 正是利用了这些 CAS 指令，可以实现并发的数据结构，比�
 
 ```
 /**
-&nbsp;*&nbsp;描述：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;模拟CAS操作，等价代码
-&nbsp;*/
-&nbsp;
-public&nbsp;class&nbsp;SimulatedCAS&nbsp;{
+  *  描述：          模拟CAS操作，等价代码
+  */
+  
+public  class  SimulatedCAS  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;int&nbsp;value;
+        private  int  value  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;synchronized&nbsp;int&nbsp;compareAndSwap(int&nbsp;expectedValue,&nbsp;int&nbsp;newValue)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;oldValue&nbsp;=&nbsp;value;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(oldValue&nbsp;==&nbsp;expectedValue)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;newValue;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;oldValue;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  synchronized  int  compareAndSwap(int  expectedValue,  int  newValue)  {
+                int  oldValue  =  value  
+                if  (oldValue  ==  expectedValue)  {
+                        value  =  newValue  
+                }
+                return  oldValue  
+        }
 }
 
 ```
 
-在这段代码中有一个 compareAndSwap&nbsp;方法，在这个方法里有两个入参，**第 1 个入参期望值 expectedValue，第 2 个入参是 newValue**，它就是我们计算好的新的值，我们希望把这个新的值去更新到变量上去。
+在这段代码中有一个 compareAndSwap  方法，在这个方法里有两个入参，**第 1 个入参期望值 expectedValue，第 2 个入参是 newValue**，它就是我们计算好的新的值，我们希望把这个新的值去更新到变量上去。
 
 你一定注意到了， compareAndSwap 方法是被 **synchronized** 修饰的，我们用同步方法为 CAS 的等价代码保证了原子性。
 
-接下来我将讲解，在 compareAndSwap 方法里都做了哪些事情。需要先拿到变量的当前值，所以代码里用就会用 int oldValue&nbsp;=&nbsp;value 把变量的当前值拿到。然后就是 compare，也就是“比较”，所以此时会用&nbsp;if&nbsp;(oldValue == expectedValue) 把当前值和期望值进行比较，如果它们是相等的话，那就意味着现在的值正好就是我们所期望的值，满足条件，说明此时可以进行 swap，也就是交换，所以就把 value 的值修改成 newValue，最后再返回 oldValue，完成了整个 CAS 过程。
+接下来我将讲解，在 compareAndSwap 方法里都做了哪些事情。需要先拿到变量的当前值，所以代码里用就会用 int oldValue  =  value 把变量的当前值拿到。然后就是 compare，也就是“比较”，所以此时会用  if  (oldValue == expectedValue) 把当前值和期望值进行比较，如果它们是相等的话，那就意味着现在的值正好就是我们所期望的值，满足条件，说明此时可以进行 swap，也就是交换，所以就把 value 的值修改成 newValue，最后再返回 oldValue，完成了整个 CAS 过程。
 
-CAS&nbsp;最核心的思想就在上面这个流程中体现了，可以看出，compare 指的就是 if 里的比较，比较 oldValue&nbsp;是否等于&nbsp;expectedValue；同样，swap 实际上就是把 value 改成 newValue，并且返回 oldValue。所以这整个 compareAndSwap 方法就还原了 CAS 的语义，也象征了&nbsp;CAS&nbsp;指令在背后所做的工作。
+CAS  最核心的思想就在上面这个流程中体现了，可以看出，compare 指的就是 if 里的比较，比较 oldValue  是否等于  expectedValue；同样，swap 实际上就是把 value 改成 newValue，并且返回 oldValue。所以这整个 compareAndSwap 方法就还原了 CAS 的语义，也象征了  CAS  指令在背后所做的工作。
 
-### 案例演示：两个线程竞争&nbsp;CAS，其中一个落败
+### 案例演示：两个线程竞争  CAS，其中一个落败
 
 有了这前面的等价代码之后，我们再来深入介绍一个具体的案例：两个线程执行 CAS，尝试修改数据，第一个线程能修改成功，而第二个线程由于来晚了，会发现数据已经被修改过了，就不再修改了。我们通过 debug 的方式可以看到 CAS 在执行过程中的具体情况。
 
@@ -77,35 +77,35 @@ CAS&nbsp;最核心的思想就在上面这个流程中体现了，可以看出�
 我们看下面的这段代码：
 
 ```
-public&nbsp;class&nbsp;DebugCAS&nbsp;implements&nbsp;Runnable&nbsp;{
+public  class  DebugCAS  implements  Runnable  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;volatile&nbsp;int&nbsp;value;
+        private  volatile  int  value  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;synchronized&nbsp;int&nbsp;compareAndSwap(int&nbsp;expectedValue,&nbsp;int&nbsp;newValue)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;oldValue&nbsp;=&nbsp;value;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(oldValue&nbsp;==&nbsp;expectedValue)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;newValue;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("线程"+Thread.currentThread().getName()+"执行成功");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;oldValue;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  synchronized  int  compareAndSwap(int  expectedValue,  int  newValue)  {
+                int  oldValue  =  value  
+                if  (oldValue  ==  expectedValue)  {
+                        value  =  newValue  
+                        System.out.println("线程"+Thread.currentThread().getName()+"执行成功")  
+                }
+                return  oldValue  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DebugCAS&nbsp;r&nbsp;=&nbsp;new&nbsp;DebugCAS();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r.value&nbsp;=&nbsp;100;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;t1&nbsp;=&nbsp;new&nbsp;Thread(r,"Thread&nbsp;1");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;t2&nbsp;=&nbsp;new&nbsp;Thread(r,"Thread&nbsp;2");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t1.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t2.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t1.join();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t2.join();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(r.value);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                DebugCAS  r  =  new  DebugCAS()  
+                r.value  =  100  
+                Thread  t1  =  new  Thread(r,"Thread  1")  
+                Thread  t2  =  new  Thread(r,"Thread  2")  
+                t1.start()  
+                t2.start()  
+                t1.join()  
+                t2.join()  
+                System.out.println(r.value)  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;compareAndSwap(100,&nbsp;150);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        @Override
+        public  void  run()  {
+                compareAndSwap(100,  150)  
+        }
 }
 
 ```
@@ -119,7 +119,7 @@ public&nbsp;class&nbsp;DebugCAS&nbsp;implements&nbsp;Runnable&nbsp;{
 首先，我们不打断点，直接执行看看运行的结果：
 
 ```
-线程Thread&nbsp;1执行成功
+线程Thread  1执行成功
 150
 
 ```

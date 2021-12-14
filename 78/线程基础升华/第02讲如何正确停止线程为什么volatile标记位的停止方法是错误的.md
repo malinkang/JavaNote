@@ -19,8 +19,8 @@
 ## 如何用 interrupt 停止线程
 
 ```
-while&nbsp;(!Thread.currentThread().isInterrupted()&nbsp;&amp;&amp;&nbsp;more&nbsp;work&nbsp;to&nbsp;do)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;more&nbsp;work
+while;(!Thread.currentThread().isInterrupted();&amp;&amp;;more;work;to;do);{
+;;;;do;more;work
 }
 ```
 
@@ -29,22 +29,22 @@ while&nbsp;(!Thread.currentThread().isInterrupted()&nbsp;&amp;&amp;&nbsp;more&nb
 我们再看看具体例子。
 
 ```
-public&nbsp;class&nbsp;StopThread&nbsp;implements&nbsp;Runnable&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;count&nbsp;=&nbsp;0;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(!Thread.currentThread().isInterrupted()&nbsp;&amp;&amp;&nbsp;count&nbsp;&lt;&nbsp;1000)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("count&nbsp;=&nbsp;"&nbsp;+&nbsp;count++);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;thread&nbsp;=&nbsp;new&nbsp;Thread(new&nbsp;StopThread());
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(5);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread.interrupt();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+public;class;StopThread;implements;Runnable;{
+;
+;;;;@Override
+;;;;public;void;run();{
+;;;;;;;;int;count;=;0;
+;;;;;;;;while;(!Thread.currentThread().isInterrupted();&amp;&amp;;count;&lt;;1000);{
+;;;;;;;;;;;;System.out.println("count;=;";+;count++);
+;;;;;;;;}
+;;;;}
+;
+;;;;public;static;void;main(String[];args);throws;InterruptedException;{
+;;;;;;;;Thread;thread;=;new;Thread(new;StopThread());
+;;;;;;;;thread.start();
+;;;;;;;;Thread.sleep(5);
+;;;;;;;;thread.interrupt();
+;;;;}
 }
 ```
 
@@ -53,18 +53,18 @@ public&nbsp;class&nbsp;StopThread&nbsp;implements&nbsp;Runnable&nbsp;{
 ## sleep 期间能否感受到中断
 
 ```
-Runnable&nbsp;runnable&nbsp;=&nbsp;()&nbsp;-&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;num&nbsp;=&nbsp;0;
-&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(!Thread.currentThread().isInterrupted()&nbsp;&amp;&amp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num&nbsp;&lt;=&nbsp;1000)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(num);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num++;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(1000000);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+Runnable;runnable;=;();-&gt;;{
+;;;;int;num;=;0;
+;;;;try;{
+;;;;;;;;while;(!Thread.currentThread().isInterrupted();&amp;&amp;;
+;;;;;;;;num;&lt;=;1000);{
+;;;;;;;;;;;;System.out.println(num);
+;;;;;;;;;;;;num++;
+;;;;;;;;;;;;Thread.sleep(1000000);
+;;;;;;;;}
+;;;;};catch;(InterruptedException;e);{
+;;;;;;;;e.printStackTrace();
+;;;;}
 };
 ```
 
@@ -73,24 +73,24 @@ Runnable&nbsp;runnable&nbsp;=&nbsp;()&nbsp;-&gt;&nbsp;{
 ```
 public class StopDuringSleep {
  
- &nbsp; &nbsp;public static void main(String[] args) throws InterruptedException {
- &nbsp; &nbsp; &nbsp; &nbsp;Runnable runnable = () -&gt; {
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;int num = 0;
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;try {
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;while (!Thread.currentThread().isInterrupted() &amp;&amp; num &lt;= 1000) {
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;System.out.println(num);
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;num++;
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Thread.sleep(1000000);
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} catch (InterruptedException e) {
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;e.printStackTrace();
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
- &nbsp; &nbsp; &nbsp; &nbsp;};
- &nbsp; &nbsp; &nbsp; &nbsp;Thread thread = new Thread(runnable);
- &nbsp; &nbsp; &nbsp; &nbsp;thread.start();
- &nbsp; &nbsp; &nbsp; &nbsp;Thread.sleep(5);
- &nbsp; &nbsp; &nbsp; &nbsp;thread.interrupt();
- &nbsp; &nbsp;}
+ ; ;public static void main(String[] args) throws InterruptedException {
+ ; ; ; ;Runnable runnable = () -&gt; {
+ ; ; ; ; ; ;int num = 0;
+ ; ; ; ; ; ;try {
+ ; ; ; ; ; ; ; ;while (!Thread.currentThread().isInterrupted() &amp;&amp; num &lt;= 1000) {
+ ; ; ; ; ; ; ; ; ; ;System.out.println(num);
+ ; ; ; ; ; ; ; ; ; ;num++;
+ ; ; ; ; ; ; ; ; ; ;Thread.sleep(1000000);
+ ; ; ; ; ; ; ; ;}
+ ; ; ; ; ; ;} catch (InterruptedException e) {
+ ; ; ; ; ; ; ; ;e.printStackTrace();
+ ; ; ; ; ; ;}
+ ; ; ; ;};
+ ; ; ; ;Thread thread = new Thread(runnable);
+ ; ; ; ;thread.start();
+ ; ; ; ;Thread.sleep(5);
+ ; ; ; ;thread.interrupt();
+ ; ;}
 }
 ```
 
@@ -103,12 +103,12 @@ public class StopDuringSleep {
 在实际开发中肯定是团队协作的，不同的人负责编写不同的方法，然后相互调用来实现整个业务的逻辑。那么如果我们负责编写的方法需要被别人调用，同时我们的方法内调用了 sleep 或者 wait 等能响应中断的方法时，仅仅 catch 住异常是不够的。
 
 ```
-void&nbsp;subTas()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(1000);
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;在这里不处理该异常是非常不好的
-&nbsp;&nbsp;&nbsp;&nbsp;}
+void;subTas();{
+;;;;try;{
+;;;;;;;;Thread.sleep(1000);
+;;;;};catch;(InterruptedException;e);{
+;;;;;;;;//;在这里不处理该异常是非常不好的
+;;;;}
 }
 ```
 
@@ -121,8 +121,8 @@ void&nbsp;subTas()&nbsp;{
 但是，捕捉到异常的 catch 没有进行任何处理逻辑，相当于把中断信号给隐藏了，这样做是非常不合理的，那么究竟应该怎么处理呢？首先，可以选择在方法签名中抛出异常。
 
 ```
-void&nbsp;subTask2()&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(1000);
+void;subTask2();throws;InterruptedException;{
+;;;;Thread.sleep(1000);
 }
 ```
 
@@ -131,13 +131,13 @@ void&nbsp;subTask2()&nbsp;throws&nbsp;InterruptedException&nbsp;{
 ## 再次中断
 
 ```
-private&nbsp;void&nbsp;reInterrupt()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(2000);
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.currentThread().interrupt();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+private;void;reInterrupt();{
+;;;;try;{
+;;;;;;;;Thread.sleep(2000);
+;;;;};catch;(InterruptedException;e);{
+;;;;;;;;Thread.currentThread().interrupt();
+;;;;;;;;e.printStackTrace();
+;;;;}
 }
 ```
 
@@ -162,33 +162,33 @@ private&nbsp;void&nbsp;reInterrupt()&nbsp;{
 **volatile 修饰标记位适用的场景**
 
 ```
-public&nbsp;class&nbsp;VolatileCanStop&nbsp;implements&nbsp;Runnable&nbsp;{
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;volatile&nbsp;boolean&nbsp;canceled&nbsp;=&nbsp;false;
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;num&nbsp;=&nbsp;0;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(!canceled&nbsp;&amp;&amp;&nbsp;num&nbsp;&lt;=&nbsp;1000000)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(num&nbsp;%&nbsp;10&nbsp;==&nbsp;0)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(num&nbsp;+&nbsp;"是10的倍数。");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num++;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(1);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VolatileCanStop&nbsp;r&nbsp;=&nbsp;new&nbsp;VolatileCanStop();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;thread&nbsp;=&nbsp;new&nbsp;Thread(r);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(3000);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r.canceled&nbsp;=&nbsp;true;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+public;class;VolatileCanStop;implements;Runnable;{
+;
+;;;;private;volatile;boolean;canceled;=;false;
+;
+;;;;@Override
+;;;;public;void;run();{
+;;;;;;;;int;num;=;0;
+;;;;;;;;try;{
+;;;;;;;;;;;;while;(!canceled;&amp;&amp;;num;&lt;=;1000000);{
+;;;;;;;;;;;;;;;;if;(num;%;10;==;0);{
+;;;;;;;;;;;;;;;;;;;;System.out.println(num;+;"是10的倍数。");
+;;;;;;;;;;;;;;;;}
+;;;;;;;;;;;;;;;;num++;
+;;;;;;;;;;;;;;;;Thread.sleep(1);
+;;;;;;;;;;;;}
+;;;;;;;;};catch;(InterruptedException;e);{
+;;;;;;;;;;;;e.printStackTrace();
+;;;;;;;;}
+;;;;}
+;
+;;;;public;static;void;main(String[];args);throws;InterruptedException;{
+;;;;;;;;VolatileCanStop;r;=;new;VolatileCanStop();
+;;;;;;;;Thread;thread;=;new;Thread(r);
+;;;;;;;;thread.start();
+;;;;;;;;Thread.sleep(3000);
+;;;;;;;;r.canceled;=;true;
+;;;;}
 }
 ```
 
@@ -201,72 +201,72 @@ public&nbsp;class&nbsp;VolatileCanStop&nbsp;implements&nbsp;Runnable&nbsp;{
 接下来我们就用一个生产者/消费者模式的案例来演示为什么说  volatile 标记位的停止方法是不完美的。
 
 ```
-class&nbsp;Producer&nbsp;implements&nbsp;Runnable&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;volatile&nbsp;boolean&nbsp;canceled&nbsp;=&nbsp;false;
-&nbsp;&nbsp;&nbsp;&nbsp;BlockingQueue&nbsp;storage;
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Producer(BlockingQueue&nbsp;storage)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.storage&nbsp;=&nbsp;storage;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;num&nbsp;=&nbsp;0;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(num&nbsp;&lt;=&nbsp;100000&nbsp;&amp;&amp;&nbsp;!canceled)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(num&nbsp;%&nbsp;50&nbsp;==&nbsp;0)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;storage.put(num);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(num&nbsp;+&nbsp;"是50的倍数,被放到仓库中了。");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num++;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;finally&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("生产者结束运行");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+class;Producer;implements;Runnable;{
+;;;;public;volatile;boolean;canceled;=;false;
+;;;;BlockingQueue;storage;
+;;;;public;Producer(BlockingQueue;storage);{
+;;;;;;;;this.storage;=;storage;
+;;;;}
+;
+;;;;@Override
+;;;;public;void;run();{
+;;;;;;;;int;num;=;0;
+;;;;;;;;try;{
+;;;;;;;;;;;;while;(num;&lt;=;100000;&amp;&amp;;!canceled);{
+;;;;;;;;;;;;;;;;if;(num;%;50;==;0);{
+;;;;;;;;;;;;;;;;;;;;storage.put(num);
+;;;;;;;;;;;;;;;;;;;;System.out.println(num;+;"是50的倍数,被放到仓库中了。");
+;;;;;;;;;;;;;;;;}
+;;;;;;;;;;;;;;;;num++;
+;;;;;;;;;;;;}
+;;;;;;;;};catch;(InterruptedException;e);{
+;;;;;;;;;;;;e.printStackTrace();
+;;;;;;;;};finally;{
+;;;;;;;;;;;;System.out.println("生产者结束运行");
+;;;;;;;;}
+;;;;}
 }
 ```
 
 首先，声明了一个生产者 Producer，通过 volatile 标记的初始值为 false 的布尔值 canceled 来停止线程。而在 run() 方法中，while 的判断语句是 num 是否小于 100000 及 canceled 是否被标记。while 循环体中判断 num 如果是 50 的倍数就放到 storage 仓库中，storage 是生产者与消费者之间进行通信的存储器，当 num 大于 100000 或被通知停止时，会跳出 while 循环并执行 finally 语句块，告诉大家“生产者结束运行”。
 
 ```
-class&nbsp;Consumer&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;BlockingQueue&nbsp;storage;
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Consumer(BlockingQueue&nbsp;storage)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.storage&nbsp;=&nbsp;storage;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;boolean&nbsp;needMoreNums()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(Math.random()&nbsp;&gt;&nbsp;0.97)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;false;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;true;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+class;Consumer;{
+;;;;BlockingQueue;storage;
+;;;;public;Consumer(BlockingQueue;storage);{
+;;;;;;;;this.storage;=;storage;
+;;;;}
+;;;;public;boolean;needMoreNums();{
+;;;;;;;;if;(Math.random();&gt;;0.97);{
+;;;;;;;;;;;;return;false;
+;;;;;;;;}
+;;;;;;;;return;true;
+;;;;}
 }
 ```
 
 而对于消费者 Consumer，它与生产者共用同一个仓库 storage，并且在方法内通过 needMoreNums() 方法判断是否需要继续使用更多的数字，刚才生产者生产了一些 50 的倍数供消费者使用，消费者是否继续使用数字的判断条件是产生一个随机数并与 0.97 进行比较，大于 0.97 就不再继续使用数字。
 
 ```
-public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayBlockingQueue&nbsp;storage&nbsp;=&nbsp;new&nbsp;ArrayBlockingQueue(8);
+public;static;void;main(String[];args);throws;InterruptedException;{
+;;;;;;;;ArrayBlockingQueue;storage;=;new;ArrayBlockingQueue(8);
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Producer&nbsp;producer&nbsp;=&nbsp;new&nbsp;Producer(storage);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;producerThread&nbsp;=&nbsp;new&nbsp;Thread(producer);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;producerThread.start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(500);
+;;;;;;;;Producer;producer;=;new;Producer(storage);
+;;;;;;;;Thread;producerThread;=;new;Thread(producer);
+;;;;;;;;producerThread.start();
+;;;;;;;;Thread.sleep(500);
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Consumer&nbsp;consumer&nbsp;=&nbsp;new&nbsp;Consumer(storage);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(consumer.needMoreNums())&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(consumer.storage.take()&nbsp;+&nbsp;"被消费了");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(100);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("消费者不需要更多数据了。");
+;;;;;;;;Consumer;consumer;=;new;Consumer(storage);
+;;;;;;;;while;(consumer.needMoreNums());{
+;;;;;;;;;;;;System.out.println(consumer.storage.take();+;"被消费了");
+;;;;;;;;;;;;Thread.sleep(100);
+;;;;;;;;}
+;;;;;;;;System.out.println("消费者不需要更多数据了。");
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//一旦消费不需要更多数据了，我们应该让生产者也停下来，但是实际情况却停不下来
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;producer.canceled&nbsp;=&nbsp;true;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(producer.canceled);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+;;;;;;;;//一旦消费不需要更多数据了，我们应该让生产者也停下来，但是实际情况却停不下来
+;;;;;;;;producer.canceled;=;true;
+;;;;;;;;System.out.println(producer.canceled);
+;;;;}
 }
 ```
 

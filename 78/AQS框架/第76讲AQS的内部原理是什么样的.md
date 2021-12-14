@@ -15,7 +15,7 @@
 /**
  * The synchronization state.
  */
-private volatile int state;
+private volatile int state  
 
 ```
 
@@ -39,7 +39,7 @@ private volatile int state;
 
 ```
 protected final boolean compareAndSetState(int expect, int update) {
-    return unsafe.compareAndSwapInt(this, stateOffset, expect, update);
+    return unsafe.compareAndSwapInt(this, stateOffset, expect, update)  
 }
 
 ```
@@ -50,7 +50,7 @@ protected final boolean compareAndSetState(int expect, int update) {
 
 ```
 protected final void setState(int newState) {
-    state = newState;
+    state = newState  
 }
 
 ```
@@ -63,7 +63,7 @@ protected final void setState(int newState) {
 /**
  * The synchronization state.
  */
-private volatile int state;
+private volatile int state  
 
 ```
 

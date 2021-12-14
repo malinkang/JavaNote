@@ -18,11 +18,11 @@
 add 方法是往队列里添加一个元素，如果队列满了，就会抛出异常来提示队列已满。示例代码如下：
 
 ```
-private&nbsp;static&nbsp;void&nbsp;addTest()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;BlockingQueue&lt;Integer&gt;&nbsp;blockingQueue&nbsp;=&nbsp;new&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayBlockingQueue&lt;Integer&gt;(2);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.add(1);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.add(1);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.add(1);
+private  static  void  addTest()  {
+        BlockingQueue&lt  Integer&gt    blockingQueue  =  new                                          ArrayBlockingQueue&lt  Integer&gt  (2)  
+        blockingQueue.add(1)  
+        blockingQueue.add(1)  
+        blockingQueue.add(1)  
 }
 
 ```
@@ -39,13 +39,13 @@ Exception in thread "main" java.lang.IllegalStateException:Queue full
 remove 方法的作用是删除元素，如果我们删除的队列是空的，由于里面什么都没有，所以也无法删除任何元素，那么 remove 方法就会抛出异常。示例代码如下：
 
 ```
-private&nbsp;static&nbsp;void&nbsp;removeTest()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;ArrayBlockingQueue&lt;Integer&gt;&nbsp;blockingQueue&nbsp;=&nbsp;new&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayBlockingQueue&lt;Integer&gt;(2);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.add(1);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.add(1);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.remove();
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.remove();
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.remove();
+private  static  void  removeTest()  {
+        ArrayBlockingQueue&lt  Integer&gt    blockingQueue  =  new          ArrayBlockingQueue&lt  Integer&gt  (2)  
+        blockingQueue.add(1)  
+        blockingQueue.add(1)  
+        blockingQueue.remove()  
+        blockingQueue.remove()  
+        blockingQueue.remove()  
 }
 
 ```
@@ -62,9 +62,9 @@ Exception in thread "main" java.util.NoSuchElementException
 element 方法是返回队列的头部节点，但是并不删除。和 remove 方法一样，如果我们用这个方法去操作一个空队列，想获取队列的头结点，可是由于队列是空的，我们什么都获取不到，会抛出和前面 remove 方法一样的异常：NoSuchElementException。示例代码如下：
 
 ```
-private&nbsp;static&nbsp;void&nbsp;elementTest()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;ArrayBlockingQueue&lt;Integer&gt;&nbsp;blockingQueue&nbsp;=&nbsp;new&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayBlockingQueue&lt;Integer&gt;(2);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.element();
+private  static  void  elementTest()  {
+        ArrayBlockingQueue&lt  Integer&gt    blockingQueue  =  new          ArrayBlockingQueue&lt  Integer&gt  (2)  
+        blockingQueue.element()  
 }
 
 ```
@@ -85,11 +85,11 @@ Exception in thread "main" java.util.NoSuchElementException
 offer 方法用来插入一个元素，并用返回值来提示插入是否成功。如果添加成功会返回 true，而如果队列已经满了，此时继续调用 offer 方法的话，它不会抛出异常，只会返回一个错误提示：false。示例代码如下：
 
 ```
-private&nbsp;static&nbsp;void&nbsp;offerTest()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;ArrayBlockingQueue&lt;Integer&gt;&nbsp;blockingQueue&nbsp;=&nbsp;new&nbsp;ArrayBlockingQueue&lt;Integer&gt;(2);
-&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(blockingQueue.offer(1));
-&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(blockingQueue.offer(1));
-&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(blockingQueue.offer(1));
+private  static  void  offerTest()  {
+        ArrayBlockingQueue&lt  Integer&gt    blockingQueue  =  new  ArrayBlockingQueue&lt  Integer&gt  (2)  
+        System.out.println(blockingQueue.offer(1))  
+        System.out.println(blockingQueue.offer(1))  
+        System.out.println(blockingQueue.offer(1))  
 }
 
 ```
@@ -110,15 +110,15 @@ false
 poll 方法和第一组的 remove 方法是对应的，作用也是移除并返回队列的头节点。但是如果当队列里面是空的，没有任何东西可以移除的时候，便会返回 null 作为提示。正因如此，我们是不允许往队列中插入 null 的，否则我们没有办法区分返回的 null 是一个提示还是一个真正的元素。示例代码如下：
 
 ```
-private&nbsp;static&nbsp;void&nbsp;pollTest()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;ArrayBlockingQueue&lt;Integer&gt;&nbsp;blockingQueue&nbsp;=&nbsp;new&nbsp;ArrayBlockingQueue&lt;Integer&gt;(3);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.offer(1);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.offer(2);
-&nbsp;&nbsp;&nbsp;&nbsp;blockingQueue.offer(3);
-&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(blockingQueue.poll());
-&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(blockingQueue.poll());
-&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(blockingQueue.poll());
-&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(blockingQueue.poll());
+private  static  void  pollTest()  {
+        ArrayBlockingQueue&lt  Integer&gt    blockingQueue  =  new  ArrayBlockingQueue&lt  Integer&gt  (3)  
+        blockingQueue.offer(1)  
+        blockingQueue.offer(2)  
+        blockingQueue.offer(3)  
+        System.out.println(blockingQueue.poll())  
+        System.out.println(blockingQueue.poll())  
+        System.out.println(blockingQueue.poll())  
+        System.out.println(blockingQueue.poll())  
 }
 
 ```
@@ -140,9 +140,9 @@ null
 peek 方法和第一组的 element 方法是对应的，意思是返回队列的头元素但并不删除。如果队列里面是空的，它便会返回 null 作为提示。示例代码如下：
 
 ```
-private&nbsp;static&nbsp;void&nbsp;peekTest()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;ArrayBlockingQueue&lt;Integer&gt;&nbsp;blockingQueue&nbsp;=&nbsp;new&nbsp;ArrayBlockingQueue&lt;Integer&gt;(2);
-&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(blockingQueue.peek());
+private  static  void  peekTest()  {
+        ArrayBlockingQueue&lt  Integer&gt    blockingQueue  =  new  ArrayBlockingQueue&lt  Integer&gt  (2)  
+        System.out.println(blockingQueue.peek())  
 }
 
 ```
@@ -161,14 +161,14 @@ null
 第二组还有一些额外值得讲解的内容，offer 和 poll 都有带超时时间的重载方法。
 
 ```
-offer(E&nbsp;e,&nbsp;long&nbsp;timeout,&nbsp;TimeUnit&nbsp;unit)
+offer(E  e,  long  timeout,  TimeUnit  unit)
 
 ```
 
 它有三个参数，分别是元素、超时时长和时间单位。通常情况下，这个方法会插入成功并返回 true；如果队列满了导致插入不成功，在调用带超时时间重载方法的 offer 的时候，则会等待指定的超时时间，如果时间到了依然没有插入成功，就会返回 false。
 
 ```
-poll(long&nbsp;timeout,&nbsp;TimeUnit&nbsp;unit)
+poll(long  timeout,  TimeUnit  unit)
 
 ```
 

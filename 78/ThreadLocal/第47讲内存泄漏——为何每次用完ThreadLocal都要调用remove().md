@@ -22,14 +22,14 @@ GC 在垃圾回收的时候会进行可达性分析，它会发现这个 ThreadL
 JDK 开发者考虑到了这一点，所以 ThreadLocalMap 中的 Entry 继承了 WeakReference 弱引用，代码如下所示：
 
 ```
-static&nbsp;class&nbsp;Entry&nbsp;extends&nbsp;WeakReference&lt;ThreadLocal&lt;?&gt;&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;/**&nbsp;The&nbsp;value&nbsp;associated&nbsp;with&nbsp;this&nbsp;ThreadLocal.&nbsp;*/
-&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;value;
+static  class  Entry  extends  WeakReference&lt  ThreadLocal&lt  ?&gt  &gt    {
+        /**  The  value  associated  with  this  ThreadLocal.  */
+        Object  value  
 
-&nbsp;&nbsp;&nbsp;&nbsp;Entry(ThreadLocal&lt;?&gt;&nbsp;k,&nbsp;Object&nbsp;v)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(k);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;v;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        Entry(ThreadLocal&lt  ?&gt    k,  Object  v)  {
+                super(k)  
+                value  =  v  
+        }
 }
 
 ```
@@ -43,15 +43,15 @@ static&nbsp;class&nbsp;Entry&nbsp;extends&nbsp;WeakReference&lt;ThreadLocal&lt;?
 可是，如果我们继续研究的话会发现，虽然 ThreadLocalMap 的每个 Entry 都是一个对 key 的弱引用，但是这个 Entry 包含了一个对 value 的强引用，还是刚才那段代码：
 
 ```
-static&nbsp;class&nbsp;Entry&nbsp;extends&nbsp;WeakReference&lt;ThreadLocal&lt;?&gt;&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;/**&nbsp;The&nbsp;value&nbsp;associated&nbsp;with&nbsp;this&nbsp;ThreadLocal.&nbsp;*/
-&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;value;
+static  class  Entry  extends  WeakReference&lt  ThreadLocal&lt  ?&gt  &gt    {
+        /**  The  value  associated  with  this  ThreadLocal.  */
+        Object  value  
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;Entry(ThreadLocal&lt;?&gt;&nbsp;k,&nbsp;Object&nbsp;v)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(k);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;v;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        Entry(ThreadLocal&lt  ?&gt    k,  Object  v)  {
+                super(k)  
+                value  =  v  
+        }
 }
 
 ```
@@ -81,10 +81,10 @@ JDK 同样也考虑到了这个问题，在执行 ThreadLocal 的 set、remove�
 我们来看一下 remove 方法的源码：
 
 ```
-public&nbsp;void&nbsp;remove()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;ThreadLocalMap&nbsp;m&nbsp;=&nbsp;getMap(Thread.currentThread());
-&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(m&nbsp;!=&nbsp;null)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m.remove(this);
+public  void  remove()  {
+        ThreadLocalMap  m  =  getMap(Thread.currentThread())  
+        if  (m  !=  null)
+                m.remove(this)  
 }
 
 ```

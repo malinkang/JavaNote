@@ -9,13 +9,13 @@
 首先，我们来看一下自适应的自旋锁。先来复习一下自旋的概念和自旋的缺点。“自旋”就是不释放 CPU，一直循环尝试获取锁，如下面这段代码所
 
 ```
-public&nbsp;final&nbsp;long&nbsp;getAndAddLong(Object&nbsp;var1,&nbsp;long&nbsp;var2,&nbsp;long&nbsp;var4)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;long&nbsp;var6;
-&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var6&nbsp;=&nbsp;this.getLongVolatile(var1,&nbsp;var2);
-&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;while(!this.compareAndSwapLong(var1,&nbsp;var2,&nbsp;var6,&nbsp;var6&nbsp;+&nbsp;var4));
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;var6;
+public;final;long;getAndAddLong(Object;var1,;long;var2,;long;var4);{
+;;;;long;var6;
+;;;;do;{
+;;;;;;;;var6;=;this.getLongVolatile(var1,;var2);
+;;;;};while(!this.compareAndSwapLong(var1,;var2,;var6,;var6;+;var4));
+;
+;;;;return;var6;
 }
 ```
 
@@ -28,44 +28,44 @@ public&nbsp;final&nbsp;long&nbsp;getAndAddLong(Object&nbsp;var1,&nbsp;long&nbsp;
 第二个优化是锁消除。首先我们来看下面的代码：
 
 ```
-public&nbsp;class&nbsp;Person&nbsp;{
+public;class;Person;{
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;String&nbsp;name;
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;int&nbsp;age;
+;;;;private;String;name;
+;;;;private;int;age;
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Person(String&nbsp;personName,&nbsp;int&nbsp;personAge)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;=&nbsp;personName;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;age&nbsp;=&nbsp;personAge;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+;;;;public;Person(String;personName,;int;personAge);{
+;;;;;;;;name;=;personName;
+;;;;;;;;age;=;personAge;
+;;;;}
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Person(Person&nbsp;p)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this(p.getName(),&nbsp;p.getAge());
-&nbsp;&nbsp;&nbsp;&nbsp;}
+;;;;public;Person(Person;p);{
+;;;;;;;;this(p.getName(),;p.getAge());
+;;;;}
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;getName()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;name;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+;;;;public;String;getName();{
+;;;;;;;;return;name;
+;;;;}
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;int&nbsp;getAge()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;age;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+;;;;public;int;getAge();{
+;;;;;;;;return;age;
+;;;;}
 }
 
-class&nbsp;Employee&nbsp;{
+class;Employee;{
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;Person&nbsp;person;
+;;;;private;Person;person;
 
-&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;makes&nbsp;a&nbsp;defensive&nbsp;copy&nbsp;to&nbsp;protect&nbsp;against&nbsp;modifications&nbsp;by&nbsp;caller
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Person&nbsp;getPerson()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;new&nbsp;Person(person);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+;;;;//;makes;a;defensive;copy;to;protect;against;modifications;by;caller
+;;;;public;Person;getPerson();{
+;;;;;;;;return;new;Person(person);
+;;;;}
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;printEmployeeDetail(Employee&nbsp;emp)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Person&nbsp;person&nbsp;=&nbsp;emp.getPerson();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;this&nbsp;caller&nbsp;does&nbsp;not&nbsp;modify&nbsp;the&nbsp;object,&nbsp;so&nbsp;defensive&nbsp;copy&nbsp;was&nbsp;unnecessary
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("Employee's&nbsp;name:&nbsp;"&nbsp;+&nbsp;person.getName()&nbsp;+&nbsp;";&nbsp;age:&nbsp;"&nbsp;+&nbsp;person.getAge());
-&nbsp;&nbsp;&nbsp;&nbsp;}
+;;;;public;void;printEmployeeDetail(Employee;emp);{
+;;;;;;;;Person;person;=;emp.getPerson();
+;;;;;;;;//;this;caller;does;not;modify;the;object,;so;defensive;copy;was;unnecessary
+;;;;;;;;System.out.println("Employee's;name:;";+;person.getName();+;";;age:;";+;person.getAge());
+;;;;}
 }
 ```
 
@@ -79,10 +79,10 @@ class&nbsp;Employee&nbsp;{
 
 ```
 @Override
-public&nbsp;synchronized&nbsp;StringBuffer&nbsp;append(Object&nbsp;obj)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;toStringCache&nbsp;=&nbsp;null;
-&nbsp;&nbsp;&nbsp;&nbsp;super.append(String.valueOf(obj));
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;this;
+public;synchronized;StringBuffer;append(Object;obj);{
+;;;;toStringCache;=;null;
+;;;;super.append(String.valueOf(obj));
+;;;;return;this;
 }
 ```
 
@@ -95,16 +95,16 @@ public&nbsp;synchronized&nbsp;StringBuffer&nbsp;append(Object&nbsp;obj)&nbsp;{
 接下来，我们来介绍一下锁粗化。如果我们释放了锁，紧接着什么都没做，又重新获取锁，例如下面这段代码所示：
 
 ```
-public&nbsp;void&nbsp;lockCoarsening()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;synchronized&nbsp;(this)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//do&nbsp;something
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;synchronized&nbsp;(this)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//do&nbsp;something
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;synchronized&nbsp;(this)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//do&nbsp;something
-&nbsp;&nbsp;&nbsp;&nbsp;}
+public;void;lockCoarsening();{
+;;;;synchronized;(this);{
+;;;;;;;;//do;something
+;;;;}
+;;;;synchronized;(this);{
+;;;;;;;;//do;something
+;;;;}
+;;;;synchronized;(this);{
+;;;;;;;;//do;something
+;;;;}
 }
 ```
 
@@ -113,10 +113,10 @@ public&nbsp;void&nbsp;lockCoarsening()&nbsp;{
 不过，我们这样做也有一个副作用，那就是我们会让同步区域变大。如果在循环中我们也这样做，如代码所示：
 
 ```
-for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;synchronized&nbsp;(this)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//do&nbsp;something
-&nbsp;&nbsp;&nbsp;&nbsp;}
+for;(int;i;=;0;;i;&lt;;1000;;i++);{
+;;;;synchronized;(this);{
+;;;;;;;;//do;something
+;;;;}
 }
 ```
 

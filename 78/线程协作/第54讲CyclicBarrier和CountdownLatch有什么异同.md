@@ -13,40 +13,40 @@ CyclicBarrier 可以构造出一个集结点，当某一个线程执行 await() 
 举一个生活中的例子。假设我们班级春游去公园里玩，并且会租借三人自行车，每个人都可以骑，但由于这辆自行车是三人的，所以要凑齐三个人才能骑一辆，而且从公园大门走到自行车驿站需要一段时间。那么我们模拟这个场景，写出如下代码：
 
 ```
-public&nbsp;class&nbsp;CyclicBarrierDemo&nbsp;{
+public  class  CyclicBarrierDemo  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CyclicBarrier&nbsp;cyclicBarrier&nbsp;=&nbsp;new&nbsp;CyclicBarrier(3);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;6;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;Thread(new&nbsp;Task(i&nbsp;+&nbsp;1,&nbsp;cyclicBarrier)).start();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  {
+                CyclicBarrier  cyclicBarrier  =  new  CyclicBarrier(3)  
+                for  (int  i  =  0    i  &lt    6    i++)  {
+                        new  Thread(new  Task(i  +  1,  cyclicBarrier)).start()  
+                }
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;class&nbsp;Task&nbsp;implements&nbsp;Runnable&nbsp;{
+        static  class  Task  implements  Runnable  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;int&nbsp;id;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;CyclicBarrier&nbsp;cyclicBarrier;
+                private  int  id  
+                private  CyclicBarrier  cyclicBarrier  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Task(int&nbsp;id,&nbsp;CyclicBarrier&nbsp;cyclicBarrier)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.id&nbsp;=&nbsp;id;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.cyclicBarrier&nbsp;=&nbsp;cyclicBarrier;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                public  Task(int  id,  CyclicBarrier  cyclicBarrier)  {
+                        this.id  =  id  
+                        this.cyclicBarrier  =  cyclicBarrier  
+                }
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("同学"&nbsp;+&nbsp;id&nbsp;+&nbsp;"现在从大门出发，前往自行车驿站");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep((long)&nbsp;(Math.random()&nbsp;*&nbsp;10000));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("同学"&nbsp;+&nbsp;id&nbsp;+&nbsp;"到了自行车驿站，开始等待其他人到达");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cyclicBarrier.await();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("同学"&nbsp;+&nbsp;id&nbsp;+&nbsp;"开始骑车");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(BrokenBarrierException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+                @Override
+                public  void  run()  {
+                        System.out.println("同学"  +  id  +  "现在从大门出发，前往自行车驿站")  
+                        try  {
+                                Thread.sleep((long)  (Math.random()  *  10000))  
+                                System.out.println("同学"  +  id  +  "到了自行车驿站，开始等待其他人到达")  
+                                cyclicBarrier.await()  
+                                System.out.println("同学"  +  id  +  "开始骑车")  
+                        }  catch  (InterruptedException  e)  {
+                                e.printStackTrace()  
+                        }  catch  (BrokenBarrierException  e)  {
+                                e.printStackTrace()  
+                        }
+                }
+        }
 }
 ```
 
@@ -90,12 +90,12 @@ public CyclicBarrier(int parties, Runnable barrierAction)：当 parties 线程�
 当预设数量的线程到达了集结点之后，在出发的时候，便会执行这里所传入的 Runnable 对象，那么假设我们把刚才那个代码的构造函数改成如下这个样子：
 
 ```
-CyclicBarrier&nbsp;cyclicBarrier&nbsp;=&nbsp;new&nbsp;CyclicBarrier(3,&nbsp;new&nbsp;Runnable()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("凑齐3人了，出发！");
-&nbsp;&nbsp;&nbsp;&nbsp;}
-});
+CyclicBarrier  cyclicBarrier  =  new  CyclicBarrier(3,  new  Runnable()  {
+        @Override
+        public  void  run()  {
+                System.out.println("凑齐3人了，出发！")  
+        }
+})  
 ```
 
 可以看出，我们传入了第二个参数，它是一个 Runnable 对象，在这里传入了这个 Runnable 之后，这个任务就会在到齐的时候去打印"凑齐3人了，出发！"。上面的代码如果改成这个样子，则执行结果如下所示：

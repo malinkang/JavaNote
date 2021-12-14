@@ -15,13 +15,13 @@ Lock 和 synchronized 是两种最常见的锁，锁是一种工具，用于控�
 我们首先看下 Lock 接口的各个方法，如代码所示。
 
 ```
-public&nbsp;interface&nbsp;Lock&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;lock();
-&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;lockInterruptibly()&nbsp;throws&nbsp;InterruptedException;
-&nbsp;&nbsp;&nbsp;&nbsp;boolean&nbsp;tryLock();
-&nbsp;&nbsp;&nbsp;&nbsp;boolean&nbsp;tryLock(long&nbsp;time,&nbsp;TimeUnit&nbsp;unit)&nbsp;throws&nbsp;InterruptedException;
-&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;unlock();
-&nbsp;&nbsp;&nbsp;&nbsp;Condition&nbsp;newCondition();
+public  interface  Lock  {
+        void  lock()  
+        void  lockInterruptibly()  throws  InterruptedException  
+        boolean  tryLock()  
+        boolean  tryLock(long  time,  TimeUnit  unit)  throws  InterruptedException  
+        void  unlock()  
+        Condition  newCondition()  
 }
 ```
 
@@ -36,13 +36,13 @@ public&nbsp;interface&nbsp;Lock&nbsp;{
 对于 Lock 接口而言，获取锁和释放锁都是显式的，不像 synchronized 那样是隐式的，所以 Lock 不会像 synchronized 一样在异常时自动释放锁（synchronized 即使不写对应的代码也可以释放），lock 的加锁和释放锁都必须以代码的形式写出来，所以使用 lock() 时必须由我们自己主动去释放锁，因此最佳实践是执行 lock() 后，首先在 try{} 中操作同步资源，如果有必要就用 catch{} 块捕获异常，然后在 finally{} 中释放锁，以保证发生异常时锁一定被释放，示例代码如下所示。
 
 ```
-Lock&nbsp;lock&nbsp;=&nbsp;...;
-lock.lock();
+Lock  lock  =  ...  
+lock.lock()  
 try{
-&nbsp;&nbsp;&nbsp;&nbsp;//获取到了被本锁保护的资源，处理任务
-&nbsp;&nbsp;&nbsp;&nbsp;//捕获异常
+        //获取到了被本锁保护的资源，处理任务
+        //捕获异常
 }finally{
-&nbsp;&nbsp;&nbsp;&nbsp;lock.unlock();&nbsp;&nbsp;&nbsp;//释放锁
+        lock.unlock()        //释放锁
 }
 ```
 
@@ -59,41 +59,41 @@ tryLock() 用来尝试获取锁，如果当前锁没有被其他线程占用，�
 因为该方法会立即返回，即便在拿不到锁时也不会一直等待，所以通常情况下，我们用 if 语句判断 tryLock() 的返回结果，根据是否获取到锁来执行不同的业务逻辑，典型使用方法如下。
 
 ```
-Lock&nbsp;lock&nbsp;=&nbsp;...;
-if(lock.tryLock())&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//处理任务
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}finally{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lock.unlock();&nbsp;&nbsp;&nbsp;//释放锁
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;
-}else&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;//如果不能获取锁，则做其他事情
+Lock  lock  =  ...  
+if(lock.tryLock())  {
+          try{
+                  //处理任务
+          }finally{
+                  lock.unlock()        //释放锁
+          }  
+}else  {
+        //如果不能获取锁，则做其他事情
 }
 ```
 
 我们创建 lock() 方法之后使用 tryLock() 方法并用 if 语句判断它的结果，如果 if 语句返回 true，就使用 try finally 完成相关业务逻辑的处理，如果 if 语句返回 false 就会进入 else 语句，代表它暂时不能获取到锁，可以先去做一些其他事情，比如等待几秒钟后重试，或者跳过这个任务，有了这个强大的 tryLock() 方法我们便可以解决死锁问题，代码如下所示。
 
 ```
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;tryLock(Lock&nbsp;lock1,&nbsp;Lock&nbsp;lock2)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(true)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(lock1.tryLock())&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(lock2.tryLock())&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("获取到了两把锁，完成业务逻辑");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;finally&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lock2.unlock();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;finally&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lock1.unlock();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(new&nbsp;Random().nextInt(1000));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  void  tryLock(Lock  lock1,  Lock  lock2)  throws  InterruptedException  {
+                while  (true)  {
+                        if  (lock1.tryLock())  {
+                                try  {
+                                        if  (lock2.tryLock())  {
+                                                try  {
+                                                        System.out.println("获取到了两把锁，完成业务逻辑")  
+                                                        return  
+                                                }  finally  {
+                                                        lock2.unlock()  
+                                                }
+                                        }
+                                }  finally  {
+                                        lock1.unlock()  
+                                }
+                        }  else  {
+                                Thread.sleep(new  Random().nextInt(1000))  
+                        }
+                }
+        }
 ```
 
 如果代码中我们不用 tryLock() 方法，那么便可能会产生死锁，比如有两个线程同时调用这个方法，传入的 lock1 和 lock2 恰好是相反的，那么如果第一个线程获取了 lock1 的同时，第二个线程获取了 lock2，它们接下来便会尝试获取对方持有的那把锁，但是又获取不到，于是便会陷入死锁，但是有了 tryLock() 方法之后，我们便可以避免死锁的发生，首先会检测 lock1 是否能获取到，如果能获取到再尝试获取 lock2，但如果 lock1 获取不到也没有关系，我们会在下面进行随机时间的等待，这个等待的目标是争取让其他的线程在这段时间完成它的任务，以便释放其他线程所持有的锁，以便后续供我们使用，同理如果获取到了 lock1 但没有获取到 lock2，那么也会释放掉 lock1，随即进行随机的等待，只有当它同时获取到 lock1 和 lock2 的时候，才会进入到里面执行业务逻辑，比如在这里我们会打印出“获取到了两把锁，完成业务逻辑”，然后方法便会返回。
@@ -113,18 +113,18 @@ tryLock() 的重载方法是 tryLock(long time, TimeUnit unit)，这个方法和
 这个方法本身是会抛出 InterruptedException 的，所以使用的时候，如果不在方法签名声明抛出该异常，那么就要写两个 try 块，如下所示。
 
 ```
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;lockInterruptibly()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lock.lockInterruptibly();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("操作资源");
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;finally&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lock.unlock();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  void  lockInterruptibly()  {
+                try  {
+                        lock.lockInterruptibly()  
+                        try  {
+                                System.out.println("操作资源")  
+                        }  finally  {
+                                lock.unlock()  
+                        }
+                }  catch  (InterruptedException  e)  {
+                        e.printStackTrace()  
+                }
+        }
 ```
 
 在这个方法中我们首先执行了 lockInterruptibly 方法，并且对它进行了 try catch 包装，然后同样假设我们能够获取到这把锁，和之前一样，就必须要使用 try finall 来保障锁的绝对释放。

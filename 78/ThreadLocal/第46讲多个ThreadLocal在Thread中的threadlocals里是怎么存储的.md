@@ -26,22 +26,22 @@
 首先我们来看一下 get 方法，源码如下所示：
 
 ```
-public&nbsp;T&nbsp;get()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;//获取到当前线程
-&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;t&nbsp;=&nbsp;Thread.currentThread();
-&nbsp;&nbsp;&nbsp;&nbsp;//获取到当前线程内的&nbsp;ThreadLocalMap&nbsp;对象，每个线程内都有一个&nbsp;ThreadLocalMap&nbsp;对象
-&nbsp;&nbsp;&nbsp;&nbsp;ThreadLocalMap&nbsp;map&nbsp;=&nbsp;getMap(t);
-&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(map&nbsp;!=&nbsp;null)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//获取&nbsp;ThreadLocalMap&nbsp;中的&nbsp;Entry&nbsp;对象并拿到&nbsp;Value
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ThreadLocalMap.Entry&nbsp;e&nbsp;=&nbsp;map.getEntry(this);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(e&nbsp;!=&nbsp;null)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@SuppressWarnings("unchecked")
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;result&nbsp;=&nbsp;(T)e.value;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;result;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;//如果线程内之前没创建过&nbsp;ThreadLocalMap，就创建
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;setInitialValue();
+public  T  get()  {
+        //获取到当前线程
+        Thread  t  =  Thread.currentThread()  
+        //获取到当前线程内的  ThreadLocalMap  对象，每个线程内都有一个  ThreadLocalMap  对象
+        ThreadLocalMap  map  =  getMap(t)  
+        if  (map  !=  null)  {
+                //获取  ThreadLocalMap  中的  Entry  对象并拿到  Value
+                ThreadLocalMap.Entry  e  =  map.getEntry(this)  
+                if  (e  !=  null)  {
+                        @SuppressWarnings("unchecked")
+                        T  result  =  (T)e.value  
+                        return  result  
+                }
+        }
+        //如果线程内之前没创建过  ThreadLocalMap，就创建
+        return  setInitialValue()  
 }
 ```
 
@@ -56,15 +56,15 @@ public&nbsp;T&nbsp;get()&nbsp;{
 下面我们来看一下 getMap 方法，源码如下所示：
 
 ```
-ThreadLocalMap&nbsp;getMap(Thread&nbsp;t)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;t.threadLocals;
+ThreadLocalMap  getMap(Thread  t)  {
+        return  t.threadLocals  
 }
 ```
 
 可以看到，这个方法很清楚地表明了 Thread 和 ThreadLocalMap 的关系，可以看出 ThreadLocalMap 是线程的一个成员变量。这个方法的作用就是获取到当前线程内的 ThreadLocalMap 对象，每个线程都有 ThreadLocalMap 对象，而这个对象的名字就叫作 threadLocals，初始值为 null，代码如下：
 
 ```
-ThreadLocal.ThreadLocalMap&nbsp;threadLocals&nbsp;=&nbsp;null;
+ThreadLocal.ThreadLocalMap  threadLocals  =  null  
 ```
 
 **set 方法**
@@ -72,13 +72,13 @@ ThreadLocal.ThreadLocalMap&nbsp;threadLocals&nbsp;=&nbsp;null;
 下面我们再来看一下 set 方法，源码如下所示：
 
 ```
-public&nbsp;void&nbsp;set(T&nbsp;value)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;t&nbsp;=&nbsp;Thread.currentThread();
-&nbsp;&nbsp;&nbsp;&nbsp;ThreadLocalMap&nbsp;map&nbsp;=&nbsp;getMap(t);
-&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(map&nbsp;!=&nbsp;null)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.set(this,&nbsp;value);
-&nbsp;&nbsp;&nbsp;&nbsp;else
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;createMap(t,&nbsp;value);
+public  void  set(T  value)  {
+        Thread  t  =  Thread.currentThread()  
+        ThreadLocalMap  map  =  getMap(t)  
+        if  (map  !=  null)
+                map.set(this,  value)  
+        else
+                createMap(t,  value)  
 }
 ```
 
@@ -91,19 +91,19 @@ set 方法的作用是把我们想要存储的 value 给保存进去。可以看
 下面我们来看一下 ThreadLocalMap 这个类，下面这段代码截取自定义在 ThreadLocal 类中的 ThreadLocalMap 类：
 
 ```
-static&nbsp;class&nbsp;ThreadLocalMap&nbsp;{
+static  class  ThreadLocalMap  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;class&nbsp;Entry&nbsp;extends&nbsp;WeakReference&lt;ThreadLocal&lt;?&gt;&gt;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/**&nbsp;The&nbsp;value&nbsp;associated&nbsp;with&nbsp;this&nbsp;ThreadLocal.&nbsp;*/
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;value;
+        static  class  Entry  extends  WeakReference&lt  ThreadLocal&lt  ?&gt  &gt    {
+                /**  The  value  associated  with  this  ThreadLocal.  */
+                Object  value  
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Entry(ThreadLocal&lt;?&gt;&nbsp;k,&nbsp;Object&nbsp;v)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(k);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;v;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;private&nbsp;Entry[]&nbsp;table;
+                Entry(ThreadLocal&lt  ?&gt    k,  Object  v)  {
+                        super(k)  
+                        value  =  v  
+                }
+        }
+      private  Entry[]  table  
 //...
 }
 ```

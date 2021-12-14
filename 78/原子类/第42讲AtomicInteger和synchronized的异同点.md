@@ -9,23 +9,23 @@
 ```
 public class Lesson42 implements Runnable {
 
-    static int value = 0;
+    static int value = 0  
 
     public static void main(String[] args) throws InterruptedException {
-        Runnable runnable = new Lesson42();
-        Thread thread1 = new Thread(runnable);
-        Thread thread2 = new Thread(runnable);
-        thread1.start();
-        thread2.start();
-        thread1.join();
-        thread2.join();
-        System.out.println(value);
+        Runnable runnable = new Lesson42()  
+        Thread thread1 = new Thread(runnable)  
+        Thread thread2 = new Thread(runnable)  
+        thread1.start()  
+        thread2.start()  
+        thread1.join()  
+        thread2.join()  
+        System.out.println(value)  
     }
 
     @Override
     public void run() {
-        for (int i = 0; i &lt; 10000; i++) {
-            value++;
+        for (int i = 0   i &lt   10000   i++) {
+            value++  
         }
     }
 }
@@ -40,23 +40,23 @@ public class Lesson42 implements Runnable {
 ```
 public class Lesson42Atomic implements Runnable {
 
-    static AtomicInteger atomicInteger = new AtomicInteger();
+    static AtomicInteger atomicInteger = new AtomicInteger()  
 
     public static void main(String[] args) throws InterruptedException {
-        Runnable runnable = new Lesson42Atomic();
-        Thread thread1 = new Thread(runnable);
-        Thread thread2 = new Thread(runnable);
-        thread1.start();
-        thread2.start();
-        thread1.join();
-        thread2.join();
-        System.out.println(atomicInteger.get());
+        Runnable runnable = new Lesson42Atomic()  
+        Thread thread1 = new Thread(runnable)  
+        Thread thread2 = new Thread(runnable)  
+        thread1.start()  
+        thread2.start()  
+        thread1.join()  
+        thread2.join()  
+        System.out.println(atomicInteger.get())  
     }
 
     @Override
     public void run() {
-        for (int i = 0; i &lt; 10000; i++) {
-            atomicInteger.incrementAndGet();
+        for (int i = 0   i &lt   10000   i++) {
+            atomicInteger.incrementAndGet()  
         }
     }
 }
@@ -69,24 +69,24 @@ public class Lesson42Atomic implements Runnable {
 ```
 public class Lesson42Syn implements Runnable {
 
-    static int value = 0;
+    static int value = 0  
 
     public static void main(String[] args) throws InterruptedException {
-        Runnable runnable = new Lesson42Syn();
-        Thread thread1 = new Thread(runnable);
-        Thread thread2 = new Thread(runnable);
-        thread1.start();
-        thread2.start();
-        thread1.join();
-        thread2.join();
-        System.out.println(value);
+        Runnable runnable = new Lesson42Syn()  
+        Thread thread1 = new Thread(runnable)  
+        Thread thread2 = new Thread(runnable)  
+        thread1.start()  
+        thread2.start()  
+        thread1.join()  
+        thread2.join()  
+        System.out.println(value)  
     }
 
     @Override
     public void run() {
-        for (int i = 0; i &lt; 10000; i++) {
+        for (int i = 0   i &lt   10000   i++) {
             synchronized (this) {
-                value++;
+                value++  
             }
         }
     }

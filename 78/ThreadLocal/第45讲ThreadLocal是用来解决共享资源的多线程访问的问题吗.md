@@ -12,41 +12,41 @@ ThreadLocal 解决线程安全问题的时候，相比于使用“锁”而言�
 如果我们把放到 ThreadLocal 中的资源用 static 修饰，让它变成一个共享资源的话，那么即便使用了 ThreadLocal，同样也会有线程安全问题。比如我们对第 44 讲中的例子进行改造，如果我们在 SimpleDateFormat 之前加上一个 static 关键字来修饰，并且把这个静态对象放到 ThreadLocal 中去存储的话，代码如下所示：
 
 ```
-public&nbsp;class&nbsp;ThreadLocalStatic&nbsp;{
+public  class  ThreadLocalStatic  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;ExecutorService&nbsp;threadPool&nbsp;=&nbsp;Executors.newFixedThreadPool(16);
-&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;SimpleDateFormat&nbsp;dateFormat&nbsp;=&nbsp;new&nbsp;SimpleDateFormat("mm:ss");
+        public  static  ExecutorService  threadPool  =  Executors.newFixedThreadPool(16)  
+        static  SimpleDateFormat  dateFormat  =  new  SimpleDateFormat("mm:ss")  
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;1000;&nbsp;i++)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;finalI&nbsp;=&nbsp;i;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Runnable()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;date&nbsp;=&nbsp;new&nbsp;ThreadLocalStatic().date(finalI);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(date);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.shutdown();
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                for  (int  i  =  0    i  &lt    1000    i++)  {
+                        int  finalI  =  i  
+                        threadPool.submit(new  Runnable()  {
+                                @Override
+                                public  void  run()  {
+                                        String  date  =  new  ThreadLocalStatic().date(finalI)  
+                                        System.out.println(date)  
+                                }
+                        })  
+                }
+                threadPool.shutdown()  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;String&nbsp;date(int&nbsp;seconds)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;date&nbsp;=&nbsp;new&nbsp;Date(1000&nbsp;*&nbsp;seconds);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SimpleDateFormat&nbsp;dateFormat&nbsp;=&nbsp;ThreadSafeFormatter.dateFormatThreadLocal.get();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;dateFormat.format(date);
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  String  date(int  seconds)  {
+                Date  date  =  new  Date(1000  *  seconds)  
+                SimpleDateFormat  dateFormat  =  ThreadSafeFormatter.dateFormatThreadLocal.get()  
+                return  dateFormat.format(date)  
+        }
 }
 
-class&nbsp;ThreadSafeFormatter&nbsp;{
+class  ThreadSafeFormatter  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;ThreadLocal&lt;SimpleDateFormat&gt;&nbsp;dateFormatThreadLocal&nbsp;=&nbsp;new&nbsp;ThreadLocal&lt;SimpleDateFormat&gt;()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;SimpleDateFormat&nbsp;initialValue()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;ThreadLocalStatic.dateFormat;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  ThreadLocal&lt  SimpleDateFormat&gt    dateFormatThreadLocal  =  new  ThreadLocal&lt  SimpleDateFormat&gt  ()  {
+                @Override
+                protected  SimpleDateFormat  initialValue()  {
+                        return  ThreadLocalStatic.dateFormat  
+                }
+        }
 }
 
 ```

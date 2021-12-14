@@ -21,11 +21,11 @@ final 是 Java 中的一个关键字，简而言之，final 的作用意味着�
  */
 public class FinalVarCantChange {
 
-    public final int finalVar = 0;
+    public final int finalVar = 0  
 
     public static void main(String[] args) {
-        FinalVarCantChange finalVarCantChange = new FinalVarCantChange();
-//        finalVarCantChange.finalVar=9;     //编译错误，不允许修改final的成员变量
+        FinalVarCantChange finalVarCantChange = new FinalVarCantChange()  
+//        finalVarCantChange.finalVar=9       //编译错误，不允许修改final的成员变量
     }
 }
 
@@ -40,7 +40,7 @@ public class FinalVarCantChange {
 第一个目的是出于**设计角度**去考虑的，比如我们希望创建一个一旦被赋值就不能改变的量，那么就可以使用 final 关键字。比如声明常量的时候，通常都是带 final 的：
 
 ```
-public static final int YEAR = 2021;
+public static final int YEAR = 2021  
 
 ```
 
@@ -68,7 +68,7 @@ public static final int YEAR = 2021;
 
 ```
 public class FinalFieldAssignment1 {
-    private final int finalVar = 0;
+    private final int finalVar = 0  
 }
 
 ```
@@ -79,10 +79,10 @@ public class FinalFieldAssignment1 {
 
 ```
 class FinalFieldAssignment2 {
-    private final int finalVar;
+    private final int finalVar  
 
     public FinalFieldAssignment2() {
-        finalVar = 0;
+        finalVar = 0  
     }
 }
 
@@ -94,10 +94,10 @@ class FinalFieldAssignment2 {
 
 ```
 class FinalFieldAssignment3 {
-    private final int finalVar;
+    private final int finalVar  
 
     {
-        finalVar = 0;
+        finalVar = 0  
     }
 }
 
@@ -118,16 +118,16 @@ class FinalFieldAssignment3 {
 public class BlankFinal {
 
     //空白final
-    private final int a;
+    private final int a  
 
     //不传参则把a赋值为默认值0
     public BlankFinal() {
-        this.a = 0;
+        this.a = 0  
     }
 
     //传参则把a赋值为传入的参数
     public BlankFinal(int a) {
-        this.a = a;
+        this.a = a  
     }
 }
 
@@ -146,7 +146,7 @@ public class BlankFinal {
  * 描述：     演示final的static类变量的赋值时机
  */
 public class StaticFieldAssignment1 {
-    private static final int a = 0;
+    private static final int a = 0  
 }
 
 ```
@@ -156,10 +156,10 @@ public class StaticFieldAssignment1 {
 ```
 class StaticFieldAssignment2 {
 
-    private static final int a;
+    private static final int a  
 
     static {
-        a = 0;
+        a = 0  
     }
 }
 
@@ -184,23 +184,23 @@ class StaticFieldAssignment2 {
 public class LocalVarAssignment1 {
 
     public void foo() {
-        final int a = 0;//等号右边直接赋值
+        final int a = 0  //等号右边直接赋值
     }
 }
 
 class LocalVarAssignment2 {
 
     public void foo() {
-        final int a;//这是允许的，因为a没有被使用
+        final int a  //这是允许的，因为a没有被使用
     }
 }
 
 class LocalVarAssignment3 {
 
     public void foo() {
-        final int a;
-        a = 0;//使用前赋值
-        System.out.println(a);
+        final int a  
+        a = 0  //使用前赋值
+        System.out.println(a)  
     }
 }
 
@@ -224,8 +224,8 @@ class LocalVarAssignment3 {
  */
 public class FinalPara {
     public void withFinal(final int a) {
-        System.out.println(a);//可以读取final参数的值
-//        a = 9; //编译错误，不允许修改final参数的值
+        System.out.println(a)  //可以读取final参数的值
+//        a = 9   //编译错误，不允许修改final参数的值
     }
 }
 

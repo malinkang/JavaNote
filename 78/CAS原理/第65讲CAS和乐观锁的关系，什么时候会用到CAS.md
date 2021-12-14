@@ -1,9 +1,9 @@
 
-在本课时中，我将讲解&nbsp;CAS 的应用场景，什么时候会用到 CAS？
+在本课时中，我将讲解  CAS 的应用场景，什么时候会用到 CAS？
 
 ### 并发容器
 
-Doug&nbsp;Lea 大神在 **JUC** 包中大量使用了&nbsp;CAS&nbsp;技术，该技术既能保证安全性，又不需要使用互斥锁，能大大提升工具类的性能。下面我将通过两个例子来展示 CAS 在并发容器中的使用情况。
+Doug  Lea 大神在 **JUC** 包中大量使用了  CAS  技术，该技术既能保证安全性，又不需要使用互斥锁，能大大提升工具类的性能。下面我将通过两个例子来展示 CAS 在并发容器中的使用情况。
 
 ## 案例一：ConcurrentHashMap
 
@@ -12,17 +12,17 @@ Doug&nbsp;Lea 大神在 **JUC** 包中大量使用了&nbsp;CAS&nbsp;技术，该
 
 ```
 final V putVal(K key, V value, boolean onlyIfAbsent) {
-    if (key == null || value == null) throw new NullPointerException();
-    int hash = spread(key.hashCode());
-    int binCount = 0;
-    for (Node&lt;K,V&gt;[] tab = table;;) {
-        Node&lt;K,V&gt; f; int n, i, fh;
+    if (key == null || value == null) throw new NullPointerException()  
+    int hash = spread(key.hashCode())  
+    int binCount = 0  
+    for (Node&lt  K,V&gt  [] tab = table    ) {
+        Node&lt  K,V&gt   f   int n, i, fh  
         if (tab == null || (n = tab.length) == 0)
-            tab = initTable();
-        else if ((f = tabAt(tab, i = (n - 1) &amp; hash)) == null) {
+            tab = initTable()  
+        else if ((f = tabAt(tab, i = (n - 1) &amp   hash)) == null) {
             if (casTabAt(tab, i, null,
-                         new Node&lt;K,V&gt;(hash, key, value, null)))
-                break;                   // no lock when adding to empty bin
+                         new Node&lt  K,V&gt  (hash, key, value, null)))
+                break                     // no lock when adding to empty bin
         }
     //以下部分省略
     ...
@@ -33,9 +33,9 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 在第 10 行，有一个醒目的方法，它就是 “casTabAt”，这个方法名就带有 “CAS”，可以猜测它一定是和 CAS 密不可分了，下面给出 casTabAt 方法的代码实现：
 
 ```
-static final &lt;K,V&gt; boolean casTabAt(Node&lt;K,V&gt;[] tab, int i,
-                                    Node&lt;K,V&gt; c, Node&lt;K,V&gt; v) {
-    return U.compareAndSwapObject(tab, ((long)i &lt;&lt; ASHIFT) + ABASE, c, v);
+static final &lt  K,V&gt   boolean casTabAt(Node&lt  K,V&gt  [] tab, int i,
+                                    Node&lt  K,V&gt   c, Node&lt  K,V&gt   v) {
+    return U.compareAndSwapObject(tab, ((long)i &lt  &lt   ASHIFT) + ABASE, c, v)  
 }
 
 ```
@@ -43,7 +43,7 @@ static final &lt;K,V&gt; boolean casTabAt(Node&lt;K,V&gt;[] tab, int i,
 该方法里面只有一行代码，即调用变量 U 的 **compareAndSwapObject** 的方法，那么，这个变量 U 是什么类型的呢？U 的定义是：
 
 ```
-private&nbsp;static&nbsp;final&nbsp;sun.misc.Unsafe&nbsp;U 
+private  static  final  sun.misc.Unsafe  U 
 ```
 
 可以看出，U 是 **Unsafe** 类型的，Unsafe 类包含 compareAndSwapInt、compareAndSwapLong、compareAndSwapObject 等和 CAS 密切相关的 native 层的方法，其底层正是利用 CPU 对 CAS 指令的支持实现的。
@@ -56,22 +56,22 @@ private&nbsp;static&nbsp;final&nbsp;sun.misc.Unsafe&nbsp;U
 
 ```
 public boolean offer(E e) {
-    checkNotNull(e);
-    final Node&lt;E&gt; newNode = new Node&lt;E&gt;(e);
+    checkNotNull(e)  
+    final Node&lt  E&gt   newNode = new Node&lt  E&gt  (e)  
 
-    for (Node&lt;E&gt; t = tail, p = t;;) {
-        Node&lt;E&gt; q = p.next;
+    for (Node&lt  E&gt   t = tail, p = t    ) {
+        Node&lt  E&gt   q = p.next  
         if (q == null) {
             if (p.casNext(null, newNode)) {
                 if (p != t) 
-                    casTail(t, newNode); 
-                return true;
+                    casTail(t, newNode)   
+                return true  
             }
         }
         else if (p == q)
-            p = (t != (t = tail)) ? t : head;
+            p = (t != (t = tail)) ? t : head  
         else
-            p = (p != t &amp;&amp; t != (t = tail)) ? t : q;
+            p = (p != t &amp  &amp   t != (t = tail)) ? t : q  
     }
 }
 
@@ -83,47 +83,47 @@ public boolean offer(E e) {
 
 ### 数据库
 
-在我们的数据库中，也存在对乐观锁和 CAS 思想的应用。在更新数据时，我们可以利用&nbsp;version&nbsp;字段在数据库中实现乐观锁和 CAS 操作，而在获取和修改数据时都不需要加悲观锁。
+在我们的数据库中，也存在对乐观锁和 CAS 思想的应用。在更新数据时，我们可以利用  version  字段在数据库中实现乐观锁和 CAS 操作，而在获取和修改数据时都不需要加悲观锁。
 
 **具体思路**如下：当我们获取完数据，并计算完毕，准备更新数据时，会检查现在的版本号与之前获取数据时的版本号是否一致，如果一致就说明在计算期间数据没有被更新过，可以直接更新本次数据；如果版本号不一致，则说明计算期间已经有其他线程修改过这个数据了，那就可以选择重新获取数据，重新计算，然后再次尝试更新数据。
 
-假设取出数据的时候&nbsp;version&nbsp;版本为&nbsp;1，相应的&nbsp;SQL&nbsp;语句示例如下所示：
+假设取出数据的时候  version  版本为  1，相应的  SQL  语句示例如下所示：
 
 ```
-UPDATE&nbsp;student &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;=&nbsp;‘小王’, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version&nbsp;=&nbsp;2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;&nbsp;id&nbsp;=&nbsp;10 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AND&nbsp;version&nbsp;=&nbsp;1 
+UPDATE  student               SET                       name  =  ‘小王’,                       version  =  2               WHERE    id  =  10                             AND  version  =  1 
 ```
 
-这样一来就可以用&nbsp;CAS 的思想去实现本次的更新操作，它会先去比较&nbsp;version&nbsp;是不是最开始获取到的 1，如果和初始值相同才去进行 name 字段的修改，同时也要把 version 的值加一。
+这样一来就可以用  CAS 的思想去实现本次的更新操作，它会先去比较  version  是不是最开始获取到的 1，如果和初始值相同才去进行 name 字段的修改，同时也要把 version 的值加一。
 
 ### 原子类
 
-在原子类中，例如&nbsp;AtomicInteger，也使用了&nbsp;CAS，原子类的内容我们在第&nbsp;39&nbsp;课时中已经具体分析过了，现在我们复习一下和&nbsp;CAS&nbsp;相关的重点内容，也就是&nbsp;AtomicInteger&nbsp;的&nbsp;getAndAdd&nbsp;方法，该方法代码如下所示：
+在原子类中，例如  AtomicInteger，也使用了  CAS，原子类的内容我们在第  39  课时中已经具体分析过了，现在我们复习一下和  CAS  相关的重点内容，也就是  AtomicInteger  的  getAndAdd  方法，该方法代码如下所示：
 
 ```
 public final int getAndAdd(int delta) {    
-    return unsafe.getAndAddInt(this, valueOffset, delta);
+    return unsafe.getAndAddInt(this, valueOffset, delta)  
 }
 
 ```
 
-从上面的三行代码中可以看到，return&nbsp;的内容是 Unsafe 的 getAndAddInt 方法的执行结果，接下来我们来看一下 getAndAddInt 方法的具体实现，代码如下所示：
+从上面的三行代码中可以看到，return  的内容是 Unsafe 的 getAndAddInt 方法的执行结果，接下来我们来看一下 getAndAddInt 方法的具体实现，代码如下所示：
 
 ```
 public final int getAndAddInt(Object var1, long var2, int var4) {
-    int var5;
+    int var5  
     do {
-        var5 = this.getIntVolatile(var1, var2);
-    } while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));
-    return var5;
+        var5 = this.getIntVolatile(var1, var2)  
+    } while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4))  
+    return var5  
 }
 
 ```
 
-在这里，我们看到上述方法中有对&nbsp;var5 的赋值，调用了&nbsp;unsafe&nbsp;的 getIntVolatile(var1, var2) 方法，这是一个&nbsp;native&nbsp;方法，作用是获取变量&nbsp;var1&nbsp;中偏移量 var2 处的值。这里传入&nbsp;var1&nbsp;的是 AtomicInteger 对象的引用，而&nbsp;var2&nbsp;就是 AtomicInteger&nbsp;里面所存储的数值（也就是 value）的偏移量&nbsp;valueOffset，所以此时得到的 var5 实际上代表当前时刻下的原子类中存储的数值。
+在这里，我们看到上述方法中有对  var5 的赋值，调用了  unsafe  的 getIntVolatile(var1, var2) 方法，这是一个  native  方法，作用是获取变量  var1  中偏移量 var2 处的值。这里传入  var1  的是 AtomicInteger 对象的引用，而  var2  就是 AtomicInteger  里面所存储的数值（也就是 value）的偏移量  valueOffset，所以此时得到的 var5 实际上代表当前时刻下的原子类中存储的数值。
 
-接下来重点来了，我们看到有一个&nbsp;**compareAndSwapInt**&nbsp;方法，这里会传入多个参数，分别是&nbsp;var1、var2、 var5、var5 + var4，其实它们代表&nbsp;object、offset、expectedValue&nbsp;和&nbsp;newValue。
+接下来重点来了，我们看到有一个  **compareAndSwapInt**  方法，这里会传入多个参数，分别是  var1、var2、 var5、var5 + var4，其实它们代表  object、offset、expectedValue  和  newValue。
  - 第一个参数 object 就是将要修改的对象，传入的是 this，也就是 atomicInteger 这个对象本身； - 第二个参数是 offset，也就是偏移量，借助它就可以获取到 value 的数值； - 第三个参数 expectedValue，代表“期望值”，传入的是刚才获取到的 var5； - 而最后一个参数 newValue 是希望修改为的新值 ，等于之前取到的数值 var5 再加上 var4，而 var4 就是我们之前所传入的 delta，delta 就是我们希望原子类所改变的数值，比如可以传入 +1，也可以传入 -1。 
-所以 compareAndSwapInt&nbsp;方法的作用就是，判断如果现在原子类里 value 的值和之前获取到的 var5 相等的话，那么就把计算出来的 var5 + var4 给更新上去，所以说这行代码就实现了&nbsp;CAS&nbsp;的过程。
+所以 compareAndSwapInt  方法的作用就是，判断如果现在原子类里 value 的值和之前获取到的 var5 相等的话，那么就把计算出来的 var5 + var4 给更新上去，所以说这行代码就实现了  CAS  的过程。
 
 一旦 CAS 操作成功，就会退出这个 while 循环，但是也有可能操作失败。如果操作失败就意味着在获取到 var5 之后，并且在 CAS 操作之前，value 的数值已经发生变化了，证明有其他线程修改过这个变量。
 
@@ -133,6 +133,6 @@ public final int getAndAddInt(Object var1, long var2, int var4) {
 
 ### 总结
 
-在本课时中，我们讲解了&nbsp;CAS&nbsp;的应用场景。在**并发容器**、**数据库**以及**原子类**中都有很多和 CAS 相关的代码，所以 CAS 有着广泛的应用场景，你需要清楚的了解什么情况下会用到 CAS。
+在本课时中，我们讲解了  CAS  的应用场景。在**并发容器**、**数据库**以及**原子类**中都有很多和 CAS 相关的代码，所以 CAS 有着广泛的应用场景，你需要清楚的了解什么情况下会用到 CAS。
 
 

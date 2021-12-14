@@ -21,19 +21,19 @@
 
 ```
 protected boolean tryAcquire(int arg) {
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException()  
 }
 
 protected boolean tryRelease(int arg) {
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException()  
 }
 
 protected int tryAcquireShared(int arg) {
-  throw new UnsupportedOperationException();
+  throw new UnsupportedOperationException()  
 }
 
 protected boolean tryReleaseShared(int arg) {
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException()  
 }
 
 ```
@@ -54,29 +54,29 @@ public class CountDownLatch {
      */
 
     private static final class Sync extends AbstractQueuedSynchronizer {
-        private static final long serialVersionUID = 4982264981922014374L;
+        private static final long serialVersionUID = 4982264981922014374L  
         Sync(int count) {
-            setState(count);
+            setState(count)  
         }
         int getCount() {
-            return getState();
+            return getState()  
         }
         protected int tryAcquireShared(int acquires) {
-            return (getState() == 0) ? 1 : -1;
+            return (getState() == 0) ? 1 : -1  
         }
         protected boolean tryReleaseShared(int releases) {
-            // Decrement count; signal when transition to zero
-            for (;;) {
-                int c = getState();
+            // Decrement count   signal when transition to zero
+            for (    ) {
+                int c = getState()  
                 if (c == 0)
-                    return false;
-                int nextc = c-1;
+                    return false  
+                int nextc = c-1  
                 if (compareAndSetState(c, nextc))
-                    return nextc == 0;
+                    return nextc == 0  
             }
         }
     }
-    private final Sync sync;
+    private final Sync sync  
    //省略其他代码...
 }
 
@@ -96,17 +96,17 @@ public class CountDownLatch {
 
 ```
 public CountDownLatch(int count) {
-    if (count &lt; 0) throw new IllegalArgumentException("count &lt; 0");
-    this.sync = new Sync(count);
+    if (count &lt   0) throw new IllegalArgumentException("count &lt   0")  
+    this.sync = new Sync(count)  
 }
 
 ```
 
-从代码中可以看到，当 count &lt; 0 时会抛出异常，当 count &gt; = 0，即代码 this.sync = new Sync( count ) ，往 Sync 中传入了 count，这个里的 Sync 的构造方法如下：
+从代码中可以看到，当 count &lt   0 时会抛出异常，当 count &gt   = 0，即代码 this.sync = new Sync( count ) ，往 Sync 中传入了 count，这个里的 Sync 的构造方法如下：
 
 ```
 Sync(int count) {
-     setState(count);
+     setState(count)  
 }
 
 ```
@@ -115,7 +115,7 @@ Sync(int count) {
 
 ```
 protected final void setState(int newState) {
-    state = newState;
+    state = newState  
 }
 
 ```
@@ -128,7 +128,7 @@ protected final void setState(int newState) {
 
 ```
 public long getCount() {
-     return sync.getCount();
+     return sync.getCount()  
 }
 
 ```
@@ -137,7 +137,7 @@ public long getCount() {
 
 ```
 int getCount() {
-     return getState();
+     return getState()  
 }
 
 ```
@@ -146,7 +146,7 @@ int getCount() {
 
 ```
 protected final int getState() {
-    return state;
+    return state  
 }
 
 ```
@@ -159,7 +159,7 @@ protected final int getState() {
 
 ```
 public void countDown() {
-    sync.releaseShared(1);
+    sync.releaseShared(1)  
 }
 
 ```
@@ -169,10 +169,10 @@ public void countDown() {
 ```
 public final boolean releaseShared(int arg) {
     if (tryReleaseShared(arg)) {
-        doReleaseShared();
-        return true;
+        doReleaseShared()  
+        return true  
     }
-    return false;
+    return false  
 }
 
 ```
@@ -181,14 +181,14 @@ public final boolean releaseShared(int arg) {
 
 ```
 protected boolean tryReleaseShared(int releases) {
-    // Decrement count; signal when transition to zero
-    for (;;) {
-        int c = getState();
+    // Decrement count   signal when transition to zero
+    for (    ) {
+        int c = getState()  
         if (c == 0)
-            return false;
-        int nextc = c-1;
+            return false  
+        int nextc = c-1  
         if (compareAndSetState(c, nextc))
-            return nextc == 0;
+            return nextc == 0  
     }
 }
 
@@ -208,7 +208,7 @@ protected boolean tryReleaseShared(int releases) {
 
 ```
 public void await() throws InterruptedException {
-    sync.acquireSharedInterruptibly(1);
+    sync.acquireSharedInterruptibly(1)  
 }
 
 ```
@@ -219,9 +219,9 @@ public void await() throws InterruptedException {
  public final void acquireSharedInterruptibly(int arg)
         throws InterruptedException {
     if (Thread.interrupted())
-        throw new InterruptedException();
-    if (tryAcquireShared(arg) &lt; 0)
-        doAcquireSharedInterruptibly(arg);
+        throw new InterruptedException()  
+    if (tryAcquireShared(arg) &lt   0)
+        doAcquireSharedInterruptibly(arg)  
 }
 
 ```
@@ -230,12 +230,12 @@ public void await() throws InterruptedException {
 
 ```
 protected int tryAcquireShared(int acquires) {
-    return (getState() == 0) ? 1 : -1;
+    return (getState() == 0) ? 1 : -1  
 }
 
 ```
 
-getState 方法获取到的值是剩余需要倒数的次数，如果此时剩余倒数的次数大于 0，那么 getState 的返回值自然不等于 0，因此 tryAcquireShared 方法会返回 -1，一旦返回 -1，再看到 if (tryAcquireShared(arg) &lt; 0) 语句中，就会符合 if 的判断条件，并且去执行 doAcquireSharedInterruptibly 方法，然后会**让线程进入阻塞状态**。
+getState 方法获取到的值是剩余需要倒数的次数，如果此时剩余倒数的次数大于 0，那么 getState 的返回值自然不等于 0，因此 tryAcquireShared 方法会返回 -1，一旦返回 -1，再看到 if (tryAcquireShared(arg) &lt   0) 语句中，就会符合 if 的判断条件，并且去执行 doAcquireSharedInterruptibly 方法，然后会**让线程进入阻塞状态**。
 
 我们再来看下另一种情况，当 state 如果此时已经等于 0 了，那就意味着倒数其实结束了，不需要再去等待了，就是说门闩是打开状态，所以说此时 getState 返回 0，tryAcquireShared 方法返回 1 ，一旦返回 1，对于 acquireSharedInterruptibly 方法而言相当于立刻返回，也就意味着 await 方法会立刻返回，那么此时**线程就不会进入阻塞状态了**，相当于倒数已经结束，立刻放行了。
 

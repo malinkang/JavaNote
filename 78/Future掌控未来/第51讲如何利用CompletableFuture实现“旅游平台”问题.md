@@ -42,46 +42,46 @@
 第一个实现方案是用线程池，我们来看一下代码。
 
 ```
-public&nbsp;class&nbsp;ThreadPoolDemo&nbsp;{
+public  class  ThreadPoolDemo  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;ExecutorService&nbsp;threadPool&nbsp;=&nbsp;Executors.newFixedThreadPool(3);
+        ExecutorService  threadPool  =  Executors.newFixedThreadPool(3)  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ThreadPoolDemo&nbsp;threadPoolDemo&nbsp;=&nbsp;new&nbsp;ThreadPoolDemo();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(threadPoolDemo.getPrices());
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                ThreadPoolDemo  threadPoolDemo  =  new  ThreadPoolDemo()  
+                System.out.println(threadPoolDemo.getPrices())  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;Set&lt;Integer&gt;&nbsp;getPrices()&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&lt;Integer&gt;&nbsp;prices&nbsp;=&nbsp;Collections.synchronizedSet(new&nbsp;HashSet&lt;Integer&gt;());
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Task(123,&nbsp;prices));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Task(456,&nbsp;prices));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Task(789,&nbsp;prices));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep(3000);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;prices;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        private  Set&lt  Integer&gt    getPrices()  throws  InterruptedException  {
+                Set&lt  Integer&gt    prices  =  Collections.synchronizedSet(new  HashSet&lt  Integer&gt  ())  
+                threadPool.submit(new  Task(123,  prices))  
+                threadPool.submit(new  Task(456,  prices))  
+                threadPool.submit(new  Task(789,  prices))  
+                Thread.sleep(3000)  
+                return  prices  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;class&nbsp;Task&nbsp;implements&nbsp;Runnable&nbsp;{
+        private  class  Task  implements  Runnable  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Integer&nbsp;productId;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&lt;Integer&gt;&nbsp;prices;
+                Integer  productId  
+                Set&lt  Integer&gt    prices  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Task(Integer&nbsp;productId,&nbsp;Set&lt;Integer&gt;&nbsp;prices)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.productId&nbsp;=&nbsp;productId;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.prices&nbsp;=&nbsp;prices;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                public  Task(Integer  productId,  Set&lt  Integer&gt    prices)  {
+                        this.productId  =  productId  
+                        this.prices  =  prices  
+                }
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;price=0;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep((long)&nbsp;(Math.random()&nbsp;*&nbsp;4000));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price=&nbsp;(int)&nbsp;(Math.random()&nbsp;*&nbsp;4000);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prices.add(price);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+                @Override
+                public  void  run()  {
+                        int  price=0  
+                        try  {
+                                Thread.sleep((long)  (Math.random()  *  4000))  
+                                price=  (int)  (Math.random()  *  4000)  
+                        }  catch  (InterruptedException  e)  {
+                                e.printStackTrace()  
+                        }
+                        prices.add(price)  
+                }
+        }
 }
 
 ```
@@ -101,60 +101,60 @@ public&nbsp;class&nbsp;ThreadPoolDemo&nbsp;{
 在这里会有一个优化的空间，比如说网络特别好时，每个航空公司响应速度都特别快，你根本不需要等三秒，有的航空公司可能几百毫秒就返回了，那么我们也不应该让用户等 3 秒。所以需要进行一下这样的改进，看下面这段代码：
 
 ```
-public&nbsp;class&nbsp;CountDownLatchDemo&nbsp;{
+public  class  CountDownLatchDemo  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;ExecutorService&nbsp;threadPool&nbsp;=&nbsp;Executors.newFixedThreadPool(3);
+        ExecutorService  threadPool  =  Executors.newFixedThreadPool(3)  
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CountDownLatchDemo&nbsp;countDownLatchDemo&nbsp;=&nbsp;new&nbsp;CountDownLatchDemo();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(countDownLatchDemo.getPrices());
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)  throws  InterruptedException  {
+                CountDownLatchDemo  countDownLatchDemo  =  new  CountDownLatchDemo()  
+                System.out.println(countDownLatchDemo.getPrices())  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;Set&lt;Integer&gt;&nbsp;getPrices()&nbsp;throws&nbsp;InterruptedException&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&lt;Integer&gt;&nbsp;prices&nbsp;=&nbsp;Collections.synchronizedSet(new&nbsp;HashSet&lt;Integer&gt;());
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CountDownLatch&nbsp;countDownLatch&nbsp;=&nbsp;new&nbsp;CountDownLatch(3);
+        private  Set&lt  Integer&gt    getPrices()  throws  InterruptedException  {
+                Set&lt  Integer&gt    prices  =  Collections.synchronizedSet(new  HashSet&lt  Integer&gt  ())  
+                CountDownLatch  countDownLatch  =  new  CountDownLatch(3)  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Task(123,&nbsp;prices,&nbsp;countDownLatch));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Task(456,&nbsp;prices,&nbsp;countDownLatch));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;threadPool.submit(new&nbsp;Task(789,&nbsp;prices,&nbsp;countDownLatch));
+                threadPool.submit(new  Task(123,  prices,  countDownLatch))  
+                threadPool.submit(new  Task(456,  prices,  countDownLatch))  
+                threadPool.submit(new  Task(789,  prices,  countDownLatch))  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;countDownLatch.await(3,&nbsp;TimeUnit.SECONDS);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;prices;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+                countDownLatch.await(3,  TimeUnit.SECONDS)  
+                return  prices  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;class&nbsp;Task&nbsp;implements&nbsp;Runnable&nbsp;{
+        private  class  Task  implements  Runnable  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Integer&nbsp;productId;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&lt;Integer&gt;&nbsp;prices;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CountDownLatch&nbsp;countDownLatch;
+                Integer  productId  
+                Set&lt  Integer&gt    prices  
+                CountDownLatch  countDownLatch  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Task(Integer&nbsp;productId,&nbsp;Set&lt;Integer&gt;&nbsp;prices,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CountDownLatch&nbsp;countDownLatch)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.productId&nbsp;=&nbsp;productId;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.prices&nbsp;=&nbsp;prices;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.countDownLatch&nbsp;=&nbsp;countDownLatch;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                public  Task(Integer  productId,  Set&lt  Integer&gt    prices,
+                                CountDownLatch  countDownLatch)  {
+                        this.productId  =  productId  
+                        this.prices  =  prices  
+                        this.countDownLatch  =  countDownLatch  
+                }
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;price&nbsp;=&nbsp;0;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep((long)&nbsp;(Math.random()&nbsp;*&nbsp;4000));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price&nbsp;=&nbsp;(int)&nbsp;(Math.random()&nbsp;*&nbsp;4000);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prices.add(price);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;countDownLatch.countDown();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+                @Override
+                public  void  run()  {
+                        int  price  =  0  
+                        try  {
+                                Thread.sleep((long)  (Math.random()  *  4000))  
+                                price  =  (int)  (Math.random()  *  4000)  
+                        }  catch  (InterruptedException  e)  {
+                                e.printStackTrace()  
+                        }
+                        prices.add(price)  
+                        countDownLatch.countDown()  
+                }
+        }
 }
 
 ```
 
 这段代码使用 CountDownLatch 实现了这个功能，整体思路和之前是一致的，不同点在于我们新增了一个 CountDownLatch，并且把它传入到了 Task 中。在 Task 中，获取完机票信息并且把它添加到 Set 之后，会调用 countDown 方法，相当于把计数减 1。
 
-这样一来，在执行&nbsp;countDownLatch.await(3,<br>
+这样一来，在执行  countDownLatch.await(3,<br>
 TimeUnit.SECONDS) 这个函数进行等待时，如果三个任务都非常快速地执行完毕了，那么三个线程都已经执行了 countDown 方法，那么这个 await 方法就会立刻返回，不需要傻等到 3 秒钟。
 
 如果有一个请求特别慢，相当于有一个线程没有执行 countDown 方法，来不及在 3 秒钟之内执行完毕，那么这个带超时参数的 await 方法也会在 3 秒钟到了以后，及时地放弃这一次等待，于是就把 prices 给返回了。所以这样一来，我们就利用 CountDownLatch 实现了这个需求，也就是说我们最多等 3 秒钟，但如果在 3 秒之内全都返回了，我们也可以快速地去返回，不会傻等，提高了效率。
@@ -164,52 +164,52 @@ TimeUnit.SECONDS) 这个函数进行等待时，如果三个任务都非常快�
 我们再来看一下用 CompletableFuture 来实现这个功能的用法，代码如下所示：
 
 ```
-public&nbsp;class&nbsp;CompletableFutureDemo&nbsp;{
+public  class  CompletableFutureDemo  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;void&nbsp;main(String[]&nbsp;args)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throws&nbsp;Exception&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CompletableFutureDemo&nbsp;completableFutureDemo&nbsp;=&nbsp;new&nbsp;CompletableFutureDemo();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(completableFutureDemo.getPrices());
-&nbsp;&nbsp;&nbsp;&nbsp;}
+        public  static  void  main(String[]  args)
+                        throws  Exception  {
+                CompletableFutureDemo  completableFutureDemo  =  new  CompletableFutureDemo()  
+                System.out.println(completableFutureDemo.getPrices())  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;Set&lt;Integer&gt;&nbsp;getPrices()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&lt;Integer&gt;&nbsp;prices&nbsp;=&nbsp;Collections.synchronizedSet(new&nbsp;HashSet&lt;Integer&gt;());
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CompletableFuture&lt;Void&gt;&nbsp;task1&nbsp;=&nbsp;CompletableFuture.runAsync(new&nbsp;Task(123,&nbsp;prices));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CompletableFuture&lt;Void&gt;&nbsp;task2&nbsp;=&nbsp;CompletableFuture.runAsync(new&nbsp;Task(456,&nbsp;prices));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CompletableFuture&lt;Void&gt;&nbsp;task3&nbsp;=&nbsp;CompletableFuture.runAsync(new&nbsp;Task(789,&nbsp;prices));
+        private  Set&lt  Integer&gt    getPrices()  {
+                Set&lt  Integer&gt    prices  =  Collections.synchronizedSet(new  HashSet&lt  Integer&gt  ())  
+                CompletableFuture&lt  Void&gt    task1  =  CompletableFuture.runAsync(new  Task(123,  prices))  
+                CompletableFuture&lt  Void&gt    task2  =  CompletableFuture.runAsync(new  Task(456,  prices))  
+                CompletableFuture&lt  Void&gt    task3  =  CompletableFuture.runAsync(new  Task(789,  prices))  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CompletableFuture&lt;Void&gt;&nbsp;allTasks&nbsp;=&nbsp;CompletableFuture.allOf(task1,&nbsp;task2,&nbsp;task3);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allTasks.get(3,&nbsp;TimeUnit.SECONDS);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(ExecutionException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(TimeoutException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;prices;
-&nbsp;&nbsp;&nbsp;&nbsp;}
+                CompletableFuture&lt  Void&gt    allTasks  =  CompletableFuture.allOf(task1,  task2,  task3)  
+                try  {
+                        allTasks.get(3,  TimeUnit.SECONDS)  
+                }  catch  (InterruptedException  e)  {
+                }  catch  (ExecutionException  e)  {
+                }  catch  (TimeoutException  e)  {
+                }
+                return  prices  
+        }
 
-&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;class&nbsp;Task&nbsp;implements&nbsp;Runnable&nbsp;{
+        private  class  Task  implements  Runnable  {
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Integer&nbsp;productId;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&lt;Integer&gt;&nbsp;prices;
+                Integer  productId  
+                Set&lt  Integer&gt    prices  
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Task(Integer&nbsp;productId,&nbsp;Set&lt;Integer&gt;&nbsp;prices)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.productId&nbsp;=&nbsp;productId;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.prices&nbsp;=&nbsp;prices;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                public  Task(Integer  productId,  Set&lt  Integer&gt    prices)  {
+                        this.productId  =  productId  
+                        this.prices  =  prices  
+                }
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;run()&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;price&nbsp;=&nbsp;0;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread.sleep((long)&nbsp;(Math.random()&nbsp;*&nbsp;4000));
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price&nbsp;=&nbsp;(int)&nbsp;(Math.random()&nbsp;*&nbsp;4000);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(InterruptedException&nbsp;e)&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prices.add(price);
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;&nbsp;&nbsp;}
+                @Override
+                public  void  run()  {
+                        int  price  =  0  
+                        try  {
+                                Thread.sleep((long)  (Math.random()  *  4000))  
+                                price  =  (int)  (Math.random()  *  4000)  
+                        }  catch  (InterruptedException  e)  {
+                                e.printStackTrace()  
+                        }
+                        prices.add(price)  
+                }
+        }
 }
 
 ```

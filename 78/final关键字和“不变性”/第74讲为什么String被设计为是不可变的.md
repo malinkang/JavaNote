@@ -8,8 +8,8 @@
 举个例子，比如我们给字符串 s 赋值为“lagou”，然后再尝试给它赋一个新值，正如下面这段代码所示：
 
 ```
-String s = "lagou";
-s = "la";
+String s = "lagou"  
+s = "la"  
 
 ```
 
@@ -18,8 +18,8 @@ s = "la";
 同样，如果我们调用 String 的 subString() 或 replace() 等方法，同时把 s 的引用指向这个新创建出来的字符串，这样都没有改变原有字符串对象的内容，因为这些方法只不过是**建了一个新的字符串而已**。例如下面这个例子：
 
 ```
-String lagou = "lagou";
-lagou = lagou.subString(0, 4);
+String lagou = "lagou"  
+lagou = lagou.subString(0, 4)  
 
 ```
 
@@ -29,9 +29,9 @@ lagou = lagou.subString(0, 4);
 
 ```
 public final class String
-    implements Java.io.Serializable, Comparable&lt;String&gt;, CharSequence {
+    implements Java.io.Serializable, Comparable&lt  String&gt  , CharSequence {
     /** The value is used for character storage. */
-    private final char value[];
+    private final char value[]  
 	//...
 }
 
@@ -54,8 +54,8 @@ public final class String
 String 不可变的第一个好处是可以使用**字符串常量池**。在 Java 中有字符串常量池的概念，比如两个字符串变量的内容一样，那么就会指向同一个对象，而不需创建第二个同样内容的新对象，例如：
 
 ```
-String s1 = "lagou";
-String s2 = "lagou";
+String s1 = "lagou"  
+String s2 = "lagou"  
 
 ```
 
@@ -68,10 +68,10 @@ String s2 = "lagou";
 如果想利用常量池这个特性，这就要求 String 必须具备不可变的性质，否则的话会出问题，我们来看下面这个例子：
 
 ```
-String s1 = "lagou";
-String s2 = "lagou";
-s1 = "LAGOU";
-System.out.println(s2);
+String s1 = "lagou"  
+String s2 = "lagou"  
+s1 = "LAGOU"  
+System.out.println(s2)  
 
 ```
 
@@ -98,7 +98,7 @@ String 不可变的第三个好处就是**缓存 HashCode**。
 
 ```
 /** Cache the hash code for the String */
-private int hash;
+private int hash  
 
 ```
 
@@ -118,6 +118,6 @@ String 不可变的第四个好处就是**线程安全**，因为具备**不变�
 
 > 
 <p data-nodeid="40917" class="te-preview-highlight">注：<br>
-“字符串常量池”参考了王磊老师的《&nbsp;Java 源码剖析 34 讲》的 01 讲的部分内容；<br>
+“字符串常量池”参考了王磊老师的《  Java 源码剖析 34 讲》的 01 讲的部分内容；<br>
 “缓存 HashCode”和“多线程安全”思路参考自 Deecyn：[https://juejin.cn/post/6844904006909689864](https://juejin.cn/post/6844904006909689864)</p>
 
