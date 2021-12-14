@@ -1,0 +1,138 @@
+
+本课时我们主要分析一下在 Thread 中多个 ThreadLocal 是怎么存储的。
+
+### Thread、 ThreadLocal 及 ThreadLocalMap 三者之间的关系
+
+在讲解本课时之前，先要搞清楚 Thread、 ThreadLocal 及 ThreadLocalMap 三者之间的关系。我们用最直观、最容易理解的图画的方式来看看它们三者的关系：<br>
+<img src="https://s0.lgstatic.com/i/image3/M01/67/E8/Cgq2xl5M5a6ADeCKAABC52ZxZCk238.png" alt="" data-nodeid="25680">
+
+我们看到最左下角的 Thread 1，这是一个线程，它的箭头指向了 &nbsp;ThreadLocalMap 1，其要表达的意思是，每个 Thread 对象中都持有一个 ThreadLocalMap 类型的成员变量，在这里 Thread 1 所拥有的成员变量就是 ThreadLocalMap 1。
+
+而这个 ThreadLocalMap 自身类似于是一个 Map，里面会有一个个 key value 形式的键值对。那么我们就来看一下它的 key 和 value 分别是什么。可以看到这个表格的左侧是 ThreadLocal 1、ThreadLocal 2…… ThreadLocal n，能看出这里的 key 就是 ThreadLocal 的引用。
+
+而在表格的右侧是一个一个的 value，这就是我们希望 ThreadLocal 存储的内容，例如 user 对象等。
+
+这里需要重点看到它们的数量对应关系：一个 Thread 里面只有一个ThreadLocalMap ，而在一个 ThreadLocalMap 里面却可以有很多的 ThreadLocal，每一个 ThreadLocal 都对应一个 value。因为一个 Thread 是可以调用多个 ThreadLocal 的，所以 Thread 内部就采用了 ThreadLocalMap 这样 Map 的数据结构来存放 ThreadLocal 和 value。
+
+通过这张图片，我们就可以搞清楚 Thread、 ThreadLocal 及 ThreadLocalMap 三者在宏观上的关系了。
+
+### 源码分析
+
+知道了它们的关系之后，我们再来进行源码分析，来进一步地看到它们内部的实现。
+
+#### get 方法
+
+首先我们来看一下 get 方法，源码如下所示：
+
+```
+public&nbsp;T&nbsp;get()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;//获取到当前线程
+&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;t&nbsp;=&nbsp;Thread.currentThread();
+&nbsp;&nbsp;&nbsp;&nbsp;//获取到当前线程内的&nbsp;ThreadLocalMap&nbsp;对象，每个线程内都有一个&nbsp;ThreadLocalMap&nbsp;对象
+&nbsp;&nbsp;&nbsp;&nbsp;ThreadLocalMap&nbsp;map&nbsp;=&nbsp;getMap(t);
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(map&nbsp;!=&nbsp;null)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//获取&nbsp;ThreadLocalMap&nbsp;中的&nbsp;Entry&nbsp;对象并拿到&nbsp;Value
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ThreadLocalMap.Entry&nbsp;e&nbsp;=&nbsp;map.getEntry(this);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(e&nbsp;!=&nbsp;null)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@SuppressWarnings("unchecked")
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;result&nbsp;=&nbsp;(T)e.value;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;result;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;//如果线程内之前没创建过&nbsp;ThreadLocalMap，就创建
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;setInitialValue();
+}
+
+```
+
+这是 ThreadLocal 的 get 方法，可以看出它利用了 Thread.currentThread 来获取当前线程的引用，并且把这个引用传入到了 getMap 方法里面，来拿到当前线程的 ThreadLocalMap。
+
+然后就是一个 if ( map != null ) 条件语句，那我们先来看看 if (map == null) 的情况，如果 map == null，则说明之前这个线程中没有创建过 ThreadLocalMap，于是就去调用 setInitialValue 来创建；如果 map != null，我们就应该通过 this 这个引用（也就是当前的 ThreadLocal 对象的引用）来获取它所对应的 Entry，同时再通过这个 Entry 拿到里面的 value，最终作为结果返回。
+
+值得注意的是，这里的 ThreadLocalMap 是保存在线程 Thread 类中的，而不是保存在 ThreadLocal 中的。
+
+#### getMap 方法
+
+下面我们来看一下 getMap 方法，源码如下所示：
+
+```
+ThreadLocalMap&nbsp;getMap(Thread&nbsp;t)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;t.threadLocals;
+}
+
+```
+
+可以看到，这个方法很清楚地表明了 Thread 和 ThreadLocalMap 的关系，可以看出 ThreadLocalMap 是线程的一个成员变量。这个方法的作用就是获取到当前线程内的 ThreadLocalMap 对象，每个线程都有 ThreadLocalMap 对象，而这个对象的名字就叫作 threadLocals，初始值为 null，代码如下：
+
+```
+ThreadLocal.ThreadLocalMap&nbsp;threadLocals&nbsp;=&nbsp;null;
+
+```
+
+#### set 方法
+
+下面我们再来看一下 set 方法，源码如下所示：
+
+```
+public&nbsp;void&nbsp;set(T&nbsp;value)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;Thread&nbsp;t&nbsp;=&nbsp;Thread.currentThread();
+&nbsp;&nbsp;&nbsp;&nbsp;ThreadLocalMap&nbsp;map&nbsp;=&nbsp;getMap(t);
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(map&nbsp;!=&nbsp;null)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.set(this,&nbsp;value);
+&nbsp;&nbsp;&nbsp;&nbsp;else
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;createMap(t,&nbsp;value);
+}
+
+```
+
+set 方法的作用是把我们想要存储的 value 给保存进去。可以看出，首先，它还是需要获取到当前线程的引用，并且利用这个引用来获取到&nbsp;ThreadLocalMap ；然后，如果 map == null 则去创建这个 map，而当 map != null 的时候就利用 map.set 方法，把 value 给 set 进去。
+
+可以看出，map.set(this, value) &nbsp;传入的这两个参数中，第一个参数是 this，就是当前 ThreadLocal 的引用，这也再次体现了，在&nbsp;ThreadLocalMap 中，它的 key 的类型是&nbsp;ThreadLocal；而第二个参数就是我们所传入的 value，这样一来就可以把这个键值对保存到&nbsp;ThreadLocalMap 中去了。
+
+#### ThreadLocalMap 类，也就是 Thread.threadLocals
+
+下面我们来看一下&nbsp;ThreadLocalMap 这个类，下面这段代码截取自定义在 ThreadLocal 类中的 ThreadLocalMap 类：
+
+```
+static&nbsp;class&nbsp;ThreadLocalMap&nbsp;{
+
+&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;class&nbsp;Entry&nbsp;extends&nbsp;WeakReference&lt;ThreadLocal&lt;?&gt;&gt;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/**&nbsp;The&nbsp;value&nbsp;associated&nbsp;with&nbsp;this&nbsp;ThreadLocal.&nbsp;*/
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;value;
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Entry(ThreadLocal&lt;?&gt;&nbsp;k,&nbsp;Object&nbsp;v)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(k);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;=&nbsp;v;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;private&nbsp;Entry[]&nbsp;table;
+//...
+}
+
+```
+
+ThreadLocalMap 类是每个线程 Thread 类里面的一个成员变量，其中最重要的就是截取出的这段代码中的 Entry 内部类。在 ThreadLocalMap 中会有一个 Entry 类型的数组，名字叫 table。我们可以把 Entry 理解为一个 map，其键值对为：
+
+<li data-nodeid="25665">
+键，当前的 ThreadLocal；
+</li>
+<li data-nodeid="25667">
+值，实际需要存储的变量，比如 user 用户对象或者 simpleDateFormat 对象等。
+</li>
+
+ThreadLocalMap 既然类似于 Map，所以就和 HashMap 一样，也会有包括 set、get、rehash、resize 等一系列标准操作。但是，虽然思路和 HashMap 是类似的，但是具体实现会有一些不同。
+
+比如其中一个不同点就是，我们知道 HashMap 在面对 hash 冲突的时候，采用的是拉链法。它会先把对象 hash 到一个对应的格子中，如果有冲突就用链表的形式往下链，如下图所示：
+
+<img src="https://s0.lgstatic.com/i/image3/M01/67/E8/CgpOIF5M5mqAPY_GAABqhQqH5zw536.png" alt="" data-nodeid="25714">
+
+但是 ThreadLocalMap 解决 hash 冲突的方式是不一样的，它采用的是线性探测法。如果发生冲突，并不会用链表的形式往下链，而是会继续寻找下一个空的格子。这是 ThreadLocalMap 和 HashMap 在处理冲突时不一样的点。
+
+以上就是本节课的内容。
+
+在本节课中，我们主要分析了 Thread、 ThreadLocal 和 ThreadLocalMap 这三个非常重要的类的关系。用图画的方式表明了它们之间的关系：一个 Thread 有一个 ThreadLocalMap，而 ThreadLocalMap 的 key 就是一个个的 ThreadLocal，它们就是用这样的关系来存储并维护内容的。之后我们对于 ThreadLocal 的一些重要方法进行了源码分析。
+
+> 
+注：第一张图片来自网络，未能找到原始出处，原作者若看到，欢迎联系，将进行标注。
+
