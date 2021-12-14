@@ -88,7 +88,7 @@ public class CountDownLatch {
 
 这里的 CountDownLatch 属于非独占的类型，因此它重写了 tryAcquireShared 和 tryReleaseShared 方法，那么这两个方法的具体含义是什么呢？别急，接下来就让我们对 CountDownLatch 类里面最重要的 4 个方法进行分析，逐步揭开它的神秘面纱。
 
-#### 构造函数
+## 构造函数
 
 首先来看看构造函数。CountDownLatch 只有一个构造方法，传入的参数是需要“倒数”的次数，每次调用 countDown 方法就会倒数 1，直到达到了最开始设定的次数之后，相当于是“打开了门闩”，所以之前在等待的线程可以继续工作了。
 
@@ -122,7 +122,7 @@ protected final void setState(int newState) {
 
 所以我们通过 CountDownLatch 构造函数将传入的 count **最终传递到 AQS 内部的 state 变量**，给 state 赋值，state 就代表还需要倒数的次数。
 
-#### getCount
+## getCount
 
 接下来介绍 getCount 方法，该方法的作用是获取当前剩余的还需要“倒数”的数量，getCount 方法的源码如下：
 
@@ -153,7 +153,7 @@ protected final int getState() {
 
 如代码所示，protected final int getState 方法直接 return 的就是 state 的值，所以最终它获取到的就在 AQS 中 state 变量的值。
 
-#### countDown
+## countDown
 
 我们再来看看 countDown 方法，该方法其实就是 CountDownLatch 的“**释放**”方法，下面来看下源码：
 
@@ -202,7 +202,7 @@ protected boolean tryReleaseShared(int releases) {
 
 下一次执行 countDown时，c 的值就是 1，而 nextc = c - 1，所以 nextc 等于 0，若这时 CAS 操作成功，最后 return nextc == 0，所以方法返回 true，一旦 tryReleaseShared 方法 return true，则 releaseShared 方法会调用 doReleaseShared 方法，把所有之前阻塞的线程都唤醒。
 
-#### await
+## await
 
 接着我们来看看 await 方法，该方法是 CountDownLatch 的“**获取**”方法，调用 await 方法会把线程阻塞，直到倒数为 0 才能继续执行。await 方法和 countDown 是配对的，追踪源码可以看到 await 方法的实现：
 
@@ -241,7 +241,7 @@ getState 方法获取到的值是剩余需要倒数的次数，如果此时剩�
 
 这里的 await 和 countDown 方法，正对应了本讲一开始所介绍的“第三步，在自己的线程协作工具类中，实现获取/释放的相关方法，并在里面调用 AQS 对应的方法，如果是独占则调用 acquire 或 release 等方法，非独占则调用 acquireShared 或 releaseShared 或 acquireSharedInterruptibly 等方法。”
 
-#### AQS 在 CountDownLatch 的应用总结
+## AQS 在 CountDownLatch 的应用总结
 
 最后对 AQS 在 CountDownLatch 的应用进行总结。当线程调用 CountDownLatch 的 await 方法时，便会尝试获取“共享锁”，不过一开始通常获取不到锁，于是线程被阻塞。“共享锁”可获取到的条件是“锁计数器”的值为 0，而“锁计数器”的初始值为 count，当每次调用 CountDownLatch 对象的 countDown 方法时，也可以把“锁计数器” -1。通过这种方式，调用 count 次 countDown 方法之后，“锁计数器”就为 0 了，于是之前等待的线程就会继续运行了，并且此时如果再有线程想调用 await 方法时也会被立刻放行，不会再去做任何阻塞操作了。
 

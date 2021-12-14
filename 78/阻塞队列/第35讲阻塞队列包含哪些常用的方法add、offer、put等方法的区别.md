@@ -13,7 +13,7 @@
 
 ### 第一组：add、remove、element
 
-#### add 方法
+## add 方法
 
 add 方法是往队列里添加一个元素，如果队列满了，就会抛出异常来提示队列已满。示例代码如下：
 
@@ -34,7 +34,7 @@ Exception in thread "main" java.lang.IllegalStateException:Queue full
 
 ```
 
-#### remove 方法
+## remove 方法
 
 remove 方法的作用是删除元素，如果我们删除的队列是空的，由于里面什么都没有，所以也无法删除任何元素，那么 remove 方法就会抛出异常。示例代码如下：
 
@@ -57,7 +57,7 @@ Exception in thread "main" java.util.NoSuchElementException
 
 ```
 
-#### element 方法
+## element 方法
 
 element 方法是返回队列的头部节点，但是并不删除。和 remove 方法一样，如果我们用这个方法去操作一个空队列，想获取队列的头结点，可是由于队列是空的，我们什么都获取不到，会抛出和前面 remove 方法一样的异常：NoSuchElementException。示例代码如下：
 
@@ -80,7 +80,7 @@ Exception in thread "main" java.util.NoSuchElementException
 
 实际上我们通常并不想看到第一组方法抛出的异常，这时我们可以优先采用第二组方法。第二组方法相比于第一组而言要友好一些，当发现队列满了无法添加，或者队列为空无法删除的时候，第二组方法会给一个提示，而不是抛出一个异常。
 
-#### offer 方法
+## offer 方法
 
 offer 方法用来插入一个元素，并用返回值来提示插入是否成功。如果添加成功会返回 true，而如果队列已经满了，此时继续调用 offer 方法的话，它不会抛出异常，只会返回一个错误提示：false。示例代码如下：
 
@@ -105,7 +105,7 @@ false
 
 可以看出，前面两次添加成功了，但是第三次添加的时候，已经超过了队列的最大容量，所以会返回 false，表明添加失败。
 
-#### poll 方法
+## poll 方法
 
 poll 方法和第一组的 remove 方法是对应的，作用也是移除并返回队列的头节点。但是如果当队列里面是空的，没有任何东西可以移除的时候，便会返回 null 作为提示。正因如此，我们是不允许往队列中插入 null 的，否则我们没有办法区分返回的 null 是一个提示还是一个真正的元素。示例代码如下：
 
@@ -135,7 +135,7 @@ null
 
 前面三次 poll 都运行成功了，并且返回了元素内容 1、2、3，是先进先出的顺序。第四次的 poll 方法返回 null，代表此时已经没有元素可以移除了。
 
-#### peek 方法
+## peek 方法
 
 peek 方法和第一组的 element 方法是对应的，意思是返回队列的头元素但并不删除。如果队列里面是空的，它便会返回 null 作为提示。示例代码如下：
 
@@ -156,7 +156,7 @@ null
 
 我们新建了一个空的 ArrayBlockingQueue，然后直接调用 peek，返回结果 null，代表此时并没有东西可以取出。
 
-#### 带超时时间的 offer 和 poll
+## 带超时时间的 offer 和 poll
 
 第二组还有一些额外值得讲解的内容，offer 和 poll 都有带超时时间的重载方法。
 
@@ -178,13 +178,13 @@ poll(long&nbsp;timeout,&nbsp;TimeUnit&nbsp;unit)
 
 第三组是我们比较熟悉的、阻塞队列最大特色的 put 和 take 方法，我们复习一下 34 课时里对于 put 和 take 方法的讲解。
 
-#### put 方法
+## put 方法
 
 put 方法的作用是插入元素。通常在队列没满的时候是正常的插入，但是如果队列已满就无法继续插入，这时它既不会立刻返回 false 也不会抛出异常，而是让插入的线程陷入阻塞状态，直到队列里有了空闲空间，此时队列就会让之前的线程解除阻塞状态，并把刚才那个元素添加进去。
 
 <img src="https://s0.lgstatic.com/i/image3/M01/62/7E/Cgq2xl4lhcOAYPonAAB1UtAAltk655.png" alt="">
 
-#### take 方法
+## take 方法
 
 take 方法的作用是获取并移除队列的头结点。通常在队列里有数据的时候会正常取出数据并删除；但是如果执行 take 的时候队列里无数据，则阻塞，直到队列里有数据；一旦队列里有数据了，就会立刻解除阻塞状态，并且取到数据。
 

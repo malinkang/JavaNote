@@ -41,7 +41,7 @@
 
 前面我们讲解了 Java 7 和 Java 8 中 ConcurrentHashMap 的主体结构，下面我们深入源码分析。由于 Java 7 版本已经过时了，所以我们把重点放在 Java 8 版本的源码分析上。
 
-#### Node 节点
+## Node 节点
 
 我们先来看看最基础的内部存储结构 Node，这就是一个一个的节点，如这段代码所示：
 
@@ -58,7 +58,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 
 下面我们看两个最重要、最核心的方法。
 
-#### put 方法源码分析
+## put 方法源码分析
 
 put 方法的核心是 putVal 方法，为了方便阅读，我把重要步骤的解读用注释的形式补充在下面的源码中。我们逐步分析这个最重要的方法，这个方法相对有些长，我们一步一步把它看清楚。
 
@@ -138,7 +138,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 
 通过以上的源码分析，我们对于 putVal 方法有了详细的认识，可以看出，方法中会逐步根据当前槽点是未初始化、空、扩容、链表、红黑树等不同情况做出不同的处理。
 
-#### get 方法源码分析
+## get 方法源码分析
 
 get 方法比较简单，我们同样用源码注释的方式来分析一下：
 
@@ -180,7 +180,7 @@ public&nbsp;V&nbsp;get(Object&nbsp;key)&nbsp;{
 
 ### 对比Java7 和Java8 的异同和优缺点
 
-#### 数据结构
+## 数据结构
 
 正如本课时最开始的两个结构示意图所示，Java 7 采用 Segment 分段锁来实现，而 Java 8 中的 ConcurrentHashMap 使用数组 + 链表 + 红黑树，在这一点上它们的差别非常大。
 
@@ -188,25 +188,25 @@ public&nbsp;V&nbsp;get(Object&nbsp;key)&nbsp;{
 
 <img src="https://s0.lgstatic.com/i/image3/M01/61/21/Cgq2xl4b3l6Ae_CiAAGZw5NzqtE956.png" alt="">
 
-#### 并发度
+## 并发度
 
 Java 7 中，每个 Segment 独立加锁，最大并发个数就是 Segment 的个数，默认是 16。
 
 但是到了 Java 8 中，锁粒度更细，理想情况下 table 数组元素的个数（也就是数组长度）就是其支持并发的最大个数，并发度比之前有提高。
 
-#### 保证并发安全的原理
+## 保证并发安全的原理
 
 Java 7 采用 Segment 分段锁来保证安全，而 Segment 是继承自 ReentrantLock。
 
 Java&nbsp;8 中放弃了 Segment 的设计，采用 Node + CAS + synchronized 保证线程安全。
 
-#### 遇到 Hash 碰撞
+## 遇到 Hash 碰撞
 
 Java 7 在 Hash 冲突时，会使用拉链法，也就是链表的形式。
 
 Java&nbsp;8 先使用拉链法，在链表长度超过一定阈值时，将链表转换为红黑树，来提高查找效率。
 
-#### 查询时间复杂度
+## 查询时间复杂度
 
 Java 7 遍历链表的时间复杂度是 O(n)，n 为链表长度。
 

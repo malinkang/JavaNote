@@ -22,7 +22,7 @@ public&nbsp;synchronized&nbsp;E&nbsp;get(int&nbsp;index)&nbsp;{
 
 所以从 JDK1.5 开始，Java 并发包里提供了使用 CopyOnWrite 机制实现的并发容器  CopyOnWriteArrayList 作为主要的并发 List，CopyOnWrite 的并发集合还包括 CopyOnWriteArraySet，其底层正是利用 CopyOnWriteArrayList 实现的。所以今天我们以 CopyOnWriteArrayList 为突破口，来看一下 CopyOnWrite 容器的特点。
 
-#### 适用场景
+## 适用场景
 
 * **读操作可以尽可能的快，而写即使慢一些也没关系**
 
@@ -32,7 +32,7 @@ public&nbsp;synchronized&nbsp;E&nbsp;get(int&nbsp;index)&nbsp;{
 
 黑名单是最典型的场景，假如我们有一个搜索网站，用户在这个网站的搜索框中，输入关键字搜索内容，但是某些关键字不允许被搜索。这些不能被搜索的关键字会被放在一个黑名单中，黑名单并不需要实时更新，可能每天晚上更新一次就可以了。当用户搜索时，会检查当前关键字在不在黑名单中，如果在，则提示不能搜索。这种读多写少的场景也很适合使用 CopyOnWrite 集合。
 
-#### 读写规则
+## 读写规则
 
 * **读写锁的规则**
 
@@ -42,7 +42,7 @@ public&nbsp;synchronized&nbsp;E&nbsp;get(int&nbsp;index)&nbsp;{
 
 CopyOnWriteArrayList 的思想比读写锁的思想又更进一步。为了将读取的性能发挥到极致，CopyOnWriteArrayList 读取是完全不用加锁的，更厉害的是，**写入也不会阻塞读取操作，也就是说你可以在写入的同时进行读取**，只有写入和写入之间需要进行同步，也就是不允许多个写入同时发生，但是在写入发生时允许读取同时发生。这样一来，读操作的性能就会大幅度提升。
 
-#### 特点
+## 特点
 
 * **CopyOnWrite的含义**
 
@@ -125,7 +125,7 @@ public&nbsp;class&nbsp;CopyOnWriteArrayListDemo&nbsp;{
 
 以上这个结果说明了，CopyOnWriteArrayList 的迭代器一旦被建立之后，如果往之前的 CopyOnWriteArrayList 对象中去新增元素，在迭代器中既不会显示出元素的变更情况，同时也不会报错，这一点和 ArrayList 是有很大区别的。
 
-#### 缺点
+## 缺点
 
 这些缺点不仅是针对 CopyOnWriteArrayList，其实同样也适用于其他的 CopyOnWrite 容器：
 
@@ -141,7 +141,7 @@ public&nbsp;class&nbsp;CopyOnWriteArrayListDemo&nbsp;{
 
 由于 CopyOnWrite 容器的修改是先修改副本，所以这次修改对于其他线程来说，并不是实时能看到的，只有在修改完之后才能体现出来。如果你希望写入的的数据马上能被其他线程看到，CopyOnWrite 容器是不适用的。
 
-#### 源码分析
+## 源码分析
 
 * **数据结构**
 

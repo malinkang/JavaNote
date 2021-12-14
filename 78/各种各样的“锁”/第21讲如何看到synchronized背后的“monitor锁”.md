@@ -35,7 +35,7 @@ public&nbsp;void&nbsp;method()&nbsp;{
 
 JVM 实现 synchronized 方法和 synchronized 代码块的细节是不一样的，下面我们就分别来看一下两者的实现。
 
-#### 同步代码块
+## 同步代码块
 
 首先我们来看下同步代码块的实现，如代码所示。
 

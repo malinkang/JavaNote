@@ -5,7 +5,7 @@
 
 Doug&nbsp;Lea 大神在 **JUC** 包中大量使用了&nbsp;CAS&nbsp;技术，该技术既能保证安全性，又不需要使用互斥锁，能大大提升工具类的性能。下面我将通过两个例子来展示 CAS 在并发容器中的使用情况。
 
-#### 案例一：ConcurrentHashMap
+## 案例一：ConcurrentHashMap
 
 先来看看并发容器 ConcurrentHashMap 的例子，我们截取部分 putVal 方法的代码，如下所示：
 
@@ -50,7 +50,7 @@ private&nbsp;static&nbsp;final&nbsp;sun.misc.Unsafe&nbsp;U
 
 上面介绍的 casTabAt 方法，不仅被用在了 ConcurrentHashMap 的 putVal 方法中，还被用在了 merge、compute、computeIfAbsent、transfer 等重要的方法中，所以 ConcurrentHashMap 对于 CAS 的应用是比较广泛的。
 
-#### 案例二：ConcurrentLinkedQueue
+## 案例二：ConcurrentLinkedQueue
 
 接下来，我们来看并发容器的第二个案例。非阻塞并发队列 ConcurrentLinkedQueue 的 offer 方法里也有 CAS 的身影，offer 方法的代码如下所示：
 

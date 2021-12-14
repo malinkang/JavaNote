@@ -2,7 +2,7 @@
 
 本课时我们主要分析一下在 Thread 中多个 ThreadLocal 是怎么存储的。
 
-#### Thread、 ThreadLocal 及 ThreadLocalMap 三者之间的关系
+## Thread、 ThreadLocal 及 ThreadLocalMap 三者之间的关系
 
 在讲解本课时之前，先要搞清楚 Thread、 ThreadLocal 及 ThreadLocalMap 三者之间的关系。我们用最直观、最容易理解的图画的方式来看看它们三者的关系：\
 ![](https://s0.lgstatic.com/i/image3/M01/67/E8/Cgq2xl5M5a6ADeCKAABC52ZxZCk238.png)
@@ -17,7 +17,7 @@
 
 通过这张图片，我们就可以搞清楚 Thread、 ThreadLocal 及 ThreadLocalMap 三者在宏观上的关系了。
 
-#### 源码分析
+## 源码分析
 
 知道了它们的关系之后，我们再来进行源码分析，来进一步地看到它们内部的实现。
 

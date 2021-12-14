@@ -684,7 +684,7 @@ static boolean matches(String regex,CharSequence input)
 
 其中`matches()`方法用来判断整个输入字符串是否匹配正则表达式模式，而`lookingAt()`则用来判断该字符串（不必是整个字符串）的始部分是否能够匹配模式。
 
-#### find\(\)
+## find\(\)
 
 `Matcher.find()`方法可用来在`CharSequence`中查找多个匹配。
 
@@ -713,7 +713,7 @@ the, the, he, e, linnet, linnet, innet, nnet, net, et, t, s, s, wings, wings, in
  */
 ```
 
-#### 组（Groups）
+## 组（Groups）
 
 组是用括号划分的正则表达式，可以根据组的编号来引用某个组。组号为0表示整个表达式，组号1表示被第一对括号括起来的组，依次类推。因此，在下面这个表达式,
 

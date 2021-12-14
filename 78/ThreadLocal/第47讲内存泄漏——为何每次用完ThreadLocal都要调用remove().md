@@ -11,7 +11,7 @@
 
 下面我们来分析一下，在 ThreadLocal 中这样的内存泄漏是如何发生的。
 
-#### Key 的泄漏
+## Key 的泄漏
 
 在上一讲中，我们分析了 ThreadLocal 的内部结构，知道了每一个 Thread 都有一个 ThreadLocal.ThreadLocalMap 这样的类型变量，该变量的名字叫作 threadLocals。线程在访问了 ThreadLocal 之后，都会在它的 ThreadLocalMap 里面的 Entry 中去维护该 ThreadLocal 变量与具体实例的映射。
 
@@ -38,7 +38,7 @@ static&nbsp;class&nbsp;Entry&nbsp;extends&nbsp;WeakReference&lt;ThreadLocal&lt;?
 
 这就是为什么 Entry 的 key 要使用弱引用的原因。
 
-#### Value 的泄漏
+## Value 的泄漏
 
 可是，如果我们继续研究的话会发现，虽然 ThreadLocalMap 的每个 Entry 都是一个对 key 的弱引用，但是这个 Entry 包含了一个对 value 的强引用，还是刚才那段代码：
 
@@ -74,7 +74,7 @@ JDK 同样也考虑到了这个问题，在执行 ThreadLocal 的 set、remove�
 
 但是假设 ThreadLocal 已经不被使用了，那么实际上 set、remove、rehash 方法也不会被调用，与此同时，如果这个线程又一直存活、不终止的话，那么刚才的那个调用链就一直存在，也就导致了 value 的内存泄漏。
 
-#### 如何避免内存泄露
+## 如何避免内存泄露
 
 分析完这个问题之后，该如何解决呢？解决方法就是我们本课时的标题：调用 ThreadLocal 的 remove 方法。调用这个方法就可以删除对应的 value 对象，可以避免内存泄漏。
 

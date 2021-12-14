@@ -5,7 +5,7 @@
 
 Happens-before 关系是用来描述和可见性相关问题的：如果第一个操作&nbsp;happens-before 第二个操作（也可以描述为，第一个操作和第二个操作之间满足 happens-before 关系），那么我们就说第一个操作对于第二个操作一定是可见的，也就是第二个操作在执行时就一定能保证看见第一个操作执行的结果。
 
-#### 不具备 happens-before 关系的例子
+## 不具备 happens-before 关系的例子
 
 我们先来举一个不具备 happens-before 关系的例子，从宏观上进一步理解 happens-before 关系想要表达的内容。我们来看看下面的代码：
 
@@ -33,7 +33,7 @@ public&nbsp;class&nbsp;Visibility&nbsp;{
 
 下面我们来看一下 happens-before 关系包含哪些具体的规则 。
 
-#### Happens-before 关系的规则有哪些？
+## Happens-before 关系的规则有哪些？
 
 如果分别有操作&nbsp;x 和操作 y，用&nbsp;hb(x, y) 来表示 x happens-before y。
 

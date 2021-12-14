@@ -8,7 +8,7 @@
 
 不过，虽然它们很好用，但是如果你的业务场景是并发量很大的，那么你也会发现，这两个原子类实际上会有较大的性能问题，这是为什么呢？就让我们从一个例子看起。
 
-#### AtomicLong 存在的问题
+## AtomicLong 存在的问题
 
 首先我们来看一段代码：
 
@@ -63,7 +63,7 @@ public&nbsp;class&nbsp;AtomicLongDemo&nbsp;{
 
 由于竞争很激烈，这样的 flush 和 refresh 操作耗费了很多资源，而且 CAS 也会经常失败。
 
-#### LongAdder 带来的改进和原理
+## LongAdder 带来的改进和原理
 
 在 JDK 8 中又新增了 LongAdder 这个类，这是一个针对 Long 类型的操作工具类。那么既然已经有了 AtomicLong，为何又要新增 LongAdder 这么一个类呢？
 
@@ -135,11 +135,11 @@ public&nbsp;long&nbsp;sum()&nbsp;{
 
 那么我们已经了解了，为什么 AtomicLong 或者说 AtomicInteger 它在高并发下性能不好，也同时看到了性能更好的 LongAdder。下面我们就分析一下，对它们应该如何选择。
 
-#### 如何选择
+## 如何选择
 
 在低竞争的情况下，AtomicLong 和 LongAdder 这两个类具有相似的特征，吞吐量也是相似的，因为竞争不高。但是在竞争激烈的情况下，LongAdder 的预期吞吐量要高得多，经过试验，LongAdder 的吞吐量大约是 AtomicLong 的十倍，不过凡事总要付出代价，LongAdder 在保证高效的同时，也需要消耗更多的空间。
 
-#### AtomicLong 可否被 LongAdder 替代？
+## AtomicLong 可否被 LongAdder 替代？
 
 那么我们就要考虑了，有了更高效的 LongAdder，那 AtomicLong 可否不使用了呢？是否凡是用到 AtomicLong 的地方，都可以用 LongAdder 替换掉呢？答案是不是的，这需要区分场景。
 

@@ -68,7 +68,7 @@ class&nbsp;ThreadSafeFormatter&nbsp;{
 
 这个问题回答到这里，可能会引申出下面这个问题。
 
-#### ThreadLocal 和 synchronized 是什么关系
+## ThreadLocal 和 synchronized 是什么关系
 
 面试官可能会问：你既然说 ThreadLocal 和 synchronized 它们两个都能解决线程安全问题，那么 ThreadLocal 和 synchronized 是什么关系呢？
 

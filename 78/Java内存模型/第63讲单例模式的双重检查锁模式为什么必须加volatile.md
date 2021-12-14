@@ -5,7 +5,7 @@
 
 单例模式指的是，保证一个类只有一个实例，并且提供一个可以全局访问的入口。
 
-#### 为什么需要使用单例模式
+## 为什么需要使用单例模式
 
 那么我们为什么需要单例呢？其中**一个理由，那就是为了节省内存、节省计算。**因为在很多情况下，我们只需要一个实例就够了，如果出现更多的实例，反而纯属浪费。
 
@@ -32,7 +32,7 @@ public&nbsp;class&nbsp;ExpensiveResource&nbsp;{
 
 <img src="https://s0.lgstatic.com/i/image3/M01/05/B6/Ciqah16BpV-AG9iPAAAf42nvy5s798.png" alt="" data-nodeid="31567">
 
-#### 双重检查锁模式的写法
+## 双重检查锁模式的写法
 
 单例模式有多种写法，我们重点介绍一下和 volatile 强相关的双重检查锁模式的写法，代码如下所示：
 
@@ -72,7 +72,7 @@ public&nbsp;class&nbsp;Singleton&nbsp;{
 
 而对于第一个 check 而言，如果去掉它，那么所有线程都会串行执行，效率低下，所以两个 check 都是需要保留的。
 
-#### 在双重检查锁模式中为什么需要使用 volatile 关键字
+## 在双重检查锁模式中为什么需要使用 volatile 关键字
 
 相信细心的你可能看到了，我们在双重检查锁模式中，给 singleton 这个对象加了 volatile 关键字，那**为什么要用 volatile 呢？**主要就在于 singleton = new Singleton() ，它并非是一个原子操作，事实上，在&nbsp;JVM&nbsp;中上述语句至少做了以下这&nbsp;3&nbsp;件事：
 

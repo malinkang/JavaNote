@@ -2,7 +2,7 @@
 
 在本课时我们将讲解 Future 的主要功能是什么。
 
-#### Future 类
+## Future 类
 
 **Future 的作用**
 
@@ -249,6 +249,6 @@ class&nbsp;Task&nbsp;implements&nbsp;Callable&lt;Integer&gt;&nbsp;{
 
 执行结果是 4950，正是任务里 0+1+2+...+99 的结果。
 
-#### 总结
+## 总结
 
 最后对本课时进行一下总结，在本课时中，我们首先在宏观上讲解了 Future 的作用，然后讲解了 Callable 和 Future 的关系，接着对于 Future 的各个方法进行了详细介绍，最后还给出了 FutureTask 这种方法来创建 Future 的用法。

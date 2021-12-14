@@ -2,7 +2,7 @@
 
 本课时主要讲解原子类是如何利用 CAS 保证线程安全的。
 
-#### 什么是原子类？原子类有什么作用？
+## 什么是原子类？原子类有什么作用？
 
 要想回答这个问题，首先我们需要知道什么是原子类，以及它有什么作用。
 
@@ -13,13 +13,13 @@
 * 粒度更细：原子变量可以把竞争范围缩小到变量级别，通常情况下，锁的粒度都要大于原子变量的粒度。
 * 效率更高：除了高度竞争的情况之外，使用原子类的效率通常会比使用同步互斥锁的效率更高，因为原子类底层利用了 CAS 操作，不会阻塞线程。
 
-#### 6 类原子类纵览
+## 6 类原子类纵览
 
 下面我们来看下一共有哪些原子类，原子类一共可以分为以下这 6 类，我们来逐一介绍：
 
 类型具体类|------
 
-#### Atomic\ 基本类型原子类
+## Atomic\ 基本类型原子类
 
 首先看到第一类 Atomic\*，我们把它称为基本类型原子类，它包括三种，分别是 AtomicInteger、AtomicLong 和 AtomicBoolean。
 
@@ -138,7 +138,7 @@ public&nbsp;class&nbsp;AtomicIntegerFieldUpdaterDemo&nbsp;implements&nbsp;Runnab
 
 下面我们继续看最后两种原子类。
 
-#### Adder 加法器
+## Adder 加法器
 
 它里面有两种加法器，分别叫作 LongAdder 和 DoubleAdder。
 
@@ -148,7 +148,7 @@ public&nbsp;class&nbsp;AtomicIntegerFieldUpdaterDemo&nbsp;implements&nbsp;Runnab
 
 这两种原子类我们会在后面的课时中展开介绍。
 
-#### 以 AtomicInteger 为例，分析在 Java 中如何利用 CAS 实现原子操作？
+## 以 AtomicInteger 为例，分析在 Java 中如何利用 CAS 实现原子操作？
 
 让我们回到标题中的问题，在充分了解了原子类的作用和种类之后，我们来看下  AtomicInteger 是如何通过 CAS 操作实现并发下的累加操作的，以其中一个重要方法 getAndAdd 方法为突破口。
 
@@ -227,7 +227,7 @@ public&nbsp;final&nbsp;int&nbsp;getAndAddInt(Object&nbsp;var1,&nbsp;long&nbsp;va
 
 我们总结一下，Unsafe 的 getAndAddInt 方法是通过循环 + CAS 的方式来实现的，在此过程中，它会通过 compareAndSwapInt 方法来尝试更新 value 的值，如果更新失败就重新获取，然后再次尝试更新，直到更新成功。
 
-#### 总结
+## 总结
 
 在本课时我们首先介绍了原子类的作用，然后对 6 类原子类进行了介绍，分别是 Atomic\* 基本类型原子类、Atomic_Array 数组类型原子类、Atomic_Reference 引用类型原子类、Atomic\*FieldUpdater 升级类型原子类、Adder 加法器和 Accumulator 积累器。
 
@@ -235,6 +235,6 @@ public&nbsp;final&nbsp;int&nbsp;getAndAddInt(Object&nbsp;var1,&nbsp;long&nbsp;va
 
 我们从 getAndAdd 方法出发，逐步深入，最后到了 Unsafe 的 getAndAddInt 方法。所以通过源码分析之后，我们也清楚地看到了，它实现的原理是利用自旋去不停地尝试，直到成功为止。
 
->
+
 
 参考：占小狼[https://www.jianshu.com/p/fb6e91b013cc](https://www.jianshu.com/p/fb6e91b013cc)

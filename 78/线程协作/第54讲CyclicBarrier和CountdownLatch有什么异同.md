@@ -2,7 +2,7 @@
 
 本课时我们主要介绍 CyclicBarrier 和 CountDownLatch 有什么不同。
 
-#### CyclicBarrier
+## CyclicBarrier
 
 **作用**
 
@@ -127,7 +127,7 @@ CyclicBarrier&nbsp;cyclicBarrier&nbsp;=&nbsp;new&nbsp;CyclicBarrier(3,&nbsp;new&
 
 值得注意的是，这个语句每个周期只打印一次，不是说你有几个线程在等待就打印几次，而是说这个任务只在“开闸”的时候执行一次。
 
-#### CyclicBarrier 和 CountDownLatch 的异同
+## CyclicBarrier 和 CountDownLatch 的异同
 
 下面我们来总结一下 CyclicBarrier 和 CountDownLatch 有什么异同。
 
@@ -139,6 +139,6 @@ CyclicBarrier&nbsp;cyclicBarrier&nbsp;=&nbsp;new&nbsp;CyclicBarrier(3,&nbsp;new&
 * \*\*可重用性不同\*\*：CountDownLatch 在倒数到 0  并且触发门闩打开后，就不能再次使用了，除非新建一个新的实例；而 CyclicBarrier 可以重复使用，在刚才的代码中也可以看出，每 3 个同学到了之后都能出发，并不需要重新新建实例。CyclicBarrier 还可以随时调用 reset 方法进行重置，如果重置时有线程已经调用了 await 方法并开始等待，那么这些线程则会抛出 BrokenBarrierException 异常。
 * \*\*执行动作不同\*\*：CyclicBarrier 有执行动作 barrierAction，而 CountDownLatch 没这个功能。
 
-#### 总结
+## 总结
 
 以上就是本课时的内容，在本课时中，首先介绍了 CyclicBarrier 的作用、代码示例和执行动作，然后对 CyclicBarrier 和 CountDownLatch 的异同进行了总结。

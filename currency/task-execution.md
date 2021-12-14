@@ -14,7 +14,7 @@
 
 类库提供了一个灵活的线程池以及一些有用的默认配置。可以通过调用`Executors`中的静态方法之一来创建一个线程池。
 
-#### newFixedThreadPool
+## newFixedThreadPool
 
 `newFixedThreadPool`将创建一个固定长度的线程池，每当提交一个任务时就创建一个线程，直到达到线程池的最大数量，这时线程池的规模将不再变化（如果某个线程由于发生了未预期的Exception而结束，那么线程池会补充一个新的线程）。
 
@@ -28,7 +28,7 @@ public static ExecutorService newFixedThreadPool(int nThreads) {
 
 
 
-#### newCachedThreadPool
+## newCachedThreadPool
 
 newCachedThreadPool将创建一个可缓存的线程池，如果线程池的当前规模超过了处理需求时，那么将回收空闲的线程，而当需求增加时，则可以添加新的线程，线程池的规模不存在任何限制。
 
@@ -42,7 +42,7 @@ public static ExecutorService newCachedThreadPool() {
 
 
 
-#### newSingleThreadExecutor
+## newSingleThreadExecutor
 
 newSingleThreadExecutor是一个单线程的Executor，它创建单个线程来执行任务，如果这个线程异常结束，会创建另一个线程来替代。`newSingleThreadExecutor`能确保依照任务在队列中的顺序来串行执行。
 
@@ -57,7 +57,7 @@ public static ExecutorService newSingleThreadExecutor() {
 
 
 
-#### newScheduledThreadPool
+## newScheduledThreadPool
 
 `newScheduledThreadPool`创建了一个固定长度的线程池，而且以延迟或定时的方式来执行任务。ScheduledThreadPool提供了3个周期方法：
 
@@ -124,7 +124,7 @@ public static class Task implements Runnable {
 33:53: Finish drinking coffee
 ```
 
-#### newSingleThreadScheduledExecutor
+## newSingleThreadScheduledExecutor
 
 它实际和` ScheduledThreadPool`线程池非常相似，它只是 ScheduledThreadPool 的一个特例，内部只有一个线程。
 
