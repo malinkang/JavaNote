@@ -49,7 +49,7 @@
 
 在前面，我们讲述了 long 和 double 和其他的基本类型不太一样，好像不具备原子性，这是什么原因造成的呢？ 官方文档对于上述问题的描述，如下所示：
 
-&#x20;
+##
 
 **Non-Atomic Treatment of double and long**
 

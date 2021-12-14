@@ -9,17 +9,19 @@
 
 场景2，ThreadLocal 用作**每个线程内需要独立保存信息**，以便**供其他方法更方便地获取**该信息的场景。每个线程获取到的信息可能都是不一样的，前面执行的方法保存了信息后，后续方法可以通过 ThreadLocal 直接获取到，避免了传参，类似于全局变量的概念。
 
-### 典型场景1
+## 典型场景1
 
 这种场景通常用于保存线程不安全的工具类，典型的需要使用的类就是 SimpleDateFormat。
 
-## 场景介绍
+### 场景介绍
 
 在这种情况下，每个 Thread 内都有自己的实例副本，且该副本只能由当前 Thread 访问到并使用，相当于每个线程内部的本地变量，这也是 ThreadLocal 命名的含义。因为每个线程独享副本，而不是公用的，所以**不存在多线程间共享的问题**。
 
 我们来做一个比喻，比如饭店要做一道菜，但是有 5 个厨师一起做，这样的话就很乱了，因为如果一个厨师已经放过盐了，假如其他厨师都不知道，于是就都各自放了一次盐，导致最后的菜很咸。这就好比多线程的情况，线程不安全。我们用了 ThreadLocal 之后，相当于每个厨师只负责自己的一道菜，一共有 5 道菜，这样的话就非常清晰明了了，不会出现问题。
 
-## SimpleDateFormat 的进化之路
+### SimpleDateFormat 的进化之路
+
+
 
 **1. 2 个线程都要用到 SimpleDateFormat**
 
@@ -51,7 +53,7 @@ public&nbsp;class&nbsp;ThreadLocalDemo01&nbsp;{
 
 在以上代码中可以看出，两个线程分别创建了一个自己的 SimpleDateFormat 对象，如图所示：
 
-<img src="https://s0.lgstatic.com/i/image3/M01/66/80/Cgq2xl5Gb8eAHJXxAAB1tWXZO48680.png" alt="">
+![](https://cdn.malinkang.com/images/currency/202112141748635.png)
 
 这样一来，有两个线程，那么就有两个 SimpleDateFormat 对象，它们之间互不干扰，这段代码是可以正常运转的，运行结果是：
 
@@ -90,7 +92,7 @@ public&nbsp;class&nbsp;ThreadLocalDemo02&nbsp;{
 
 上面的代码利用了一个 for 循环来完成这个需求。for 循环一共循环 10 次，每一次都会新建一个线程，并且每一个线程都会在 date 方法中创建一个 SimpleDateFormat 对象，示意图如下：
 
-<img src="https://s0.lgstatic.com/i/image3/M01/66/7E/CgpOIF5Gal6AeBk6AACsNc5-9ck050.png" alt="">
+![](https://cdn.malinkang.com//images/currency/202112141754479.png)
 
 可以看出一共有 10 个线程，对应 10 个 SimpleDateFormat 对象。
 
@@ -162,7 +164,7 @@ public&nbsp;class&nbsp;ThreadLocalDemo03&nbsp;{
 
 程序运行结果正确，把从 00:00 到 16:39 这 1000 个时间给打印了出来，并且没有重复的时间。我们把这段代码用图形化给表示出来，如图所示：
 
-<img src="https://s0.lgstatic.com/i/image3/M01/66/7F/CgpOIF5GbTyAVB13AACRdzpW9yI360.png" alt="">
+![](https://cdn.malinkang.com/images/currency/202112141755447.png)
 
 图的左侧是一个线程池，右侧是 1000 个任务。我们刚才所做的就是每个任务都创建了一个 simpleDateFormat 对象，也就是说，1000 个任务对应 1000 个 simpleDateFormat 对象。
 
@@ -347,7 +349,7 @@ class&nbsp;ThreadSafeFormatter&nbsp;{
 
 以上就是第一种非常典型的适合使用 ThreadLocal 的场景。
 
-### 典型场景2
+## 典型场景2
 
 每个线程内需要保存类似于全局变量的信息（例如在拦截器中获取的用户信息），可以让不同方法直接使用，避免参数传递的麻烦却不想被多线程共享（因为不同线程获取到的用户信息不一样）。
 
