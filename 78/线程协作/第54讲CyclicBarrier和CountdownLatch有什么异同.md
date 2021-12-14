@@ -1,9 +1,10 @@
+# 第54讲CyclicBarrier和CountdownLatch有什么异同
 
-本课时我们主要介绍&nbsp;CyclicBarrier 和 CountDownLatch 有什么不同。
+本课时我们主要介绍 CyclicBarrier 和 CountDownLatch 有什么不同。
 
-### CyclicBarrier
+#### CyclicBarrier
 
-#### 作用
+**作用**
 
 CyclicBarrier 和 CountDownLatch 确实有一定的相似性，它们都能阻塞一个或者一组线程，直到某种预定的条件达到之后，这些之前在等待的线程才会统一出发，继续向下执行。正因为它们有这个相似点，你可能会认为它们的作用是完全一样的，其实并不是。
 
@@ -47,7 +48,6 @@ public&nbsp;class&nbsp;CyclicBarrierDemo&nbsp;{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 &nbsp;&nbsp;&nbsp;&nbsp;}
 }
-
 ```
 
 在这段代码中可以看到，首先建了一个参数为 3 的 CyclicBarrier，参数为 3 的意思是需要等待 3 个线程到达这个集结点才统一放行；然后我们又在 for 循环中去开启了 6 个线程，每个线程中执行的 Runnable 对象就在下方的 Task 类中，直接看到它的 run 方法，它首先会打印出"同学某某现在从大门出发，前往自行车驿站"，然后是一个随机时间的睡眠，这就代表着从大门开始步行走到自行车驿站的时间，由于每个同学的步行速度不一样，所以时间用随机值来模拟。
@@ -75,14 +75,13 @@ public&nbsp;class&nbsp;CyclicBarrierDemo&nbsp;{
 同学1开始骑车
 同学6开始骑车
 同学4开始骑车
-
 ```
 
 可以看到 6 个同学纷纷从大门出发走到自行车驿站，因为每个人的速度不一样，所以会有 3 个同学先到自行车驿站，不过在这 3 个先到的同学里面，前面 2 个到的都必须等待第 3 个人到齐之后，才可以开始骑车。后面的同学也一样，由于第一辆车已经被骑走了，第二辆车依然也要等待 3 个人凑齐才能统一发车。
 
 要想实现这件事情，如果你不利用 CyclicBarrier 去做的话，逻辑可能会非常复杂，因为你也不清楚哪个同学先到、哪个后到。而用了 CyclicBarrier 之后，可以非常简洁优雅的实现这个逻辑，这就是它的一个非常典型的应用场景。
 
-#### 执行动作 barrierAction
+**执行动作 barrierAction**
 
 public CyclicBarrier(int parties, Runnable barrierAction)：当 parties 线程到达集结点时，继续往下执行前，会执行这一次这个动作。
 
@@ -97,7 +96,6 @@ CyclicBarrier&nbsp;cyclicBarrier&nbsp;=&nbsp;new&nbsp;CyclicBarrier(3,&nbsp;new&
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("凑齐3人了，出发！");
 &nbsp;&nbsp;&nbsp;&nbsp;}
 });
-
 ```
 
 可以看出，我们传入了第二个参数，它是一个 Runnable 对象，在这里传入了这个 Runnable 之后，这个任务就会在到齐的时候去打印"凑齐3人了，出发！"。上面的代码如果改成这个样子，则执行结果如下所示：
@@ -123,14 +121,13 @@ CyclicBarrier&nbsp;cyclicBarrier&nbsp;=&nbsp;new&nbsp;CyclicBarrier(3,&nbsp;new&
 同学5开始骑车
 同学1开始骑车
 同学3开始骑车
-
 ```
 
 可以看出，三个人凑齐了一组之后，就会打印出“凑齐 3 人了，出发！”这样的语句，该语句恰恰是我们在这边传入 Runnable 所执行的结果。
 
 值得注意的是，这个语句每个周期只打印一次，不是说你有几个线程在等待就打印几次，而是说这个任务只在“开闸”的时候执行一次。
 
-### CyclicBarrier 和 CountDownLatch 的异同
+#### CyclicBarrier 和 CountDownLatch 的异同
 
 下面我们来总结一下 CyclicBarrier 和 CountDownLatch 有什么异同。
 
@@ -138,16 +135,10 @@ CyclicBarrier&nbsp;cyclicBarrier&nbsp;=&nbsp;new&nbsp;CyclicBarrier(3,&nbsp;new&
 
 但是它们也有很多不同点，具体如下。
 
-<li data-nodeid="356">
-**作用对象不同**：CyclicBarrier 要等固定数量的线程都到达了栅栏位置才能继续执行，而 CountDownLatch 只需等待数字倒数到 0，也就是说 CountDownLatch 作用于事件，但 CyclicBarrier 作用于线程；CountDownLatch 是在调用了 countDown 方法之后把数字倒数减 1，而 CyclicBarrier 是在某线程开始等待后把计数减 1。
-</li>
-<li data-nodeid="358">
-**可重用性不同**：CountDownLatch 在倒数到 0 &nbsp;并且触发门闩打开后，就不能再次使用了，除非新建一个新的实例；而 CyclicBarrier 可以重复使用，在刚才的代码中也可以看出，每 3 个同学到了之后都能出发，并不需要重新新建实例。CyclicBarrier 还可以随时调用 reset 方法进行重置，如果重置时有线程已经调用了 await 方法并开始等待，那么这些线程则会抛出 BrokenBarrierException 异常。
-</li>
-<li data-nodeid="360">
-**执行动作不同**：CyclicBarrier 有执行动作 barrierAction，而 CountDownLatch 没这个功能。
-</li>
+* \*\*作用对象不同\*\*：CyclicBarrier 要等固定数量的线程都到达了栅栏位置才能继续执行，而 CountDownLatch 只需等待数字倒数到 0，也就是说 CountDownLatch 作用于事件，但 CyclicBarrier 作用于线程；CountDownLatch 是在调用了 countDown 方法之后把数字倒数减 1，而 CyclicBarrier 是在某线程开始等待后把计数减 1。
+* \*\*可重用性不同\*\*：CountDownLatch 在倒数到 0  并且触发门闩打开后，就不能再次使用了，除非新建一个新的实例；而 CyclicBarrier 可以重复使用，在刚才的代码中也可以看出，每 3 个同学到了之后都能出发，并不需要重新新建实例。CyclicBarrier 还可以随时调用 reset 方法进行重置，如果重置时有线程已经调用了 await 方法并开始等待，那么这些线程则会抛出 BrokenBarrierException 异常。
+* \*\*执行动作不同\*\*：CyclicBarrier 有执行动作 barrierAction，而 CountDownLatch 没这个功能。
 
-### 总结
+#### 总结
 
-以上就是本课时的内容，在本课时中，首先介绍了 CyclicBarrier 的作用、代码示例和执行动作，然后对&nbsp;CyclicBarrier 和 CountDownLatch&nbsp;的异同进行了总结。
+以上就是本课时的内容，在本课时中，首先介绍了 CyclicBarrier 的作用、代码示例和执行动作，然后对 CyclicBarrier 和 CountDownLatch 的异同进行了总结。

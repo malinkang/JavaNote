@@ -1,7 +1,4 @@
-
-
-# Future 类
-
+# future
 
 在本课时我们将讲解 Future 的主要功能是什么。
 
@@ -93,7 +90,6 @@ public interface Future<V> {
         throws InterruptedException, ExecutionException, TimeoutException;
 }
 
-
 ```
 
 其中，第 5 个方法是对第 4 个方法的重载，方法名一样，但是参数不一样。
@@ -114,7 +110,7 @@ get 方法最主要的作用就是获取任务执行的结果，该方法在执�
 
 下面用图的形式让过程更清晰：
 
-<img src="https://s0.lgstatic.com/i/image3/M01/6A/F4/Cgq2xl5WX0OAUkXdAADovQH3upQ950.png" alt="">
+![](https://s0.lgstatic.com/i/image3/M01/6A/F4/Cgq2xl5WX0OAUkXdAADovQH3upQ950.png)
 
 在图中，右侧是一个线程池，线程池中有一些线程来执行任务。重点在图的左侧，可以看到有一个 submit 方法，该方法往线程池中提交了一个 Task，这个 Task 实现了 Callable 接口，当我们去给线程池提交这个任务的时候，调用 submit 方法会立刻返回一个 Future 类型的对象，这个对象目前内容是空的，其中还不包含计算结果，因为此时计算还没有完成。
 
@@ -145,7 +141,6 @@ public class FutureDemo {
         }
     }
 }
-
 ```
 
 在这段代码中，main 方法新建了一个 10 个线程的线程池，并且用 submit 方法把一个任务提交进去。这个任务如代码的最下方所示，它实现了 Callable 接口，它所做的内容就是先休眠三秒钟，然后返回一个随机数。接下来我们就直接把 future.get 结果打印出来，其结果是正常打印出一个随机数，比如 100192 等。这段代码对应了我们刚才那个图示的讲解，这也是 Future 最常用的一种用法。
@@ -185,10 +180,9 @@ public class FutureDemo2 {
         }
     }
 }
-
 ```
 
-在这段代码中，可以看到有一个线程池，并且往线程池中去提交任务，这个任务会直接抛出一个异常。那么接下来我们就用一个 for 循环去休眠，同时让它慢慢打印出 0 ~ 4 这 5 个数字，这样做的目的是起到了一定的延迟作用。在这个执行完毕之后，再去调用 isDone() 方法，并且把这个结果打印出来，然后再去调用 future.get()。
+在这段代码中，可以看到有一个线程池，并且往线程池中去提交任务，这个任务会直接抛出一个异常。那么接下来我们就用一个 for 循环去休眠，同时让它慢慢打印出 0 \~ 4 这 5 个数字，这样做的目的是起到了一定的延迟作用。在这个执行完毕之后，再去调用 isDone() 方法，并且把这个结果打印出来，然后再去调用 future.get()。
 
 这段代码的执行结果是这样的：
 
@@ -201,10 +195,9 @@ public class FutureDemo2 {
 true
 java.util.concurrent.ExecutionException:&nbsp;java.lang.IllegalArgumentException:&nbsp;Callable抛出异常
 ...
-
 ```
 
-**这里要注意**，我们知道这个异常实际上是在任务刚被执行的时候就抛出了，因为我们的计算任务中是没有其他逻辑的，只有抛出异常。我们再来看，控制台是什么时候打印出异常的呢？它是在  true 打印完毕后才打印出异常信息的，也就是说，在调用 get 方法时打印出的异常。
+**这里要注意**，我们知道这个异常实际上是在任务刚被执行的时候就抛出了，因为我们的计算任务中是没有其他逻辑的，只有抛出异常。我们再来看，控制台是什么时候打印出异常的呢？它是在 true 打印完毕后才打印出异常信息的，也就是说，在调用 get 方法时打印出的异常。
 
 **这段代码证明了三件事情**：第一件事情，即便任务抛出异常，isDone 方法依然会返回 true；第二件事情，虽然抛出的异常是 IllegalArgumentException，但是对于 get 而言，它抛出的异常依然是 ExecutionException；第三个事情，虽然在任务执行一开始时就抛出了异常，但是真正要等到我们执行 get 的时候，才看到了异常。
 
@@ -216,7 +209,7 @@ java.util.concurrent.ExecutionException:&nbsp;java.lang.IllegalArgumentException
 
 第二种情况也比较简单。如果任务已经完成，或者之前已经被取消过了，那么执行 cancel 方法则代表取消失败，返回 false。因为任务无论是已完成还是已经被取消过了，都不能再被取消了。
 
-第三种情况比较特殊，就是这个任务正在执行，这个时候执行 cancel 方法是不会直接取消这个任务的，而是会根据我们传入的参数做判断。cancel 方法是必须传入一个参数，该参数叫作 &nbsp;**mayInterruptIfRunning**，它是什么含义呢？如果传入的参数是 true，执行任务的线程就会收到一个中断的信号，正在执行的任务可能会有一些处理中断的逻辑，进而停止，这个比较好理解。如果传入的是 false 则就代表不中断正在运行的任务，也就是说，本次 cancel 不会有任何效果，同时 cancel 方法会返回 false。
+第三种情况比较特殊，就是这个任务正在执行，这个时候执行 cancel 方法是不会直接取消这个任务的，而是会根据我们传入的参数做判断。cancel 方法是必须传入一个参数，该参数叫作  **mayInterruptIfRunning**，它是什么含义呢？如果传入的参数是 true，执行任务的线程就会收到一个中断的信号，正在执行的任务可能会有一些处理中断的逻辑，进而停止，这个比较好理解。如果传入的是 false 则就代表不中断正在运行的任务，也就是说，本次 cancel 不会有任何效果，同时 cancel 方法会返回 false。
 
 那么如何选择传入 true 还是 false 呢？
 
@@ -224,9 +217,9 @@ java.util.concurrent.ExecutionException:&nbsp;java.lang.IllegalArgumentException
 
 传入 false 适用于什么情况呢？
 
-- 如果我们明确知道这个线程不能处理中断，那应该传入 false。
-- 我们不知道这个任务是否支持取消（是否能响应中断），因为在大多数情况下代码是多人协作的，对于这个任务是否支持中断，我们不一定有十足的把握，那么在这种情况下也应该传入 false。
-- 如果这个任务一旦开始运行，我们就希望它完全的执行完毕。在这种情况下，也应该传入 false。
+* 如果我们明确知道这个线程不能处理中断，那应该传入 false。
+* 我们不知道这个任务是否支持取消（是否能响应中断），因为在大多数情况下代码是多人协作的，对于这个任务是否支持中断，我们不一定有十足的把握，那么在这种情况下也应该传入 false。
+* 如果这个任务一旦开始运行，我们就希望它完全的执行完毕。在这种情况下，也应该传入 false。
 
 这就是传入 true 和 false 的不同含义和选择方法。
 
@@ -247,7 +240,6 @@ FutureTask 首先是一个任务（Task），然后具有 Future 接口的语义
 ```java
 public class FutureTask<V> implements RunnableFuture<V> {
 }
-
 ```
 
 可以看到，它实现了一个接口，这个接口叫作 **RunnableFuture**。我们再来看一下 RunnableFuture 接口的代码实现：
@@ -260,12 +252,11 @@ public interface RunnableFuture<V> extends Runnable, Future<V> {
      */
     void run();
 }
-
 ```
 
 可以看出，它是 extends Runnable 和 Future 这两个接口的，它们的关系如下图所示：
 
-<img src="https://s0.lgstatic.com/i/image3/M01/6A/F4/Cgq2xl5WX1SADhlVAAC-Fertc-E743.png" alt="">
+![](https://s0.lgstatic.com/i/image3/M01/6A/F4/Cgq2xl5WX1SADhlVAAC-Fertc-E743.png)
 
 既然 RunnableFuture 继承了 Runnable 接口和 Future 接口，而 FutureTask 又实现了 RunnableFuture 接口，所以 FutureTask 既可以作为 Runnable 被线程执行，又可以作为 Future 得到 Callable 的返回值。
 
