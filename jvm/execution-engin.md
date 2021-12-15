@@ -18,6 +18,22 @@
 
 在方法执行时，虚拟机是使用局部变量表完成参数值到参数变量列表的传递过程的，如果执行的是实例方法（非static的方法），那局部变量表中第0位索引的Slot默认是用于传递方法所属对象实例的引用，在方法中可以通过关键字“this”来访问到这个隐含的参数。其余参数则按照参数表顺序排列，占用从1开始的局部变量Slot，参数表分配完毕后，再根据方法体内部定义的变量顺序和作用域分配其余的Slot。
 
+今天在想，局部变量表存放的是局部变量的对象的引用，那么成员变量的引用存放在哪里呢。成员变量的引用应该是存放在对象里。
+
+```java
+public class StringDemo {
+    String str = "abc";
+
+    public static void main(String[] args) {
+       //demo类
+        StringDemo demo = new StringDemo();
+        System.out.println(demo.str);;
+    }
+}
+```
+
+
+
 ### 操作数栈
 
 操作数栈（Operand Stack）也常称为操作栈，它是一个后入先出（Last In FirstOut, LIFO）栈。同局部变量表一样，操作数栈的最大深度也在编译的时候写入到Code属性的max_stacks数据项中。操作数栈的每一个元素可以是任意的Java数据类型，包括long和double。32位数据类型所占的栈容量为1，64位数据类型所占的栈容量为2。在方法执行的任何时候，操作数栈的深度都不会超过在max_stacks数据项中设定的最大值。
