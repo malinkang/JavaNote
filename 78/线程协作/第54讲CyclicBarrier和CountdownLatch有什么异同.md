@@ -2,9 +2,9 @@
 
 本课时我们主要介绍 CyclicBarrier 和 CountDownLatch 有什么不同。
 
-## CyclicBarrier
 
-**作用**
+
+## CyclicBarrier作用
 
 CyclicBarrier 和 CountDownLatch 确实有一定的相似性，它们都能阻塞一个或者一组线程，直到某种预定的条件达到之后，这些之前在等待的线程才会统一出发，继续向下执行。正因为它们有这个相似点，你可能会认为它们的作用是完全一样的，其实并不是。
 
@@ -12,41 +12,42 @@ CyclicBarrier 可以构造出一个集结点，当某一个线程执行 await() 
 
 举一个生活中的例子。假设我们班级春游去公园里玩，并且会租借三人自行车，每个人都可以骑，但由于这辆自行车是三人的，所以要凑齐三个人才能骑一辆，而且从公园大门走到自行车驿站需要一段时间。那么我们模拟这个场景，写出如下代码：
 
-```
-public  class  CyclicBarrierDemo  {
+```java
+public class CyclicBarrierDemo {
 
-        public  static  void  main(String[]  args)  {
-                CyclicBarrier  cyclicBarrier  =  new  CyclicBarrier(3)  
-                for  (int  i  =  0    i  &lt    6    i++)  {
-                        new  Thread(new  Task(i  +  1,  cyclicBarrier)).start()  
-                }
+    public static void main(String[] args) {
+
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(3);
+        for (int i = 0; i < 6; i++) {
+            new Thread(new Task(i + 1, cyclicBarrier)).start();
+        }
+    }
+
+    static class Task implements Runnable {
+
+        private int id;
+        private CyclicBarrier cyclicBarrier;
+
+        public Task(int id, CyclicBarrier cyclicBarrier) {
+            this.id = id;
+            this.cyclicBarrier = cyclicBarrier;
         }
 
-        static  class  Task  implements  Runnable  {
-
-                private  int  id  
-                private  CyclicBarrier  cyclicBarrier  
-
-                public  Task(int  id,  CyclicBarrier  cyclicBarrier)  {
-                        this.id  =  id  
-                        this.cyclicBarrier  =  cyclicBarrier  
-                }
-
-                @Override
-                public  void  run()  {
-                        System.out.println("同学"  +  id  +  "现在从大门出发，前往自行车驿站")  
-                        try  {
-                                Thread.sleep((long)  (Math.random()  *  10000))  
-                                System.out.println("同学"  +  id  +  "到了自行车驿站，开始等待其他人到达")  
-                                cyclicBarrier.await()  
-                                System.out.println("同学"  +  id  +  "开始骑车")  
-                        }  catch  (InterruptedException  e)  {
-                                e.printStackTrace()  
-                        }  catch  (BrokenBarrierException  e)  {
-                                e.printStackTrace()  
-                        }
-                }
+        @Override
+        public void run() {
+            System.out.println("同学" + id + "现在从大门出发，前往自行车驿站");
+            try {
+                Thread.sleep((long) (Math.random() * 10000));
+                System.out.println("同学" + id + "到了自行车驿站，开始等待其他人到达");
+                cyclicBarrier.await();
+                System.out.println("同学" + id + "开始骑车");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
+            }
         }
+    }
 }
 ```
 
@@ -81,7 +82,7 @@ public  class  CyclicBarrierDemo  {
 
 要想实现这件事情，如果你不利用 CyclicBarrier 去做的话，逻辑可能会非常复杂，因为你也不清楚哪个同学先到、哪个后到。而用了 CyclicBarrier 之后，可以非常简洁优雅的实现这个逻辑，这就是它的一个非常典型的应用场景。
 
-**执行动作 barrierAction**
+## 执行动作 barrierAction
 
 public CyclicBarrier(int parties, Runnable barrierAction)：当 parties 线程到达集结点时，继续往下执行前，会执行这一次这个动作。
 
@@ -89,13 +90,13 @@ public CyclicBarrier(int parties, Runnable barrierAction)：当 parties 线程�
 
 当预设数量的线程到达了集结点之后，在出发的时候，便会执行这里所传入的 Runnable 对象，那么假设我们把刚才那个代码的构造函数改成如下这个样子：
 
-```
-CyclicBarrier  cyclicBarrier  =  new  CyclicBarrier(3,  new  Runnable()  {
-        @Override
-        public  void  run()  {
-                System.out.println("凑齐3人了，出发！")  
-        }
-})  
+```java
+CyclicBarrier cyclicBarrier = new CyclicBarrier(3, new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("凑齐3人了，出发！");
+    }
+});
 ```
 
 可以看出，我们传入了第二个参数，它是一个 Runnable 对象，在这里传入了这个 Runnable 之后，这个任务就会在到齐的时候去打印"凑齐3人了，出发！"。上面的代码如果改成这个样子，则执行结果如下所示：

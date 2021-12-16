@@ -5,7 +5,7 @@
 
 ## 介绍
 
-<img src="https://s0.lgstatic.com/i/image3/M01/6E/8A/Cgq2xl5fiViAS1xOAADHimTjAp0576.png" alt="" data-nodeid="17878">
+![](https://cdn.malinkang.com/images/currency/202112161717267.png)
 
 从图中可以看出，信号量的一个最主要的作用就是，来控制那些需要限制并发访问量的资源。具体来讲，信号量会维护“许可证”的计数，而线程去访问共享资源前，必须先拿到许可证。线程可以从信号量中去“获取”一个许可证，一旦线程获取之后，信号量持有的许可证就转移过去了，所以信号量手中剩余的许可证要减一。
 
@@ -17,7 +17,7 @@
 
 我们来看一个具体的场景：
 
-<img src="https://s0.lgstatic.com/i/image3/M01/6E/89/CgpOIF5fiWSAf2upAABI13bn6cI788.png" alt="" data-nodeid="17888">
+![](https://cdn.malinkang.com//source/images/currency/202112161719864.png)
 
 在这个场景中，我们的服务是中间这个方块儿，左侧是请求，右侧是我们所依赖的那个慢服务。出于种种原因（比如计算量大、依赖的下游服务多等），右边的慢服务速度很慢，并且它可以承受的请求数量也很有限，一旦有太多的请求同时到达它这边，可能会导致它这个服务不可用，会压垮它。所以我们必须要保护它，不能让太多的线程同时去访问。那怎么才能做到这件事情呢？
 
@@ -71,7 +71,7 @@ pool-1-thread-6调用了慢服务
 
 **正常情况下获取许可证**
 
-<img src="https://s0.lgstatic.com/i/image2/M01/0C/16/CgpVE2AXbH-AFw9RAAA3ZTddKWM230.png" alt="Lark20210201-104823.png" data-nodeid="17900">
+![](https://cdn.malinkang.com/images/currency/202112161722411.png)
 
 这张图的方框代表一个许可证为 3 的信号量，每一个绿色的长条代表一个许可证（permit）。现在我们拥有 3 个许可证，并且信号量的特点是非常“慷慨”，只要它持有许可证，别人想请求的话它都会分发的。假设此时 Thread 1 来请求了，在这种情况下，信号量就会把一个许可证给到这边的第一个线程 Thread 1。于是 Thread 1 获得了许可证，变成了下图这个样子：
 
@@ -79,21 +79,21 @@ pool-1-thread-6调用了慢服务
 
 Thread 1 拿到许可证之后就拥有了访问慢服务的资格，它紧接着就会去访问我们的慢服务，同时，我们的信号量手中持有的许可证也减为了 2。假设这个慢服务速度很慢，可能长时间内不返回，所以在没返回之前，Thread 1 也会不释放许可证，在此期间第二个线程又来请求了：
 
-<img src="https://s0.lgstatic.com/i/image/M00/94/1D/Ciqc1GAXbX6AFjv2AABA2iqm0P4371.png" alt="2.png" data-nodeid="17912">
+![](https://s0.lgstatic.com/i/image/M00/94/1D/Ciqc1GAXbX6AFjv2AABA2iqm0P4371.png)
 
 同理，此时由于信号量手中持有两个许可证，还是可以满足 Thread 2 的需求的，所以就把第二个许可证给了第二个线程。这样一来，第二个线程也拿到了我们的许可证，可以访问右边的慢服务了，如图所示：
 
-<img src="https://s0.lgstatic.com/i/image2/M01/0C/13/Cip5yGAXbYqASyiQAABDBXlUBo0090.png" alt="3.png" data-nodeid="19602">
+![](https://s0.lgstatic.com/i/image2/M01/0C/13/Cip5yGAXbYqASyiQAABDBXlUBo0090.png)
 
 同理，在前两个线程返回前，第三个线程也过来了，也是按照同样的方式获得了许可证，并且访问慢服务：
 
-<img src="https://s0.lgstatic.com/i/image2/M01/0C/13/Cip5yGAXbbOAPDjlAABH5dhYwUU956.png" alt="4.png" data-nodeid="17924">
+![](https://cdn.malinkang.com/images/currency/202112161722845.png)
 
 **没许可证时，会阻塞前来请求的线程**
 
 至此，我们信号量中的许可证已经没有了，因为原有的 3 个都分给这 3 个线程了。在这种情况下，信号量就可以进一步发挥作用了，此时假设第 4 个线程再来请求找我们信号量拿许可证，由于此时线程 1、线程 2、线程 3 都正在访问“慢服务”，还没归还许可证，而信号量自身也没有更多的许可证了，所以在这个时候就会发生这样的一种情况：
 
-<img src="https://s0.lgstatic.com/i/image2/M01/0C/16/CgpVE2AXbcCAcWUpAABNWMJg-nw773.png" alt="5.png" data-nodeid="17934">
+![](https://cdn.malinkang.com/images/currency/202112161721118.png)
 
 线程 4 在找我们用 acquire 方法请求许可证的时候，它会被阻塞，意味着线程 4 没有拿到许可证，也就没有被允许访问“慢服务”，也就是说此时“慢服务”依然只能被前面的 3 个线程访问，这样就达到我们最开始的目的了：限制同时最多有 3 个线程调用我们的慢服务。
 
@@ -101,19 +101,19 @@ Thread 1 拿到许可证之后就拥有了访问慢服务的资格，它紧接�
 
 假设此时线程 1 因为最早去的，它执行完了这个任务，于是返回了。返回的时候它会调用 release 方法，表示“我处理完了我的任务，我想把许可证还回去”，所以，此时线程 1 就释放了之前持有的许可证，把它还给了我们的信号量，于是信号量所持有的许可证数量从 0 又变回了 1，如图所示：
 
-<img src="https://s0.lgstatic.com/i/image2/M01/0C/16/CgpVE2AXbcqAH6L0AABWKo4i04w361.png" alt="6.png" data-nodeid="17946">
+![](https://cdn.malinkang.com/images/currency/202112161720706.png)
 
 此时由于许可证已经归还给了信号量，那么刚才找我们要许可证的线程 4 就可以顺利地拿到刚刚释放的这个许可证了。于是线程 4 也就拥有了访问慢服务的访问权，接下来它也会去访问这个慢服务。
 
 不过要注意，此时线程 1 先归还了许可证给信号量，再由信号量把这个许可证转给线程 4，所以，此时同时访问慢服务的依然只有 3 个线程，分别是线程 2、3 和 4，因为之前的线程 1 已经完成任务并且离开了。
 
-<img src="https://s0.lgstatic.com/i/image2/M01/0C/13/Cip5yGAXbeGAEJjWAABhGTcve38623.png" alt="7.png" data-nodeid="17953">
+![](https://cdn.malinkang.com//source/images/currency/202112161720946.png)
 
 **如果有两个线程释放许可证**
 
 假设程序继续运行，随着时间推移，线程 2 和 3 同时执行完毕，然后释放手中的许可证。于是信号量又重新拥有了 2 个许可证，它会把许可证进一步发放给还有这个需求的线程 5 和线程 6，那么这两个线程也就能访问这个慢服务了：
 
-<img src="https://s0.lgstatic.com/i/image2/M01/0C/13/Cip5yGAXbeyAdTc5AABmeMiqFnc424.png" alt="8.png" data-nodeid="17963">
+![](https://cdn.malinkang.com/images/currency/202112161720550.png)
 
 不过此时访问慢服务的就变成了线程 4、5、6，可以看出，总的数量从来没有超过 3 个。
 

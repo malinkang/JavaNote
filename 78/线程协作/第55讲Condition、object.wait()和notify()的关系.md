@@ -3,8 +3,6 @@
 
 下面先讲一下 Condition 这个接口，来看看它的作用、如何使用，以及需要注意的点有哪些。
 
-### Condition接口
-
 ## 作用
 
 我们假设线程 1 需要等待某些条件满足后，才能继续运行，这个条件会根据业务场景不同，有不同的可能性，比如等待某个时间点到达或者等待某些任务处理完毕。在这种情况下，我们就可以执行 Condition 的 await 方法，一旦执行了该方法，这个线程就会进入 WAITING 状态。
@@ -13,52 +11,53 @@
 
 ## 代码案例
 
+
+
 我们用一个代码来说明这个问题，如下所示：
 
-```
-public  class  ConditionDemo  {
-        private  ReentrantLock  lock  =  new  ReentrantLock()  
-        private  Condition  condition  =  lock.newCondition()  
+```java
+public class ConditionDemo {
+    private ReentrantLock lock = new ReentrantLock();
+    private Condition condition = lock.newCondition();
 
-        void  method1()  throws  InterruptedException  {
-                lock.lock()  
-                try{
-                        System.out.println(Thread.currentThread().getName()+":条件不满足，开始await")  
-                        condition.await()  
-                        System.out.println(Thread.currentThread().getName()+":条件满足了，开始执行后续的任务")  
-                }finally  {
-                        lock.unlock()  
+    void method1() throws InterruptedException {
+        lock.lock();
+        try {
+            System.out.println(Thread.currentThread().getName() + ":条件不满足，开始await");
+            condition.await();
+            System.out.println(Thread.currentThread().getName() + ":条件满足了，开始执行后续的任务");
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    void method2() throws InterruptedException {
+        lock.lock();
+        try {
+            System.out.println(Thread.currentThread().getName() + ":需要5秒钟的准备时间");
+            Thread.sleep(5000);
+            System.out.println(Thread.currentThread().getName() + ":准备工作完成，唤醒其他的线程");
+            condition.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        ConditionDemo conditionDemo = new ConditionDemo();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    conditionDemo.method2();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-        }
-
-        void  method2()  throws  InterruptedException  {
-                lock.lock()  
-                try{
-                        System.out.println(Thread.currentThread().getName()+":需要5秒钟的准备时间")  
-                        Thread.sleep(5000)  
-                        System.out.println(Thread.currentThread().getName()+":准备工作完成，唤醒其他的线程")  
-                        condition.signal()  
-                }finally  {
-                        lock.unlock()  
-                }
-        }
-
-        public  static  void  main(String[]  args)  throws  InterruptedException  {
-                ConditionDemo  conditionDemo  =  new  ConditionDemo()  
-                new  Thread(new  Runnable()  {
-                        @Override
-                        public  void  run()  {
-                                try  {
-                                        conditionDemo.method2()  
-                                }  catch  (InterruptedException  e)  {
-                                        e.printStackTrace()  
-                                }
-                        }
-                }).start()  
-                conditionDemo.method1()  
-        }
+            }
+        }).start();
+        conditionDemo.method1();
+    }
 }
-
 ```
 
 在这个代码中，有以下三个方法。
@@ -101,7 +100,7 @@ signalAll() 和 signal() 区别
 
 signalAll() 会唤醒所有正在等待的线程，而 signal() 只会唤醒一个线程。
 
-### 用 Condition 和 wait/notify 实现简易版阻塞队列
+##用 Condition 和 wait/notify 实现简易版阻塞队列
 
 在第 05 讲，讲过如何用 Condition 和 wait/notify 来实现生产者/消费者模式，其中的精髓就在于用 Condition 和 wait/notify 来实现简易版阻塞队列，我们来分别回顾一下这两段代码。
 
@@ -109,46 +108,46 @@ signalAll() 会唤醒所有正在等待的线程，而 signal() 只会唤醒一�
 
 代码如下所示：
 
-```
-public  class  MyBlockingQueueForCondition  {
-  
-      private  Queue  queue  
-      private  int  max  =  16  
-      private  ReentrantLock  lock  =  new  ReentrantLock()  
-      private  Condition  notEmpty  =  lock.newCondition()  
-      private  Condition  notFull  =  lock.newCondition()  
-  
-      public  MyBlockingQueueForCondition(int  size)  {
-              this.max  =  size  
-              queue  =  new  LinkedList()  
-      }
-  
-      public  void  put(Object  o)  throws  InterruptedException  {
-              lock.lock()  
-              try  {
-                      while  (queue.size()  ==  max)  {
-                              notFull.await()  
-                      }
-                      queue.add(o)  
-                      notEmpty.signalAll()  
-              }  finally  {
-                      lock.unlock()  
-              }
-      }
-  
-      public  Object  take()  throws  InterruptedException  {
-              lock.lock()  
-              try  {
-                      while  (queue.size()  ==  0)  {
-                              notEmpty.await()  
-                      }
-                      Object  item  =  queue.remove()  
-                      notFull.signalAll()  
-                      return  item  
-              }  finally  {
-                      lock.unlock()  
-              }
-      }
+```java
+public class MyBlockingQueueForCondition {
+
+    private Queue<Object> queue;
+    private int max = 16;
+    private ReentrantLock lock = new ReentrantLock();
+    private Condition notEmpty = lock.newCondition();
+    private Condition notFull = lock.newCondition();
+
+    public MyBlockingQueueForCondition(int size) {
+        this.max = size;
+        queue = new LinkedList<>();
+    }
+
+    public void put(Object o) throws InterruptedException {
+        lock.lock();
+        try {
+            while (queue.size() == max) {
+                notFull.await();
+            }
+            queue.add(o);
+            notEmpty.signalAll();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public Object take() throws InterruptedException {
+        lock.lock();
+        try {
+            while (queue.size() == 0) {
+                notEmpty.await();
+            }
+            Object item = queue.remove();
+            notFull.signalAll();
+            return item;
+        } finally {
+            lock.unlock();
+        }
+    }
 }
 
 ```
@@ -159,32 +158,31 @@ public  class  MyBlockingQueueForCondition  {
 
 我们再来看看如何使用 wait/notify 来实现简易版阻塞队列，代码如下：
 
-```
-class  MyBlockingQueueForWaitNotify  {
-  
-      private  int  maxSize  
-      private  LinkedList&lt  Object&gt    storage  
-  
-      public  MyBlockingQueueForWaitNotify  (int  size)  {
-              this.maxSize  =  size  
-              storage  =  new  LinkedList&lt  &gt  ()  
-      }
-  
-      public  synchronized  void  put()  throws  InterruptedException  {
-              while  (storage.size()  ==  maxSize)  {
-                      this.wait()  
-              }
-              storage.add(new  Object())  
-              this.notifyAll()  
-      }
-  
-      public  synchronized  void  take()  throws  InterruptedException  {
-              while  (storage.size()  ==  0)  {
-                      this.wait()  
-              }
-              System.out.println(storage.remove())  
-              this.notifyAll()  
-      }
+```java
+class MyBlockingQueueForWaitNotify {
+
+    private int maxSize;
+    private LinkedList<Object> storage;
+    public MyBlockingQueueForWaitNotify(int size) {
+        this.maxSize = size;
+        storage = new LinkedList<>();
+    }
+
+    public synchronized void put() throws InterruptedException {
+        while (storage.size() == maxSize) {
+            this.wait();
+        }
+        storage.add(new Object());
+        this.notifyAll();
+    }
+
+    public synchronized void take() throws InterruptedException {
+        while (storage.size() == 0) {
+            this.wait();
+        }
+        System.out.println(storage.remove());
+        this.notifyAll();
+    }
 }
 
 ```
@@ -199,17 +197,17 @@ class  MyBlockingQueueForWaitNotify  {
 
 左：
 
-```
+```java
 public  void  put(Object  o)  throws  InterruptedException  {
-      lock.lock()  
+      lock.lock();
       try  {
             while  (queue.size()  ==  max)  {
-                  condition1.await()  
+                  condition1.await();  
             }
-            queue.add(o)  
-            condition2.signalAll()  
+            queue.add(o);
+            condition2.signalAll();  
       }  finally  {
-            lock.unlock()  
+            lock.unlock();
       }
 }
 
@@ -217,13 +215,13 @@ public  void  put(Object  o)  throws  InterruptedException  {
 
 右：
 
-```
+```java
 public  synchronized  void  put()  throws  InterruptedException  {
       while  (storage.size()  ==  maxSize)  {
-            this.wait()  
+            this.wait();  
       }
-      storage.add(new  Object())  
-      this.notifyAll()  
+      storage.add(new  Object());
+      this.notifyAll();  
 }
 
 ```
